@@ -1,0 +1,126 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Wattwatchers REST API v3 (Mercury)
+  version: 1.0.0
+extends: openapi/wattwatchers-rest-api-v3-openapi.json
+x-generated: '2026-07-27'
+x-method: generated
+x-source: >-
+  Generated from the harvested OpenAPI plus the artifacts in this repository
+  (conventions/, errors/, rate-limits/, authentication/, lifecycle/,
+  data-model/). Captures API Evangelist enhancements only; the harvested spec at
+  openapi/wattwatchers-rest-api-v3-openapi.json is never mutated.
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-provider: wattwatchers
+      x-apievangelist-artifacts:
+        authentication: authentication/wattwatchers-authentication.yml
+        conventions: conventions/wattwatchers-conventions.yml
+        errors: errors/wattwatchers-error-codes.yml
+        rateLimits: rate-limits/wattwatchers-rate-limits.yml
+        lifecycle: lifecycle/wattwatchers-lifecycle.yml
+        changelog: changelog/wattwatchers-changelog.yml
+        dataModel: data-model/wattwatchers-data-model.yml
+        conformance: conformance/wattwatchers-conformance.yml
+      x-apievangelist-notes: >-
+        The published contract declares no top-level security requirement even
+        though every operation requires the bearer token in practice, and it
+        omits the 429 and 500 responses that the error reference documents.
+
+  - target: $
+    update:
+      security:
+        - BearerAuth: []
+      x-apievangelist-security-note: >-
+        The upstream spec applies BearerAuth per-operation on only two
+        operations. An anonymous request to any path returns 401 UNAUTHORIZED,
+        so the correct model is a global security requirement.
+
+  - target: $.info
+    update:
+      x-rate-limits:
+        scope: api-key
+        dimensions: [transactions-per-second, transactions-per-day]
+        auto_scaling: true
+        headers:
+          - X-RateLimit-TpsLimit
+          - X-RateLimit-TpsRemaining
+          - X-RateLimit-TpsReset
+          - X-RateLimit-TpdLimit
+          - X-RateLimit-TpdRemaining
+          - X-RateLimit-TpdReset
+          - Retry-After
+        docs: https://docs.wattwatchers.com.au/api/v3/rate-limits.html
+
+  - target: $.info
+    update:
+      x-error-envelope:
+        media_type: application/json
+        shape: '{code, httpCode, message}'
+        multi_error_shape: '{errors: [...]}'
+        rfc9457: false
+        docs: https://docs.wattwatchers.com.au/api/v3/errors.html
+
+  - target: $.info
+    update:
+      x-events:
+        webhooks: false
+        streaming: false
+        note: >-
+          No push surface. The vendor documents that a stream-based push API is
+          being explored. Integrators poll; see the polling guidance.
+        polling_guidance: https://docs.wattwatchers.com.au/api/tips/polling-data.html
+
+  - target: $.paths['/devices/{device-id}'].patch
+    update:
+      x-agentic-access:
+        action-class: acting
+        consequence: physical
+        human-in-the-loop: required
+        audit: required
+      x-apievangelist-note: >-
+        The only write operation in the API. Setting a switch state opens or
+        closes a real relay on +3SW hardware (6M+3SW, 6W+3SW, 3RM+3SW). Changes
+        are applied asynchronously; the requested value appears under `pending`
+        until the device converges. Read-only properties supplied in the body
+        are silently ignored rather than rejected.
+
+  - target: $.paths['/short-energy/{device-id}'].get
+    update:
+      x-apievangelist-window:
+        max_period: 12 hours
+        over_limit_status: 422
+        default_from: now minus 1 hour
+        default_to: fromTs plus 1 hour
+      x-apievangelist-note: >-
+        Response arrays are POSITIONAL — eReal[n], eReactive[n], vRMS[n] and
+        iRMS[n] correspond to channels[n] from getDevice. Fetch the device
+        before interpreting any energy payload.
+
+  - target: $.paths['/long-energy/{device-id}'].get
+    update:
+      x-apievangelist-window:
+        max_period: 7 days at default granularity
+        over_limit_status: 422
+        default_from: the device's first Long Energy entry
+        default_to: fromTs plus 7 days
+      x-apievangelist-note: >-
+        `timezone` is REQUIRED when `granularity` is hour or coarser and is
+        ignored below that. `fields[energy]=+pf` cannot be combined with
+        `filter[group]=phases`. Response arrays are positional by channel.
+
+  - target: $.paths['/modbus/{device-id}'].get
+    update:
+      x-apievangelist-note: >-
+        The response schema varies by the downstream meter model attached to the
+        6M+One device (PMC-340B three-phase or PMC-220 single-phase); the `model`
+        field on each data point records which was attached at capture time.
+
+  - target: $.components.schemas.Error
+    update:
+      x-apievangelist-catalog: errors/wattwatchers-error-codes.yml
+      x-apievangelist-note: >-
+        The `httpCode` body field does not always match the HTTP status — the
+        vendor's own FORBIDDEN example returns HTTP 403 with httpCode 401. Trust
+        the HTTP status, not the body field.

@@ -1,0 +1,78 @@
+generated: '2026-07-27'
+method: searched
+source: >-
+  https://registry.npmjs.org (search + package metadata),
+  https://api.github.com/orgs/wattwatchers/repos,
+  https://docs.wattwatchers.com.au/api/tips/openapi-spec.html
+description: >-
+  First-party Wattwatchers packages found on the public registries. Wattwatchers
+  publishes NO client SDK for the REST API v3 (Mercury) in any language — the
+  documentation explicitly directs developers to download the OpenAPI JSON and
+  generate a client with OpenAPI Generator or Swagger Codegen instead
+  (docs.wattwatchers.com.au/api/tips/openapi-spec.html). The only first-party
+  published packages are two Homebridge plugins on npm, both authored by
+  "Wattwatchers" under the `wattwatchers` npm maintainer account and hosted on
+  the company's own Bitbucket org. They are consumer HomeKit integrations that
+  consume the API, not client libraries for it, so no `SDKs` pointer is emitted
+  for this provider. Registry probes recorded at fetch time.
+sdk_status: none-published
+sdk_note: >-
+  No official client library on npm, PyPI, RubyGems, crates.io, Packagist,
+  Maven Central, NuGet or pkg.go.dev. PyPI `wattwatchers` 404, RubyGems
+  `wattwatchers` 404, npm search returns only the two Homebridge plugins below.
+  The vendor position is "generate your own client from the OpenAPI spec."
+packages:
+  - language: javascript
+    registry: npm
+    name: homebridge-wattwatchers
+    url: https://www.npmjs.com/package/homebridge-wattwatchers
+    source: https://bitbucket.org/wattwatchers/homebridge-plugin
+    install: npm install homebridge-wattwatchers
+    version: 0.0.2
+    license: MPL-2.0
+    official: true
+    kind: integration-plugin
+    description: >-
+      Homebridge plugin exposing Wattwatchers switches and solar generation data
+      to Apple HomeKit. npm author "Wattwatchers"; maintainer account
+      `wattwatchers`; repository on the company Bitbucket org.
+    last_published: '2022-05-05'
+  - language: javascript
+    registry: npm
+    name: homebridge-wattwatchersamber
+    url: https://www.npmjs.com/package/homebridge-wattwatchersamber
+    source: https://bitbucket.org/wattwatchers/homebridge-amber
+    install: npm install homebridge-wattwatchersamber
+    version: 0.0.6
+    license: MPL-2.0
+    official: true
+    kind: integration-plugin
+    description: >-
+      Homebridge plugin exposing Amber Electric pricing information to HomeKit.
+      Described in its own npm metadata as "developed as a Proof of Concept by
+      Wattwatchers."
+    last_published: '2022-06-16'
+sample_code:
+  - name: rest-api-notebooks
+    url: https://github.com/wattwatchers/rest-api-notebooks
+    language: python
+    format: Jupyter Notebook
+    official: true
+    description: >-
+      First-party Colab-runnable Jupyter notebooks demonstrating Long Energy and
+      Modbus data download against the REST API v3. Sample code, not a package.
+  - name: le_completeness_analysis
+    url: https://github.com/wattwatchers/le_completeness_analysis
+    language: python
+    format: Jupyter Notebook
+    official: true
+    description: >-
+      First-party notebook for analysing Long Energy interval completeness.
+      Last pushed 2026-07-02.
+registry_probes:
+  - {registry: npm, query: wattwatchers, status: 200, result: 2 first-party packages}
+  - {registry: pypi, name: wattwatchers, status: 404}
+  - {registry: pypi, name: pywattwatchers, status: 404}
+  - {registry: pypi, name: wattwatchers-api, status: 404}
+  - {registry: rubygems, name: wattwatchers, status: 404}
+  - {registry: crates.io, name: wattwatchers, status: 403, note: crates.io front-end blocks automated clients; no crate found via search}

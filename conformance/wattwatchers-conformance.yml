@@ -1,0 +1,146 @@
+generated: '2026-07-27'
+method: derived
+source: >-
+  Derived from openapi/wattwatchers-rest-api-v3-openapi.json (securitySchemes,
+  Error schema, parameters) and the published documentation
+  (docs.wattwatchers.com.au/api/v3/auth.html, /errors.html, /rate-limits.html,
+  /conventions.html), plus the live probes recorded in review.yml and
+  well-known/wattwatchers-well-known.yml.
+description: >-
+  Which cross-cutting and industry standards the Wattwatchers REST API v3
+  (Mercury) actually conforms to. The short answer: HTTP done competently, and
+  nothing else. The API is a proprietary JSON/REST shape with a bearer token —
+  no OAuth, no OIDC, no RFC 9457, and no energy-sector interoperability standard
+  of any kind. No certification or compliance program is published, so no
+  `Compliance` pointer is wired.
+standards:
+  - id: openapi-3.0
+    conforms: true
+    evidence: >-
+      Publishes a valid OpenAPI 3.0.0 contract (version 3.6.0, 13 paths /
+      14 operations) anonymously at
+      docs.wattwatchers.com.au/api/v3/openapi/public_rest_api_3_6_0.json, with a
+      live Swagger UI. Harvested verbatim to
+      openapi/wattwatchers-rest-api-v3-openapi.json.
+  - id: rfc6750-bearer-token
+    conforms: true
+    evidence: >-
+      components.securitySchemes.BearerAuth is type http / scheme bearer;
+      docs mandate 'Authorization: Bearer key_...' on every request.
+  - id: oauth2
+    conforms: false
+    evidence: >-
+      No oauth2 securityScheme in the spec; no authorization or token endpoint;
+      /.well-known/oauth-authorization-server 404 on the API host. Keys are
+      human-issued by Wattwatchers, not negotiated.
+  - id: oidc
+    conforms: false
+    evidence: 'https://api-v3.wattwatchers.com.au/.well-known/openid-configuration returned 404.'
+  - id: oauth2-scopes
+    conforms: false
+    evidence: >-
+      No scope surface exists. Authorization is expressed as the SET OF DEVICES
+      Wattwatchers assigns to a key, plus coarse permission levels for metadata
+      and configuration writes added in v3.5. Nothing is expressed in the token.
+  - id: mtls
+    conforms: false
+    evidence: No mutualTLS securityScheme; no client-certificate requirement documented.
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: >-
+      Errors use a proprietary {code, httpCode, message} envelope over
+      application/json, inherited from the v2 API. No application/problem+json,
+      no type URI, no instance. See errors/wattwatchers-error-codes.yml.
+  - id: json-api
+    conforms: false
+    evidence: >-
+      Bracketed query parameters (filter[group], fields[energy]) borrow JSON:API
+      SPELLING, but responses are bare arrays/objects with no data/attributes/
+      relationships envelope, no type/id members and no links. Cosmetic
+      resemblance only.
+  - id: rfc7231-retry-after
+    conforms: true
+    evidence: 'Returns an integer-seconds Retry-After header on 429, explicitly to match the RFC.'
+  - id: ietf-ratelimit-headers
+    conforms: false
+    evidence: >-
+      Uses proprietary X-RateLimit-Tpd*/Tps* headers rather than the IETF
+      draft RateLimit/RateLimit-Policy fields. The signal is rich and documented,
+      just not standardised. See rate-limits/wattwatchers-rate-limits.yml.
+  - id: rfc8594-sunset-header
+    conforms: false
+    evidence: No Sunset or Deprecation headers; no deprecation policy published.
+  - id: rfc9116-security-txt
+    conforms: false
+    evidence: >-
+      /.well-known/security.txt returns 404 on both the API host and the docs
+      host; the corporate host answers a blanket captcha 202 for every path.
+  - id: rest-http-semantics
+    conforms: true
+    evidence: >-
+      Correct use of GET for reads and PATCH for partial updates; PUT
+      deliberately unsupported; 204 for no-content; 400 vs 422 distinguished
+      explicitly (malformed vs semantically invalid).
+  - id: unix-epoch-timestamps
+    conforms: true
+    evidence: >-
+      All timestamps are integer Unix seconds (fromTs/toTs and every data point
+      timestamp). No ISO 8601 / RFC 3339 representation is offered.
+    note: >-
+      Standard, but not the usual web-API convention — clients must not expect
+      RFC 3339 strings anywhere in this API.
+  - id: asyncapi
+    conforms: false
+    evidence: >-
+      No event surface exists at all — no webhooks, MQTT, WebSocket or SSE. The
+      polling guide states a stream-based push API is being "explored". Nothing
+      to describe, so this is N/A rather than a gap.
+  - id: cdr-energy
+    conforms: false
+    applicable: false
+    evidence: >-
+      Verified against the live CDR Register: Wattwatchers appears in neither
+      the 84 designated energy data-holder brands nor the 38 accredited data
+      recipients. As a behind-the-meter hardware and platform vendor it is not a
+      designated data holder, so the Consumer Data Right energy mandate does not
+      bind it. See review.yml.
+  - id: green-button-espi
+    conforms: false
+    evidence: >-
+      No Green Button / NAESB ESPI surface. Full-text search of all 22
+      documentation pages found no mention.
+  - id: ieee-2030.5
+    conforms: false
+    evidence: No IEEE 2030.5 (SEP2) surface; not referenced in any documentation page.
+  - id: openadr
+    conforms: false
+    evidence: >-
+      No OpenADR demand-response surface. Load control exists (switch state via
+      updateDevice) but it drives Wattwatchers' own relays through the
+      proprietary REST API, not a standards-based DR protocol.
+  - id: iec-cim-61968-61970
+    conforms: false
+    evidence: No IEC CIM data model; the schemas are proprietary.
+  - id: ocpp-ocpi
+    conforms: false
+    evidence: No EV charging session surface despite EV programs appearing in marketing.
+  - id: modbus
+    conforms: true
+    scope: device-side only
+    evidence: >-
+      /modbus/{device-id} endpoints (getModbusData, getFirstModbusData,
+      getLatestModbusData) expose Modbus register data that 6M+One hardware
+      reads from downstream equipment, with per-model schemas for PMC-340B and
+      PMC-220.
+    caveat: >-
+      Modbus is an industrial fieldbus read by the device, NOT an energy
+      data-sharing standard implemented by the API. It must not be counted as
+      interoperability at the API layer.
+compliance_program:
+  published: false
+  certifications: []
+  evidence: >-
+    No trust center, no SOC 2 / ISO 27001 / PCI / HIPAA / FedRAMP claim, no
+    security page reachable (probe-security-programs.py returned vdp=none
+    trust=none; trust.wattwatchers.com.au does not resolve; every corporate-site
+    path is behind a blanket captcha).

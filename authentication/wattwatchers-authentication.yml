@@ -1,0 +1,92 @@
+generated: '2026-07-27'
+method: searched
+source: openapi/wattwatchers-rest-api-v3-openapi.json
+docs: https://docs.wattwatchers.com.au/api/v3/auth.html
+description: >-
+  Wattwatchers REST API v3 (Mercury) uses a single authentication mechanism: an
+  HTTP Bearer token ("API key") issued by hand by Wattwatchers. There is no
+  OAuth, no OpenID Connect, no mTLS and no scope surface. Authorization is not
+  expressed in the token — it is expressed as the SET OF DEVICES Wattwatchers
+  assigns to that key, plus coarse permission levels (added in v3.5) that control
+  whether the key may change device metadata and/or configuration. Derived from
+  the OpenAPI securityScheme and upgraded from the published auth page.
+summary:
+  types:
+    - http
+  api_key_in: []
+  oauth2_flows: []
+  self_serve: false
+  scopes: false
+schemes:
+  - name: BearerAuth
+    type: http
+    scheme: bearer
+    description: Bearer token authentication
+    sources:
+      - openapi/wattwatchers-rest-api-v3-openapi.json
+    header: Authorization
+    value_format: 'Bearer key_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+    token_prefix: key_
+    applies_to: >-
+      Every documented operation. Note the spec declares no top-level `security`
+      array — BearerAuth is applied per-operation on listDevices and getDevice
+      and is required in practice everywhere (an anonymous GET /devices returns
+      401 UNAUTHORIZED).
+key_issuance:
+  self_serve: false
+  signup_form: false
+  free_tier: false
+  sandbox_key: false
+  process:
+    - Own or manage Wattwatchers Auditor hardware.
+    - Obtain access to the Fleet Management app (https://fleet.wattwatchers.com.au) via Wattwatchers support.
+    - The existing key is displayed under the profile menu of the Fleet app.
+    - 'For a new key: contact the Wattwatchers team. They set it up, assign the correct devices and permissions, and distribute it securely.'
+  quote: >-
+    "Please contact the Wattwatchers team to have an API key setup. We will
+    distribute the API key to you securely once we have set it up and assigned
+    the correct devices and related permissions."
+  console: https://fleet.wattwatchers.com.au
+authorization_model:
+  mechanism: device-assignment
+  description: >-
+    "The API key represents a set of permissions to a pre-defined set of devices
+    that the client application is permitted to access (read and modify)." To
+    restrict access to a subset of devices you must have Wattwatchers create an
+    additional key. There is no runtime scoping, no delegation and no
+    per-request audience selection.
+  permission_levels:
+    introduced: v3.5 (2020-05-25)
+    description: >-
+      "Additional permission levels to API keys relating to changing device
+      metadata and/or configuration." Read, metadata-write and
+      configuration-write are distinguished at key-issuance time, not requested
+      per call. A key lacking the level returns 403 FORBIDDEN.
+  masking: >-
+    A device not assigned to the key returns 404 NOT_FOUND, not 403 — existence
+    is masked as well as access.
+token_lifecycle:
+  expiry: none-by-default
+  detail: '"This token lives until it is expired by Wattwatchers." There is no client-driven rotation, refresh or revocation endpoint.'
+  forced_rotation: >-
+    If Wattwatchers become aware of a key being disclosed insecurely (e.g. pasted
+    into an email or a support ticket) they automatically retire and refresh it,
+    and notify the technical contacts on file.
+  disclosure_hygiene: >-
+    Docs instruct customers to identify a key by its LAST 5 CHARACTERS only when
+    communicating with support, never the whole value.
+key_handling_guidance:
+  - Do not hard-code the key into an application or commit it to source control.
+  - Store it as an environment variable server-side.
+  - Never store it in browser cookies or local storage; a browser app should only receive it over HTTPS after the user is authenticated.
+  - Do not send the key by insecure email or web-based communication tools.
+discovery_probes:
+  - {url: 'https://api-v3.wattwatchers.com.au/.well-known/openid-configuration', status: 404}
+  - {url: 'https://api-v3.wattwatchers.com.au/.well-known/oauth-authorization-server', status: 404}
+  - {url: 'https://api-v3.wattwatchers.com.au/.well-known/oauth-protected-resource', status: 404}
+  - {url: 'https://api-v3.wattwatchers.com.au/devices', status: 401, note: 'anonymous request returns {"code":"UNAUTHORIZED",...} — the gate is real and enforced'}
+scopes:
+  supported: false
+  note: >-
+    No OAuth scope surface exists, so no scopes/ artifact is emitted for this
+    provider. Permission is a property of the issued key, not of the request.

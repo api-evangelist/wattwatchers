@@ -1,0 +1,181 @@
+generated: '2026-07-27'
+method: searched
+source: https://docs.wattwatchers.com.au/api/v3/release-notes.html
+docs: https://docs.wattwatchers.com.au/api/v3/release-notes.html
+description: >-
+  Structured capture of the Wattwatchers API v3 (Mercury) dated release notes.
+  Wattwatchers publishes a full, dated, semantically-versioned history from the
+  v3.0 launch in February 2019 through v3.6.0 in April 2024, tagging each item
+  New / Changed / Fixed and listing the endpoints affected. The cadence is
+  notable: 20 releases across 2019-2020, then a four-year gap to the single
+  2024 release. The live page is the source of truth.
+versioning:
+  scheme: semver-ish (major.minor.patch), major encoded in the API hostname
+  current: 3.6.0
+  current_released: '2024-04-26'
+  detail: lifecycle/wattwatchers-lifecycle.yml
+cadence_note: >-
+  Last documented release 2024-04-26. No release notes have been published in
+  the two years since, and none reference the October 2025 administration or
+  the EPX acquisition.
+entries:
+  - version: 3.6.0
+    date: '2024-04-26'
+    latest: true
+    breaking: false
+    changed:
+      - Added support for the 6MW and 6MW-CER products.
+  - version: 3.5.1
+    date: '2020-06-11'
+    breaking: false
+    changed:
+      - '"Behind the scenes" updates preparing for upcoming changes related to communications and subscriptions.'
+  - version: '3.5'
+    date: '2020-05-25'
+    breaking: false
+    additions:
+      - Capability to set and get label and timezone for a device.
+      - Additional permission levels on API keys relating to changing device metadata and/or configuration.
+    endpoints_affected: ['GET /devices/{device-id}', 'PATCH /devices/{device-id}']
+  - version: 3.4.5
+    date: '2020-05-08'
+    breaking: false
+    fixes:
+      - 422 error being incorrectly returned for switch state or metadata changes.
+  - version: 3.4.4
+    date: '2020-05-07'
+    breaking: false
+    fixes:
+      - Switching no longer incorrectly available for 6M+One devices.
+  - version: 3.4.3
+    date: '2020-04-15'
+    breaking: false
+    fixes:
+      - 400 no longer returned when calculated power factors are requested by clients that translate '+' to space.
+      - No longer errors when computing power factor with monthly aggregation.
+  - version: 3.4.2
+    date: '2020-04-06'
+    breaking: false
+    fixes:
+      - No longer errors when unit conversion is used with monthly aggregation.
+  - version: 3.4.1
+    date: '2020-03-13'
+    breaking: false
+    fixes:
+      - Wrong CT rating returned in status for uninitialised Rogowski devices.
+  - version: 3.4.0
+    date: '2020-03-10'
+    breaking: false
+    additions:
+      - Unit conversion to kWh (energy) and kW (power) for short and long energy values, including filter[group]=phases support.
+      - Calculated power factor for short and long energy data packets (cannot be combined with filter[group]=phases).
+      - '"Timestamp only" return for first/latest short energy, long energy and modbus data.'
+      - Significant performance improvements to first + latest values via caching.
+    endpoints_affected:
+      - 'GET /long-energy/{device-id} — convert[energy], fields[energy]=+pf'
+      - 'GET /long-energy/{device-id}/first — convert[energy], fields[energy]=timestamp, fields[energy]=+pf'
+      - 'GET /long-energy/{device-id}/latest — convert[energy], fields[energy]=timestamp, fields[energy]=+pf'
+      - 'GET /short-energy/{device-id} — convert[energy], fields[energy]=+pf'
+      - 'GET /short-energy/{device-id}/first — convert[energy], fields[energy]=timestamp, fields[energy]=+pf'
+      - 'GET /short-energy/{device-id}/latest — convert[energy], fields[energy]=timestamp, fields[energy]=+pf'
+    fixes:
+      - Some uninitialised devices incorrectly returned as "Offline".
+      - latestStatus and other fields not returned for some devices.
+      - Channel CT rating change not correctly reflected in the "pending" value.
+  - version: 3.3.6
+    date: '2020-02-10'
+    breaking: false
+    fixes: [Incomplete status returned for some devices.]
+  - version: 3.3.5
+    date: '2019-10-15'
+    breaking: false
+    fixes: [Issues retrieving switch state for some devices.]
+  - version: 3.3.4
+    date: '2019-09-20'
+    breaking: false
+    fixes:
+      - Setting switch state for some devices caused a 500 on device status.
+      - 'GET /devices/{device-id} no longer returns an empty switches collection for non-switching devices.'
+  - version: 3.3.3
+    date: '2019-09-18'
+    breaking: false
+    fixes: [Further fixes for intermittent error setting channel category ID.]
+  - version: 3.3.2
+    date: '2019-09-14'
+    breaking: false
+    fixes: ['Intermittent error setting channel category ID to "Not set".']
+  - version: 3.3.1
+    date: '2019-09-08'
+    breaking: false
+    fixes: ['PATCH /devices/{device-id} switch-state processing stopped for recently initialised devices.']
+  - version: 3.3.0
+    date: '2019-09-03'
+    breaking: false
+    additions: ['PATCH /devices/{device-id} now supports setting channel.categoryId.']
+    fixes: ['GET and PATCH /devices/{device-id} correctly return channel.ctRating=3000 for Rogowski devices.']
+  - version: 3.2.5
+    date: '2019-09-02'
+    breaking: false
+    fixes: [Better handling of certain device metadata misconfiguration cases.]
+  - version: 3.2.4
+    date: '2019-08-14'
+    breaking: false
+    fixes: ['PATCH /devices/{device-id} fully validates count and grouping values for edge cases.']
+  - version: 3.2.3
+    date: '2019-08-13'
+    breaking: false
+    fixes:
+      - 'PATCH /devices/{device-id} correctly accepts the grouping property.'
+      - 'GET /devices/{device-id} returns grouping values for irregular CT order.'
+  - version: 3.2.2
+    date: '2019-07-29'
+    breaking: false
+    changed: [Performance improvements for Long and Short energy calls at 5m, 15m and 30m granularity.]
+    fixes:
+      - Timestamp not included in combined phase output in some circumstances.
+      - Duration now always returned as an integer in combined phase output.
+    endpoints_affected: ['GET /long-energy/{device-id}', 'GET /short-energy/{device-id}']
+  - version: 3.2.1
+    date: '2019-07-11'
+    breaking: false
+    fixes:
+      - Performance improvements.
+      - Rate limit headers not returned for some endpoints.
+  - version: '3.2'
+    date: '2019-07-10'
+    breaking: false
+    additions:
+      - Option to combine Long and Short energy channel output for 3-phase installs into a single data point per phase (phase grouping).
+    endpoints_affected:
+      - 'GET /devices/{device-id} — phases property returned'
+      - 'PATCH /devices/{device-id} — phases property editing'
+      - 'GET /long-energy/{device-id}?filter[group]=phases'
+      - 'GET /short-energy/{device-id}?filter[group]=phases'
+  - version: '3.1'
+    date: '2019-05'
+    breaking: false
+    additions:
+      - Write operations for select device properties such as CT rating and switch state, gated by a per-API-key permissions model.
+    endpoints_affected: ['PATCH /devices/{device-id}']
+  - version: '3.0'
+    date: '2019-02'
+    breaking: true
+    breaking_note: >-
+      New infrastructure and new base URL (https://api-v3.wattwatchers.com.au).
+      Minor behavioural changes could break v2 integrations; the version number
+      was incremented for exactly this reason. Migration required contacting
+      Wattwatchers to migrate the API key and device data.
+    additions:
+      - 'GET /devices/{device-id} — status and metadata for a specific device'
+      - 'GET /devices/channel-categories — channel categorisation schema'
+      - 'GET /devices/models — valid device models (3M, 6M+One, ...)'
+      - 'GET /long-energy/{device-id}/first and /latest'
+      - 'GET /modbus/{device-id}, /first and /latest'
+      - 'GET /short-energy/{device-id}/first and /latest'
+    changed:
+      - Improved performance.
+      - Read device config information (CT rating, channel metadata, switch state).
+      - Improved status codes and response payloads in error cases.
+      - Clearer handling of granularity and fromTs/toTs interactions.
+      - Reduced rate limiting restrictions.
+    migration_guide: https://docs.wattwatchers.com.au/api/v3/v2-diff.html

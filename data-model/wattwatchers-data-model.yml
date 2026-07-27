@@ -1,0 +1,155 @@
+generated: '2026-07-27'
+method: derived
+source: >-
+  Derived from openapi/wattwatchers-rest-api-v3-openapi.json — components.schemas
+  ($ref links, array item shapes and id-reference fields) and the path structure
+  — enriched from https://docs.wattwatchers.com.au/api/v3/conventions.html
+  (id formats) and https://docs.wattwatchers.com.au/api/v3/phase-grouping.html
+docs: https://docs.wattwatchers.com.au/api/v3/endpoints.html
+description: >-
+  The entity-relationship graph behind the Wattwatchers REST API v3 (Mercury).
+  The domain is small and device-centric: a Device is the root aggregate, owning
+  Channels (measured circuits), Switches (controllable relays) and a Phase
+  grouping; three parallel time-series streams (Short Energy at 30-second
+  resolution, Long Energy at 5-minute resolution, Modbus register reads) hang off
+  the Device by device-id. There are no cross-device entities, no customers, no
+  sites and no accounts in the API surface — tenancy is expressed entirely by
+  which Devices are assigned to the API key.
+notation: >-
+  relationships use has_one / has_many / belongs_to with the linking field or
+  path parameter; direction is from the entity that owns the reference.
+
+id_formats:
+  device: 13 uppercase alphanumeric characters starting with B, D, E or F — e.g. D123456789012. Synonym for serial number.
+  channel: '<device-id>_C<n> — underscore, literal C, one-indexed ordinal. e.g. D123456789012_C3'
+  switch: '<device-id>_S<n> — underscore, literal S, one-indexed ordinal. e.g. D123456789012_S1'
+  case_rule: Device, Channel and Switch identifiers are always uppercase.
+
+entities:
+  - name: Device
+    root: true
+    domain: fleet
+    schemas: [DeviceDetailsCellular, DeviceDetailsWiFi, Devices]
+    key: id
+    description: >-
+      A Wattwatchers Auditor unit installed behind the meter. Two response
+      variants by comms type — cellular (4G) and WiFi — selected by oneOf.
+      Carries model, firmwareVersion, latestStatus, shortEnergyReportingInterval,
+      comms status, channels, phases and pending.
+    operations: [listDevices, getDevice, updateDevice]
+  - name: DevicePending
+    domain: fleet
+    schemas: [DevicePending]
+    description: >-
+      Configuration requested via PATCH but not yet applied by the physical
+      device. Holds the shadow copy (e.g. shortEnergyReportingInterval) until the
+      device next connects and converges. The eventual-consistency seam of the API.
+  - name: Channel
+    domain: fleet
+    schemas: [DeviceChannels]
+    key: id
+    description: >-
+      One measured circuit on a device (a CT clamp or Rogowski coil). Carries a
+      label, a CT rating and a category id. Channels are the axis of every energy
+      array — the nth element of eReal corresponds to the nth channel.
+    operations: [getDevice, updateDevice]
+  - name: Switch
+    domain: control
+    description: >-
+      A controllable relay on +3SW hardware variants (6M+3SW, 6W+3SW, 3RM+3SW).
+      Switch state is writable through the device PATCH body, which is the only
+      actuation surface in the API.
+    schemas: [DevicePatchBody]
+    operations: [getDevice, updateDevice]
+  - name: PhaseGrouping
+    domain: fleet
+    schemas: [DevicePhases]
+    description: >-
+      Phase count plus a grouping array describing how channels combine for
+      3-phase installations. Drives the filter[group]=phases collapse on energy
+      queries.
+    operations: [getDevice, updateDevice]
+  - name: ChannelCategory
+    domain: reference
+    schemas: [DeviceChannelCategories]
+    key: id
+    description: >-
+      The platform-wide categorisation schema for channels (the vocabulary a
+      channel's categoryId points at). Read-only reference data, not device-scoped.
+    operations: [getChannelCategories]
+  - name: DeviceModel
+    domain: reference
+    schemas: [DeviceModels]
+    key: code
+    description: >-
+      The catalogue of valid device models (3M, 6M+One, 6MW, 6MW-CER, ...).
+      Read-only reference data, not device-scoped.
+    operations: [getDeviceModels]
+  - name: ShortEnergyDataPoint
+    domain: telemetry
+    schemas: [ShortEnergyData, ShortEnergyDataPoint]
+    key: timestamp
+    interval: ~30 seconds (device shortEnergyReportingInterval)
+    description: >-
+      High-resolution interval record — timestamp, duration, frequency, and
+      per-channel arrays for eReal, eReactive, vRMS, iRMS.
+    operations: [getShortEnergyData, getFirstShortEnergyData, getLatestShortEnergyData]
+  - name: LongEnergyDataPoint
+    domain: telemetry
+    schemas: [LongEnergyData, LongEnergyDataPoint]
+    key: timestamp
+    interval: 5 minutes, aggregatable to 15m / 30m / hour / day / week / month
+    description: >-
+      Aggregated interval record — timestamp, duration, and per-channel arrays
+      for eReal (+ signed positive/negative), eReactive (+ signed), and min/max
+      vRMS and iRMS. The billing-grade stream most integrators poll.
+    operations: [getLongEnergyData, getFirstLongEnergyData, getLatestLongEnergyData]
+  - name: ModbusDataPoint
+    domain: telemetry
+    schemas: [ModbusDataPMC-340B, ModbusDataPointPMC-340B, ModbusDataPMC-220, ModbusDataPointPMC-220]
+    key: timestamp
+    description: >-
+      Register values a 6M+One device read from downstream Modbus equipment.
+      Schema is per attached meter model — PMC-340B (three-phase: _Ia/_Ib/_Ic,
+      _PFa/_PFb/_PFc, _Uan/_Ubn/_Ucn, four-quadrant kvarh) and PMC-220
+      (single-phase: _I, _PF, _V). The `model` field on each point records which
+      meter was attached when the data was captured.
+    operations: [getModbusData, getFirstModbusData, getLatestModbusData]
+  - name: Error
+    domain: platform
+    schemas: [Error]
+    description: 'Proprietary error envelope — {code, httpCode, message}. See errors/wattwatchers-error-codes.yml.'
+
+relationships:
+  - {from: Device, to: Channel, kind: has_many, via: channels}
+  - {from: Device, to: Switch, kind: has_many, via: switches (DevicePatchBody)}
+  - {from: Device, to: PhaseGrouping, kind: has_one, via: phases}
+  - {from: Device, to: DevicePending, kind: has_one, via: pending}
+  - {from: Device, to: DeviceModel, kind: belongs_to, via: model}
+  - {from: Channel, to: ChannelCategory, kind: belongs_to, via: categoryId}
+  - {from: Device, to: ShortEnergyDataPoint, kind: has_many, via: 'path parameter device-id'}
+  - {from: Device, to: LongEnergyDataPoint, kind: has_many, via: 'path parameter device-id'}
+  - {from: Device, to: ModbusDataPoint, kind: has_many, via: 'path parameter device-id'}
+  - {from: ShortEnergyDataPoint, to: Channel, kind: has_many, via: 'positional array index (eReal[n] -> channels[n])'}
+  - {from: LongEnergyDataPoint, to: Channel, kind: has_many, via: 'positional array index (eReal[n] -> channels[n])'}
+  - {from: PhaseGrouping, to: Channel, kind: has_many, via: grouping}
+
+modelling_notes:
+  positional_channel_binding: >-
+    The single most important structural fact: energy data points do NOT name
+    their channels. Every measurement is an ARRAY whose ordinal position maps to
+    the device's channel order from GET /devices/{device-id}. A client must fetch
+    the device to interpret any energy payload, and must re-fetch if channel
+    configuration changes.
+  no_customer_entity: >-
+    There is no Customer, Site, Account, Tariff or Bill entity. The API models
+    hardware and telemetry only; commercial and site context lives outside it.
+  tenancy: >-
+    Multi-tenancy is enforced by the device-to-API-key assignment, not by any
+    entity in the model. GET /devices returns exactly the devices your key owns.
+  energy_field_casing: >-
+    Energy attribute names (vRMS, iRMSMin, eReal) intentionally break the API's
+    own strict-camelCase rule for v2 backwards compatibility. Do not normalise.
+  units: >-
+    Raw values are device-native; convert[energy]=kWh|kW normalises. Modbus
+    integer registers are scaled (0.01kWh, 0.01kVAh, 0.01kvarh).

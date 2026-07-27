@@ -1,0 +1,31 @@
+generated: '2026-07-27'
+method: generated
+source: >-
+  Packaged Agent Skills generated from the Wattwatchers REST API v3 (Mercury)
+  OpenAPI contract. Every step is grounded in an operationId verified verbatim
+  in openapi/wattwatchers-rest-api-v3-openapi.json; cross-cutting rules cite
+  conventions/wattwatchers-conventions.yml,
+  errors/wattwatchers-error-codes.yml,
+  rate-limits/wattwatchers-rate-limits.yml and
+  authentication/wattwatchers-authentication.yml. Wattwatchers publishes no
+  AGENTS.md or skill files of its own (searched the docs site and the
+  github.com/wattwatchers organization).
+description: >-
+  Three skills covering the three things this API actually does: read interval
+  energy for one device, actuate a physical relay, and keep an entire fleet in
+  sync without losing data to IoT comms outages.
+skills:
+  - file: wattwatchers-pull-interval-energy.md
+    name: Pull interval energy data for a device
+    api: openapi/wattwatchers-rest-api-v3-openapi.json
+    operations: [listDevices, getDevice, getFirstLongEnergyData, getLatestLongEnergyData, getLongEnergyData]
+  - file: wattwatchers-switch-a-circuit.md
+    name: Switch a circuit on or off
+    api: openapi/wattwatchers-rest-api-v3-openapi.json
+    operations: [getDevice, updateDevice]
+    consequence: physical
+    human_in_the_loop: required
+  - file: wattwatchers-sync-fleet-data.md
+    name: Continuously sync a fleet's energy data
+    api: openapi/wattwatchers-rest-api-v3-openapi.json
+    operations: [listDevices, getDevice, getLatestLongEnergyData, getLongEnergyData]

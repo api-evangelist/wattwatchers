@@ -1,0 +1,120 @@
+generated: '2026-07-27'
+method: searched
+source: >-
+  https://docs.wattwatchers.com.au/api/roadmap.html,
+  https://docs.wattwatchers.com.au/api/v3/release-notes.html,
+  https://docs.wattwatchers.com.au/api/v3/v2-diff.html,
+  https://docs.wattwatchers.com.au/api/index.html; status-page and
+  deprecation-policy probes recorded below; ownership change verified at
+  https://epx.tech/
+description: >-
+  Versioning, deprecation, support and operational-transparency posture for the
+  Wattwatchers REST API v3 (Mercury). Wattwatchers publishes a dated release-note
+  history and an explicit (if thin) roadmap page, and states a clear major-version
+  policy. It publishes NO status page, NO SLA and NO formal deprecation policy,
+  and supports no RFC 8594 Sunset/Deprecation headers.
+versioning:
+  scheme: uri-host major version
+  mechanism: The major version is encoded in the API hostname (api-v3.wattwatchers.com.au).
+  current: 3.6.0
+  current_released: '2024-04-26'
+  policy: >-
+    "The API URL version number will only be incremented if changes in the API
+    version are backwards incompatible with previous versions. Thus v3
+    introduces a new base URL, but v3.1 will not." Minor and patch releases are
+    additive and ship on the same host without client action.
+  docs: https://docs.wattwatchers.com.au/api/roadmap.html
+  release_notes: https://docs.wattwatchers.com.au/api/v3/release-notes.html
+  detail: changelog/wattwatchers-changelog.yml
+versions:
+  - version: v3
+    name: Mercury
+    status: current
+    base_url: https://api-v3.wattwatchers.com.au
+    released: '2019-02'
+    docs: https://docs.wattwatchers.com.au/api/v3/index.html
+  - version: v2
+    name: Jove
+    status: legacy
+    docs: http://ww-es-data.s3.amazonaws.com/docs/api/restful-apis.html
+    migration_guide: https://docs.wattwatchers.com.au/api/v3/v2-diff.html
+    note: >-
+      Still linked from the API index as "Version 2 (Jove)". No sunset date is
+      published. The v3 release notes say migration requires contacting
+      Wattwatchers so they can migrate the API key and device data — migration
+      is human-mediated, not self-serve.
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  notes: >-
+    No deprecation policy, no notice period, no sunset dates and no RFC 8594
+    Sunset/Deprecation response headers are documented anywhere in the developer
+    surface. The v2 API remains linked with no announced end-of-life. Because no
+    deprecation policy is published, no `Deprecation` pointer is wired.
+deprecated_operations: []
+deprecated_operations_note: >-
+  No operation, parameter or schema in
+  openapi/wattwatchers-rest-api-v3-openapi.json carries deprecated: true.
+roadmap:
+  url: https://docs.wattwatchers.com.au/api/roadmap.html
+  published: true
+  disclaimer: '"The following roadmap outline is indicative only. Delivery dates and version features may change without notice."'
+  stale: true
+  stale_note: >-
+    The roadmap page's only forward entry is v3.6 with "ETA Aug 2020" and
+    "Details coming soon" — provision of communications and data subscription
+    information. v3.6.0 in fact shipped 2024-04-26 with 6MW/6MW-CER product
+    support instead. The page is real and published but has not been maintained.
+status_page:
+  url: null
+  published: false
+  probes:
+    - {url: 'https://status.wattwatchers.com.au/', status: '000', result: DNS does not resolve}
+    - {url: 'https://wattwatchers.statuspage.io/', status: 200, result: 91-byte redirect stub to statuspage.io — an unclaimed subdomain, not a real status page}
+  note: >-
+    No status page exists. The polling guide acknowledges maintenance windows
+    and unexpected server outages that delay data availability, but there is no
+    public incident/uptime surface. No `StatusPage` pointer is wired.
+sla:
+  url: null
+  uptime_target: null
+  published: false
+  note: >-
+    No SLA or uptime commitment is published. Availability expectations are set
+    narratively in the polling guide ("we work very hard to ensure that our
+    systems work flawlessly, 24/7") rather than contractually.
+support:
+  knowledge_base: https://service.wattwatchers.com.au/
+  knowledge_base_effective: https://support.epx.tech/wattwatchers/
+  ticketing: https://service.wattwatchers.com.au/kb-tickets/new
+  note: >-
+    service.wattwatchers.com.au now issues a 301 to support.epx.tech/wattwatchers/
+    following the EPX acquisition. Rate-limit increases and API key issuance are
+    handled by a named Wattwatchers account manager, not by a self-serve console.
+  channels: [knowledge base, support ticket, account manager, technical partners email list]
+change_communication:
+  release_notes: https://docs.wattwatchers.com.au/api/v3/release-notes.html
+  advance_notice_channel: >-
+    Technical partners email list — named in the rate-limits FAQ as the channel
+    for advance notice of auto-scaling changes. Subscription is arranged through
+    a Wattwatchers account manager.
+ownership:
+  status: acquired
+  parent: EPX Limited (ASX:EPX, formerly EP&T Global)
+  evidence:
+    - {source: 'https://epx.tech/', note: 'EPX website states it acquired Wattwatchers - Digital Energy to complement its EDGE building-optimisation platform.'}
+    - {source: 'https://service.wattwatchers.com.au/', note: '301 redirect to https://support.epx.tech/wattwatchers/ — the Wattwatchers knowledge base is now operated by EPX Limited (offices listed: North Sydney, London, Dubai).'}
+  note: >-
+    Wattwatchers entered voluntary administration in October 2025 and was
+    acquired by EPX Limited via a deed of company arrangement. Recorded here
+    because it is a material lifecycle signal for anyone integrating: the
+    developer documentation, the API host and the OpenAPI contract all remain
+    live and unchanged at the time of this probe, but support has already
+    migrated to EPX infrastructure.
+continuity_probes:
+  - {url: 'https://api-v3.wattwatchers.com.au/', status: 200, date: '2026-07-27', note: 'anonymous health response returns status ok'}
+  - {url: 'https://docs.wattwatchers.com.au/', status: 200, date: '2026-07-27'}
+  - {url: 'https://docs.wattwatchers.com.au/api/v3/openapi/public_rest_api_3_6_0.json', status: 200, date: '2026-07-27'}

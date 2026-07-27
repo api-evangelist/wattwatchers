@@ -1,0 +1,96 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+provider: Wattwatchers
+providerId: wattwatchers
+generated: '2026-07-27'
+method: searched
+created: '2026-07-27'
+modified: '2026-07-27'
+source: >-
+  https://docs.wattwatchers.com.au/api/v3/rate-limits.html and
+  https://docs.wattwatchers.com.au/api/v3/errors.html
+docs: https://docs.wattwatchers.com.au/api/v3/rate-limits.html
+tags:
+  - Rate Limiting
+  - Energy Data
+  - Smart Metering
+description: >-
+  Wattwatchers REST API v3 (Mercury) rate limits are enforced per API key across
+  two independent dimensions — Transactions Per Second (TPS) and Transactions Per
+  Day (TPD) — and both AUTO-SCALE with the number of devices assigned to the key
+  rather than being fixed per plan. The published limits are illustrative; the
+  authoritative value for any key is always the value in the response headers,
+  which are returned on every successful request. Limits can be raised
+  commercially via a Wattwatchers account manager, and increases take effect
+  immediately without resetting the running count.
+scope: api-key
+headers:
+  tpdLimit: X-RateLimit-TpdLimit
+  tpdRemaining: X-RateLimit-TpdRemaining
+  tpdReset: X-RateLimit-TpdReset
+  tpsLimit: X-RateLimit-TpsLimit
+  tpsRemaining: X-RateLimit-TpsRemaining
+  tpsReset: X-RateLimit-TpsReset
+  retryAfter: Retry-After
+headerNotes:
+  X-RateLimit-TpdReset: Integer — seconds remaining until the TPD count resets.
+  X-RateLimit-TpsReset: Float — seconds.milliseconds remaining until the TPS count resets.
+  Retry-After: Integer seconds, returned only on a 429, per the RFC specification for the header.
+  legacy: >-
+    The errors reference also documents the shorter X-RateLimit-Limit /
+    X-RateLimit-Remaining / X-RateLimit-Reset trio on 429 examples; the
+    rate-limits reference documents the Tpd/Tps-qualified names on 200
+    responses. Handle both.
+responseCodes:
+  throttled: 429
+errorCodes:
+  - code: TOO_MANY_REQUESTS_TPS
+    meaning: The per-second limit was exceeded.
+  - code: TOO_MANY_REQUESTS_TPD
+    meaning: The per-day limit was exceeded.
+limits:
+  - name: Transactions Per Second (TPS)
+    scope: api-key
+    metric: requests_per_second
+    limit: 5
+    timeFrame: second
+    autoScaling: true
+    illustrative: true
+    note: >-
+      5/sec is the documented illustrative example. The real default is derived
+      as (number of devices on the key / 3) — a 100-device fleet yields TPS = 33.
+      Resets every second.
+  - name: Transactions Per Day (TPD)
+    scope: api-key
+    metric: requests_per_day
+    limit: 10000
+    timeFrame: day
+    autoScaling: true
+    illustrative: true
+    note: >-
+      10,000/day is the documented illustrative example. The real default is
+      derived as devices x (1 call per 5 min for Long Energy + 1 call per 30 sec
+      for Short Energy + 1 call per 5 min for device status) + a buffer — i.e.
+      devices x (288 + 2880 + 288); a 100-device fleet yields 345,600/day plus
+      buffer. Resets at 12AM UTC.
+autoScaling:
+  enabled: true
+  tpd_formula: devices x (288 + 2880 + 288) + buffer
+  tps_formula: devices / 3
+  worked_example:
+    devices: 100
+    tpd: 345600
+    tps: 33
+  change_notice: >-
+    Wattwatchers state the auto-scaling defaults may change in future, announced
+    in advance via their technical partners email list.
+increases:
+  available: true
+  mechanism: Commercial arrangement via a Wattwatchers account manager.
+  effective: Immediately on grant; the running count against the limit is not reset.
+concurrency:
+  documented_rule: none
+  guidance: >-
+    Estimate safe concurrency from TPS x average response time — e.g. TPS 33 at
+    100ms average response supports roughly 3 concurrent threads polling 10x per
+    second. Throttled responses must be handled as normal operation.

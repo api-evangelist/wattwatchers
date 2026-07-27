@@ -1,0 +1,207 @@
+generated: '2026-07-27'
+method: searched
+source: >-
+  https://docs.wattwatchers.com.au/api/v3/conventions.html,
+  https://docs.wattwatchers.com.au/api/v3/errors.html,
+  https://docs.wattwatchers.com.au/api/v3/rate-limits.html,
+  https://docs.wattwatchers.com.au/api/v3/auth.html,
+  https://docs.wattwatchers.com.au/api/tips/polling-data.html, and derived from
+  openapi/wattwatchers-rest-api-v3-openapi.json (components.parameters).
+docs: https://docs.wattwatchers.com.au/api/v3/conventions.html
+description: >-
+  Cross-cutting request/response semantics for the Wattwatchers REST API v3
+  (Mercury) — the runtime rules that apply to every operation and that the
+  OpenAPI contract does not fully express. Wattwatchers publishes an explicit
+  conventions page, which is unusual for a hardware vendor; this artifact
+  captures it alongside the auth, error, rate-limit and polling guidance.
+base_url: https://api-v3.wattwatchers.com.au
+api_style: REST over HTTPS, JSON request and response bodies
+
+authentication:
+  scheme: HTTP Bearer token (Wattwatchers-issued API key)
+  header: 'Authorization: Bearer key_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+  key_prefix: key_
+  required_on: All endpoints. Every request MUST carry the header.
+  self_serve: false
+  docs: https://docs.wattwatchers.com.au/api/v3/auth.html
+  detail: authentication/wattwatchers-authentication.yml
+
+idempotency:
+  supported: false
+  mechanism: null
+  note: >-
+    Wattwatchers documents NO idempotency contract — there is no
+    Idempotency-Key header, no client-supplied request key, and no replay
+    semantics anywhere in the docs or the OpenAPI. The API is nearly all-GET
+    (13 of 14 operations are safe reads and therefore inherently idempotent);
+    the single write, PATCH /devices/{device-id} (updateDevice), is a
+    partial-update PATCH whose repeated application converges on the same state
+    but carries no dedupe guarantee from the vendor. No `Idempotency` pointer is
+    emitted for this provider because no idempotency contract is published.
+
+http_methods:
+  supported: [GET, PATCH]
+  put_supported: false
+  put_note: >-
+    PUT is deliberately NOT supported even where it would be applicable —
+    Wattwatchers state the same result is achieved by PATCH with all values
+    supplied, and they only support PATCH to keep the API simple.
+  post_on_existing: >-
+    Where applicable a POST against an existing resource behaves as a PATCH and
+    does not raise an HTTP error for incorrect method use.
+  read_only_properties: >-
+    Read-only properties supplied in a POST/PATCH body are silently IGNORED
+    rather than rejected. This deliberately enables the
+    "retrieve > modify > PATCH" round-trip without pruning the object first —
+    e.g. sending a changed device.comms.imsi neither updates it nor errors.
+
+pagination:
+  style: none
+  note: >-
+    There is no pagination surface. GET /devices returns an UNPAGINATED list of
+    every device authorised for the API key (explicitly stated in the v3.0
+    release notes). Energy and Modbus collections are bounded by a TIME WINDOW
+    instead of by page cursors — fromTs/toTs, with a hard maximum period per
+    granularity enforced as a 422.
+  windowing:
+    request_params:
+      fromTs: Unix timestamp (seconds). Returns data with timestamp >= fromTs.
+      toTs: Unix timestamp (seconds). Returns data with timestamp < toTs (exclusive upper bound).
+    defaults:
+      short_energy: fromTs defaults to now minus 1 hour; toTs defaults to fromTs + 1 hour.
+      long_energy: fromTs defaults to the device's first Long Energy entry; toTs defaults to fromTs + 7 days.
+      modbus: toTs defaults to fromTs + 7 days.
+    max_period:
+      short_energy: 12 hours (422 beyond)
+      long_energy: 7 days at default granularity (422 beyond)
+    convenience_endpoints: >-
+      /first and /latest variants exist for Short Energy, Long Energy and Modbus
+      so a caller can find the bounds of a device's data without scanning.
+
+field_selection:
+  supported: true
+  mechanism: fields[energy] query parameter
+  values:
+    "+pf": Append calculated power factor to each returned energy data object.
+    timestamp: Return ONLY the timestamp attribute of the data object.
+  mutually_exclusive: true
+  note: >-
+    +pf and timestamp cannot be combined. fields[energy]=+pf also cannot be
+    combined with filter[group]=phases.
+
+filtering:
+  supported: true
+  mechanism: filter[group] query parameter
+  values:
+    phases: >-
+      Collapse energy data entries to reflect the device's phases.grouping
+      configuration — the 3-phase combining behaviour documented at
+      https://docs.wattwatchers.com.au/api/v3/phase-grouping.html
+
+unit_conversion:
+  supported: true
+  mechanism: convert[energy] query parameter
+  values: [kWh, kW]
+  note: >-
+    Raw energy values are returned in device-native units by default; convert[]
+    normalises to kilowatt hours (energy) or kilowatts (power). See
+    https://docs.wattwatchers.com.au/api/tips/units-conversion.html
+
+aggregation:
+  supported: true
+  mechanism: granularity query parameter (Long Energy only)
+  values: ['5m', '15m', '30m', hour, day, week, month]
+  timezone_rule: >-
+    The `timezone` parameter is REQUIRED when granularity is hour or coarser,
+    and is ignored for finer granularities.
+
+naming:
+  case: strict camelCase for all attribute names
+  uppercase_rule: 'Uppercase source names follow strict camelCase: SIM ID > simId, IMSI > imsi.'
+  exception: >-
+    ENERGY DATA ONLY retains v2-era capitalisation for backwards compatibility —
+    vRMS, iRMSMin, vRMSMax, iRMSMax, eReal, eReactive etc. do NOT conform to
+    strict camelCase and must not be normalised.
+  ids:
+    device_id: >-
+      Synonym for serial number. Always uppercase, no spaces or punctuation,
+      13 characters, starting with B, D, E or F — e.g. D123456789012.
+    sub_entity: >-
+      Underscore + a single type character + a ONE-indexed ordinal —
+      D123456789012_C3 (channel 3), D123456789012_S1 (switch 1). One-indexed to
+      match how people talk about channels; the underscore makes the id usable
+      as a property name in JavaScript/Python.
+    case: Device, Channel and Switch ids are always uppercase.
+
+payload_rules:
+  content_type: application/json on both request and response; PATCH rejects anything else with 400.
+  additive_change_policy: >-
+    New fields are added to payloads over time. Clients MUST not break when an
+    unknown field appears.
+  empty_values: >-
+    A property with no value is OMITTED rather than returned as null or {}.
+    Exceptions exist where null itself is meaningful ("not set") or where an
+    empty collection carries semantics. Callers must code defensively and check
+    for attribute existence before access.
+  empty_vs_no_data: >-
+    An empty energy list `[]` with HTTP 200 means "the device has data, but none
+    in this period". HTTP 204 means "the device has no data of this class at
+    all". These are different states.
+
+pending_values:
+  supported: true
+  mechanism: '`pending` object on device details'
+  description: >-
+    Configuration writes are eventually consistent against physical hardware.
+    A PATCH that changes device configuration surfaces the requested value under
+    device.pending until the device next connects and converges, at which point
+    the value moves to the live property. Callers must read `pending` to
+    distinguish "requested" from "applied".
+
+versioning:
+  scheme: uri-host major version
+  current: 3.6.0
+  base_url_form: https://api-v{major}.wattwatchers.com.au
+  policy: >-
+    The URL version number is incremented ONLY for backwards-incompatible
+    changes. v3 introduced a new base URL; v3.1 did not. Minor/patch releases
+    are additive and ship on the same host.
+  detail: lifecycle/wattwatchers-lifecycle.yml
+
+error_envelope:
+  media_type: application/json
+  shape: '{code, httpCode, message}'
+  multi_error_shape: '{errors: [{code, httpCode, message}, ...]}'
+  multi_error_applies_to: [updateDevice]
+  rfc9457: false
+  detail: errors/wattwatchers-error-codes.yml
+
+rate_limiting:
+  signalled: true
+  headers: [X-RateLimit-TpdLimit, X-RateLimit-TpdRemaining, X-RateLimit-TpdReset, X-RateLimit-TpsLimit, X-RateLimit-TpsRemaining, X-RateLimit-TpsReset, Retry-After]
+  throttled_status: 429
+  detail: rate-limits/wattwatchers-rate-limits.yml
+
+request_tracing:
+  request_id_header: null
+  note: No request-id / correlation-id header is documented or returned.
+
+events:
+  webhooks: false
+  streaming: false
+  note: >-
+    There is no push surface of any kind — no webhooks, no MQTT, no WebSocket,
+    no server-sent events. The polling guide states verbatim that Wattwatchers
+    is "exploring options to enable a stream-based 'push' API" and invites
+    customers into early trials. Integrators poll.
+  polling_guidance: https://docs.wattwatchers.com.au/api/tips/polling-data.html
+
+data_freshness:
+  model: eventually-consistent IoT telemetry
+  caveat: >-
+    Devices buffer locally during comms outages and back-fill on reconnect.
+    Catch-up can take up to ~6 hours after an extended outage. A naive
+    "poll the last X minutes" job WILL silently miss data. Wattwatchers
+    recommend maintaining per-device "last Long Energy received" state and
+    reconciling forward from it rather than polling a rolling window.
+  reference: https://docs.wattwatchers.com.au/api/tips/device-catch-up.html

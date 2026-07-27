@@ -1,0 +1,176 @@
+generated: '2026-07-27'
+method: generated
+source: openapi/wattwatchers-rest-api-v3-openapi.json
+description: Recommended x-agentic-access execution contracts, classified heuristically from the OpenAPI.
+  A governance starting point for exposing this API to AI agents — review and bind audience per deployment.
+  See research/curity/agentic-governance/.
+summary:
+  operations: 14
+  by_action_class:
+    connected: 13
+    acting: 1
+  by_consequence:
+    read: 13
+    physical: 1
+  human_in_the_loop_required: 1
+  curated_operations: 1
+operations:
+- path: /devices
+  method: get
+  operationId: listDevices
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /devices/{device-id}
+  method: get
+  operationId: getDevice
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /devices/{device-id}
+  method: patch
+  operationId: updateDevice
+  curated: true
+  curation_note: 'Raised from the heuristic default (consequence write / human-in-the-loop conditional)
+    to consequence PHYSICAL with human-in-the-loop REQUIRED. This single operation carries the API''s
+    entire actuation surface: the `switches` array in the PATCH body opens or closes a real relay on +3SW
+    hardware (6M+3SW, 6W+3SW, 3RM+3SW), energising or de-energising a live electrical circuit. Wattwatchers
+    document a dedicated switching guide for it. The keyword heuristic could not see this because the
+    path and method carry no control/dispatch token — the consequence lives in the request body. Evidence:
+    https://docs.wattwatchers.com.au/api/tips/switching-example.html and openapi #/components/schemas/DevicePatchBody.switches.'
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: required
+      purpose-required: true
+    escalation:
+      human-in-the-loop: required
+      triggers:
+      - switch-state-change
+      - abnormal
+      - high-value
+    audit: required
+- path: /devices/channel-categories
+  method: get
+  operationId: getChannelCategories
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /devices/models
+  method: get
+  operationId: getDeviceModels
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /short-energy/{device-id}
+  method: get
+  operationId: getShortEnergyData
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /short-energy/{device-id}/first
+  method: get
+  operationId: getFirstShortEnergyData
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /short-energy/{device-id}/latest
+  method: get
+  operationId: getLatestShortEnergyData
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /long-energy/{device-id}
+  method: get
+  operationId: getLongEnergyData
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /long-energy/{device-id}/first
+  method: get
+  operationId: getFirstLongEnergyData
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /long-energy/{device-id}/latest
+  method: get
+  operationId: getLatestLongEnergyData
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /modbus/{device-id}
+  method: get
+  operationId: getModbusData
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /modbus/{device-id}/first
+  method: get
+  operationId: getFirstModbusData
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /modbus/{device-id}/latest
+  method: get
+  operationId: getLatestModbusData
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+curation: updateDevice raised to consequence=physical / human-in-the-loop=required after review; see the
+  curation_note on that operation.

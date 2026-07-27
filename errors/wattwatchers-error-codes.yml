@@ -1,0 +1,194 @@
+generated: '2026-07-27'
+method: searched
+source: >-
+  https://docs.wattwatchers.com.au/api/v3/errors.html (the published error
+  reference), cross-checked against
+  openapi/wattwatchers-rest-api-v3-openapi.json (components.schemas.Error and
+  the 4xx responses on getDevice, getShortEnergyData, getLongEnergyData,
+  getModbusData, getFirstModbusData, getLatestModbusData).
+docs: https://docs.wattwatchers.com.au/api/v3/errors.html
+format: proprietary
+format_note: >-
+  NOT RFC 9457. Wattwatchers uses a proprietary JSON error envelope inherited
+  from the v2 API — a flat object with `code` (string enum), `httpCode`
+  (integer, mirrors the HTTP status) and `message` (human-readable detail).
+  Content-Type is application/json, not application/problem+json. There is no
+  `type` URI, no `instance`, and no problem-type registry.
+envelope:
+  media_type: application/json
+  schema: openapi/wattwatchers-rest-api-v3-openapi.json#/components/schemas/Error
+  fields:
+    code: string — machine-readable error code (SCREAMING_SNAKE_CASE)
+    httpCode: integer — the HTTP status, repeated in the body
+    message: string — human-readable detail
+  example: |
+    {
+      "code": "UNAUTHORIZED",
+      "httpCode": 401,
+      "message": "You must provide a valid Authorization header value to access this endpoint."
+    }
+multi_error_envelope:
+  supported: true
+  applies_to: ['PATCH /devices/{device-id}']
+  operations: [updateDevice]
+  field: errors
+  description: >-
+    PATCH endpoints can return multiple validation or upstream processing errors
+    at once. The response body is {"errors": [ ...standard error objects... ]}.
+    The array is returned regardless of count (a single error still arrives as a
+    one-element array). The HTTP status code returned is the LOWEST status code
+    found among the errors.
+  example: |
+    {
+      "errors": [
+        {"code": "BAD_REQUEST", "httpCode": 400, "message": "Detail about the error 1"},
+        {"code": "BAD_REQUEST", "httpCode": 400, "message": "Detail about the error 2"}
+      ]
+    }
+problems:
+  - status: 204
+    code: null
+    title: No Content
+    detail: >-
+      Not technically an error (a 2xx), but documented in the error reference
+      because it looks like one. Returned when the device has never recorded the
+      requested class of data (Long Energy, Short Energy or Modbus) — e.g. the
+      device has not yet been installed or initialised. Distinct from a 200 with
+      an empty array `[]`, which means "the device HAS data, but none in the
+      requested fromTs/toTs window".
+    remediation: Confirm the device is commissioned and reporting; widen the time window.
+    source_operations:
+      - getShortEnergyData
+      - getFirstShortEnergyData
+      - getLatestShortEnergyData
+      - getLongEnergyData
+      - getFirstLongEnergyData
+      - getLatestLongEnergyData
+      - getModbusData
+      - getFirstModbusData
+      - getLatestModbusData
+  - status: 400
+    code: BAD_REQUEST
+    title: Bad Request
+    detail: >-
+      The request or one of its parameters is malformed or in the wrong format
+      (e.g. a string supplied where an integer was expected), the Content-Type
+      header is not application/json on a body-bearing request, or a required
+      query parameter was omitted.
+    remediation: >-
+      Read the `message` field — it names the offending parameter or header.
+      Send Content-Type application/json on PATCH; supply required fromTs.
+    examples:
+      - "The Content-Type header must be 'application/json'."
+      - "Serial numbers must be 13 characters in length, starting with a B, D, E, F."
+      - "You must specify the fromTs query string value."
+    source_operations: [getLongEnergyData, updateDevice]
+  - status: 401
+    code: UNAUTHORIZED
+    title: Unauthorized
+    detail: >-
+      The provided credentials are not valid or have been disabled, or no
+      Authorization header (or no bearer token within it) was supplied.
+    remediation: >-
+      Send `Authorization: Bearer key_...`. Keys are issued by Wattwatchers and
+      are never self-serve; see authentication/wattwatchers-authentication.yml.
+    examples:
+      - "You must provide a valid Authorization header value to access this endpoint."
+    source_operations: [getDevice]
+  - status: 403
+    code: FORBIDDEN
+    title: Forbidden
+    detail: >-
+      The credentials are valid but are not permitted to access the requested
+      resource — the device is not assigned to this API key, or the key lacks
+      the write/metadata permission level for the operation.
+    remediation: >-
+      Ask Wattwatchers to assign the device to the key or raise the key's
+      permission level. Permissions are per-key device assignments, not scopes.
+    examples:
+      - "You don't have permission to access device D123456789012."
+    source_operations: [getDevice]
+    note: >-
+      The published example for this code carries httpCode 401 in the body while
+      the HTTP status is 403 — a documented inconsistency in the vendor's own
+      error reference. Do not rely on body httpCode matching the HTTP status.
+  - status: 403
+    code: NOT_PERMITTED
+    title: Not Permitted
+    detail: Returned when the API key itself is unrecognised.
+    remediation: Verify the key value; contact Wattwatchers for reissue.
+    examples:
+      - "You are not permitted to access this endpoint with the provided token."
+  - status: 404
+    code: NOT_FOUND
+    title: Not Found
+    detail: >-
+      The requested resource does not exist OR the provided apiKey does not
+      grant access to it. The two cases are deliberately not distinguished —
+      404 doubles as an authorization-masking response.
+    remediation: Verify the device ID; confirm the device is assigned to your key.
+    examples:
+      - "D123456789012 could not be found."
+    source_operations: [getDevice]
+  - status: 422
+    code: UNPROCESSABLE_ENTITY
+    title: Unprocessable Entity
+    detail: >-
+      The request is well formed and correctly typed, but semantically invalid
+      or unfulfillable — most commonly an invalid timestamp, or a fromTs/toTs
+      period that exceeds the maximum allowed for the requested granularity
+      (12 hours for Short Energy, 7 days for Long Energy / Modbus at the default
+      granularity).
+    remediation: Shorten the requested window or coarsen the granularity.
+    examples:
+      - "The provided {{fromTs|toTs}} ({{timestamp}}) value was invalid."
+      - "The requested time period is greater than 7 days."
+    source_operations:
+      - getShortEnergyData
+      - getLongEnergyData
+      - getModbusData
+      - getFirstModbusData
+      - getLatestModbusData
+  - status: 429
+    code: TOO_MANY_REQUESTS_TPS
+    title: Too Many Requests — per-second limit
+    detail: The transactions-per-second limit for the API key was exceeded.
+    remediation: >-
+      Honour the `Retry-After` header (integer seconds) and back off. Read
+      X-RateLimit-TpsLimit / TpsRemaining / TpsReset. See
+      rate-limits/wattwatchers-rate-limits.yml.
+    examples:
+      - "You have exceeded the request limit of 5 per 1 second for your API key. Please review the response headers for further details."
+  - status: 429
+    code: TOO_MANY_REQUESTS_TPD
+    title: Too Many Requests — per-day limit
+    detail: The transactions-per-day limit for the API key was exceeded.
+    remediation: >-
+      Honour `Retry-After`. TPD resets at 12AM UTC. Read X-RateLimit-TpdLimit /
+      TpdRemaining / TpdReset.
+    examples:
+      - "You have exceeded the request limit of 10000 per 1 day for for your API key. Please review the response headers for further details."
+  - status: 500
+    code: INTERNAL_SERVER_ERROR
+    title: Internal Server Error
+    detail: Server-side failure processing the request.
+    remediation: >-
+      Retry with backoff. Wattwatchers state their operations team is alerted
+      automatically on any server error.
+unbranded_throttling:
+  description: >-
+    A 429 with NO X-RateLimit-* headers and NO Retry-After, whose body is not in
+    the standard error envelope, indicates platform-wide edge throttling in
+    response to aggregate traffic — not the caller's own API-key limits.
+  remediation: Back off; the vendor is alerted and working the incident.
+error_semantics:
+  status_400_vs_422: >-
+    400 = malformed / wrong type. 422 = well-formed and correctly typed but
+    semantically invalid or unfulfillable (e.g. period too long for the
+    granularity).
+  status_404_masking: >-
+    404 is returned both for a genuinely unknown device and for a device the key
+    is not authorised to see; callers cannot distinguish the two.
+  empty_vs_no_data: >-
+    204 = device has no data of that class at all. 200 with `[]` = device has
+    data but none in the requested window. Treat these differently.

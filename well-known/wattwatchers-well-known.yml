@@ -1,0 +1,43 @@
+generated: '2026-07-27'
+method: searched
+source: live HTTP probes of every apis.yml host and OpenAPI servers[] host
+description: >-
+  Results of probing the /.well-known/ discovery surface for every Wattwatchers
+  host: the API host from OpenAPI servers[] (api-v3.wattwatchers.com.au), the
+  documentation host (docs.wattwatchers.com.au), and the corporate host
+  (wattwatchers.com.au). NOTHING is served. The API host and docs host return a
+  clean 404 for every probed path. The corporate host answers HTTP 202 with a
+  SiteGround captcha interstitial (/.well-known/sgcaptcha/) for EVERY path
+  including nonsense paths, so its 202 responses are NOT evidence that any
+  document exists — a control probe of https://wattwatchers.com.au/zzz-nonsense-
+  path-12345/ also returned 202. No security.txt, no OIDC discovery, no OAuth
+  authorization-server metadata, no api-catalog, no ai-plugin. Because no
+  document was found, no `WellKnown` or `SecurityTxt` pointer is wired in
+  apis.yml — this file records the negative result as evidence.
+result: none-found
+hosts:
+  - host: https://api-v3.wattwatchers.com.au
+    role: api (OpenAPI servers[0])
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/openid-configuration, status: 404}
+      - {path: /.well-known/oauth-authorization-server, status: 404}
+      - {path: /.well-known/oauth-protected-resource, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}
+      - {path: /.well-known/ai-plugin.json, status: 404}
+  - host: https://docs.wattwatchers.com.au
+    role: documentation
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}
+      - {path: /llms.txt, status: 404}
+      - {path: /llms-full.txt, status: 404}
+  - host: https://wattwatchers.com.au
+    role: corporate website
+    note: >-
+      Every path returns HTTP 202 with a SiteGround captcha interstitial. Not
+      readable by any non-browser client; the 202 is not a document.
+    documents:
+      - {path: /.well-known/security.txt, status: 202, verdict: captcha-interstitial-not-a-document}
+      - {path: /security.txt, status: 202, verdict: captcha-interstitial-not-a-document}
+      - {path: /zzz-nonsense-path-12345/, status: 202, verdict: control probe — proves 202 is blanket}

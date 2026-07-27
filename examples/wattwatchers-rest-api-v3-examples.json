@@ -1,0 +1,1229 @@
+{
+  "generated": "2026-07-27",
+  "method": "derived",
+  "source": "openapi/wattwatchers-rest-api-v3-openapi.json",
+  "description": "Request and response examples extracted verbatim from the published Wattwatchers OpenAPI 3.0.0 contract (version 3.6.0). Every value below is the vendor's own published example - nothing is invented. Extracted so the examples are addressable outside the spec; the spec remains the source of truth.",
+  "base_url": "https://api-v3.wattwatchers.com.au",
+  "examples": [
+    {
+      "operationId": "listDevices",
+      "method": "GET",
+      "path": "/devices",
+      "tags": [
+        "Devices"
+      ],
+      "response_examples": {
+        "200": [
+          "D123456789012",
+          "D234567890123",
+          "D345678901234"
+        ]
+      }
+    },
+    {
+      "operationId": "getDevice",
+      "method": "GET",
+      "path": "/devices/{device-id}",
+      "tags": [
+        "Devices"
+      ],
+      "parameter_examples": {
+        "device-id": "D123456789012"
+      },
+      "response_examples": {
+        "200": {
+          "Cellular device": {
+            "id": "D123456789012",
+            "label": "Cellular device",
+            "timezone": "Australia/Sydney",
+            "model": "6M4+3SW",
+            "firmwareVersion": "49.1.0",
+            "latestStatus": 1550632148,
+            "shortEnergyReportingInterval": 30,
+            "pending": {
+              "shortEnergyReportingInterval": 5
+            },
+            "comms": {
+              "type": "cellular",
+              "mode": "4G",
+              "lastHeardAt": 1691035991,
+              "signalQualityDbm": -57,
+              "simId": "simId",
+              "apn": "apn",
+              "imsi": "imsi",
+              "networkId": "networkId"
+            },
+            "channels": [
+              {
+                "id": "D123456789012_C1",
+                "ctRating": 60,
+                "label": "Grid connection",
+                "categoryId": 1,
+                "categoryLabel": "Grid connect"
+              },
+              {
+                "id": "D123456789012_C2",
+                "ctRating": 60,
+                "label": "Grid connection",
+                "categoryId": 1,
+                "categoryLabel": "Grid connect"
+              },
+              {
+                "id": "D123456789012_C3",
+                "ctRating": 60,
+                "label": "Grid connection",
+                "categoryId": 1,
+                "categoryLabel": "Grid connect"
+              },
+              {
+                "id": "D123456789012_C4",
+                "ctRating": 60,
+                "label": "Solar",
+                "categoryId": 5,
+                "categoryLabel": "Solar generation"
+              },
+              {
+                "id": "D123456789012_C5",
+                "ctRating": 60,
+                "label": "Solar",
+                "categoryId": 5,
+                "categoryLabel": "Solar generation"
+              },
+              {
+                "id": "D123456789012_C6",
+                "ctRating": 60,
+                "label": "Solar",
+                "categoryId": 5,
+                "categoryLabel": "Solar generation"
+              }
+            ],
+            "phases": {
+              "count": 3,
+              "grouping": [
+                {
+                  "included": [
+                    "D123456789012_C1",
+                    "D123456789012_C2",
+                    "D123456789012_C3"
+                  ]
+                },
+                {
+                  "included": [
+                    "D123456789012_C4",
+                    "D123456789012_C5",
+                    "D123456789012_C6"
+                  ]
+                }
+              ]
+            },
+            "switches": [
+              {
+                "id": "D123456789012_S1",
+                "state": "open",
+                "label": "Switch one",
+                "contactorType": "NC",
+                "closedStateLabel": "On",
+                "openStateLabel": "Off",
+                "pending": {
+                  "state": "closed"
+                }
+              },
+              {
+                "id": "D123456789012_S2",
+                "state": "open",
+                "label": "Switch two",
+                "contactorType": "NC",
+                "closedStateLabel": "On",
+                "openStateLabel": "Off",
+                "pending": {
+                  "state": "closed"
+                }
+              },
+              {
+                "id": "D123456789012_S3",
+                "state": "open",
+                "label": "Switch three",
+                "contactorType": "NC",
+                "closedStateLabel": "On",
+                "openStateLabel": "Off",
+                "pending": {
+                  "state": "closed"
+                }
+              }
+            ]
+          },
+          "WiFi device": {
+            "id": "D123456789012",
+            "label": "WiFi device",
+            "timezone": "Australia/Sydney",
+            "model": "6W+3SW",
+            "firmwareVersion": "2.2.7.0",
+            "latestStatus": 1550632148,
+            "shortEnergyReportingInterval": 30,
+            "pending": {
+              "shortEnergyReportingInterval": 5
+            },
+            "comms": {
+              "type": "cellular",
+              "mode": "4G",
+              "lastHeardAt": 1691035991,
+              "signalQualityDbm": -57,
+              "simId": "simId",
+              "apn": "apn",
+              "imsi": "imsi",
+              "networkId": "networkId"
+            },
+            "channels": [
+              {
+                "id": "D123456789012_C1",
+                "ctRating": 60,
+                "label": "Grid connection",
+                "categoryId": 1,
+                "categoryLabel": "Grid connect"
+              },
+              {
+                "id": "D123456789012_C2",
+                "ctRating": 60,
+                "label": "Grid connection",
+                "categoryId": 1,
+                "categoryLabel": "Grid connect"
+              },
+              {
+                "id": "D123456789012_C3",
+                "ctRating": 60,
+                "label": "Grid connection",
+                "categoryId": 1,
+                "categoryLabel": "Grid connect"
+              },
+              {
+                "id": "D123456789012_C4",
+                "ctRating": 60,
+                "label": "Solar",
+                "categoryId": 5,
+                "categoryLabel": "Solar generation"
+              },
+              {
+                "id": "D123456789012_C5",
+                "ctRating": 60,
+                "label": "Solar",
+                "categoryId": 5,
+                "categoryLabel": "Solar generation"
+              },
+              {
+                "id": "D123456789012_C6",
+                "ctRating": 60,
+                "label": "Solar",
+                "categoryId": 5,
+                "categoryLabel": "Solar generation"
+              }
+            ],
+            "phases": {
+              "count": 3,
+              "grouping": [
+                {
+                  "included": [
+                    "D123456789012_C1",
+                    "D123456789012_C2",
+                    "D123456789012_C3"
+                  ]
+                },
+                {
+                  "included": [
+                    "D123456789012_C4",
+                    "D123456789012_C5",
+                    "D123456789012_C6"
+                  ]
+                }
+              ]
+            },
+            "switches": [
+              {
+                "id": "D123456789012_S1",
+                "state": "open",
+                "label": "Switch one",
+                "contactorType": "NC",
+                "closedStateLabel": "On",
+                "openStateLabel": "Off",
+                "pending": {
+                  "state": "closed"
+                }
+              },
+              {
+                "id": "D123456789012_S2",
+                "state": "open",
+                "label": "Switch two",
+                "contactorType": "NC",
+                "closedStateLabel": "On",
+                "openStateLabel": "Off",
+                "pending": {
+                  "state": "closed"
+                }
+              },
+              {
+                "id": "D123456789012_S3",
+                "state": "open",
+                "label": "Switch three",
+                "contactorType": "NC",
+                "closedStateLabel": "On",
+                "openStateLabel": "Off",
+                "pending": {
+                  "state": "closed"
+                }
+              }
+            ]
+          }
+        },
+        "401": {
+          "code": "Unauthorized",
+          "httpCode": 401,
+          "message": "API key is missing or invalid."
+        },
+        "403": {
+          "code": "Forbidden",
+          "httpCode": 403,
+          "message": "API key is missing or invalid."
+        },
+        "404": {
+          "code": "Not Found",
+          "httpCode": 404,
+          "message": "Device with the specified ID does not exist."
+        }
+      }
+    },
+    {
+      "operationId": "updateDevice",
+      "method": "PATCH",
+      "path": "/devices/{device-id}",
+      "tags": [
+        "Devices"
+      ],
+      "parameter_examples": {
+        "device-id": "D123456789012"
+      },
+      "request_examples": {
+        "default": {
+          "label": "Main Switchboard",
+          "timezone": "Australia/Sydney",
+          "switches": [
+            {
+              "id": "D123456789012_S1",
+              "state": "closed"
+            }
+          ],
+          "phases": {
+            "count": 3,
+            "grouping": [
+              {
+                "included": [
+                  "D123456789012_C1",
+                  "D123456789012_C2",
+                  "D123456789012_C3"
+                ]
+              },
+              {
+                "included": [
+                  "D123456789012_C4",
+                  "D123456789012_C5",
+                  "D123456789012_C6"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "response_examples": {
+        "200": {
+          "default": {
+            "id": "D123456789012",
+            "label": "Cellular device",
+            "timezone": "Australia/Sydney",
+            "model": "6M4+3SW",
+            "firmwareVersion": "49.1.0",
+            "latestStatus": 1550632148,
+            "shortEnergyReportingInterval": 30,
+            "pending": {
+              "shortEnergyReportingInterval": 5
+            },
+            "comms": {
+              "type": "cellular",
+              "mode": "4G",
+              "lastHeardAt": 1691035991,
+              "signalQualityDbm": -57,
+              "simId": "simId",
+              "apn": "apn",
+              "imsi": "imsi",
+              "networkId": "networkId"
+            },
+            "channels": [
+              {
+                "id": "D123456789012_C1",
+                "ctRating": 60,
+                "label": "Grid connection",
+                "categoryId": 1,
+                "categoryLabel": "Grid connect"
+              },
+              {
+                "id": "D123456789012_C2",
+                "ctRating": 60,
+                "label": "Grid connection",
+                "categoryId": 1,
+                "categoryLabel": "Grid connect"
+              },
+              {
+                "id": "D123456789012_C3",
+                "ctRating": 60,
+                "label": "Grid connection",
+                "categoryId": 1,
+                "categoryLabel": "Grid connect"
+              },
+              {
+                "id": "D123456789012_C4",
+                "ctRating": 60,
+                "label": "Solar",
+                "categoryId": 5,
+                "categoryLabel": "Solar generation"
+              },
+              {
+                "id": "D123456789012_C5",
+                "ctRating": 60,
+                "label": "Solar",
+                "categoryId": 5,
+                "categoryLabel": "Solar generation"
+              },
+              {
+                "id": "D123456789012_C6",
+                "ctRating": 60,
+                "label": "Solar",
+                "categoryId": 5,
+                "categoryLabel": "Solar generation"
+              }
+            ],
+            "phases": {
+              "count": 3,
+              "grouping": [
+                {
+                  "included": [
+                    "D123456789012_C1",
+                    "D123456789012_C2",
+                    "D123456789012_C3"
+                  ]
+                },
+                {
+                  "included": [
+                    "D123456789012_C4",
+                    "D123456789012_C5",
+                    "D123456789012_C6"
+                  ]
+                }
+              ]
+            },
+            "switches": [
+              {
+                "id": "D123456789012_S1",
+                "state": "open",
+                "label": "Switch one",
+                "contactorType": "NC",
+                "closedStateLabel": "On",
+                "openStateLabel": "Off",
+                "pending": {
+                  "state": "closed"
+                }
+              },
+              {
+                "id": "D123456789012_S2",
+                "state": "open",
+                "label": "Switch two",
+                "contactorType": "NC",
+                "closedStateLabel": "On",
+                "openStateLabel": "Off",
+                "pending": {
+                  "state": "closed"
+                }
+              },
+              {
+                "id": "D123456789012_S3",
+                "state": "open",
+                "label": "Switch three",
+                "contactorType": "NC",
+                "closedStateLabel": "On",
+                "openStateLabel": "Off",
+                "pending": {
+                  "state": "closed"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "operationId": "getChannelCategories",
+      "method": "GET",
+      "path": "/devices/channel-categories",
+      "tags": [
+        "Devices"
+      ],
+      "response_examples": {
+        "200": [
+          {
+            "id": -1,
+            "label": "Not set",
+            "description": "No category has been set for this channel."
+          },
+          {
+            "id": 0,
+            "label": "Not connected",
+            "description": "The channel is available on the device, but is not connected to a circuit."
+          },
+          {
+            "id": 1,
+            "label": "Grid connect",
+            "description": "The channel monitors imports and exports to the electricity grid."
+          },
+          {
+            "id": 2,
+            "label": "Lighting & Power",
+            "description": "The channel monitors a single circuit covering Lighting and Power combined."
+          },
+          {
+            "id": 3,
+            "label": "Pool pump",
+            "description": "The channel monitors energy consumption of a pool pump."
+          },
+          {
+            "id": 4,
+            "label": "Air conditioning",
+            "description": "The channel monitors energy consumption of an air conditioner appliance."
+          },
+          {
+            "id": 5,
+            "label": "Solar generation",
+            "description": "The channel monitors the total amount of power generated by a solar installation (before consumption/export)."
+          },
+          {
+            "id": 6,
+            "label": "Hot water",
+            "description": "The channel monitors energy consumption of an electric hot water system."
+          },
+          {
+            "id": 7,
+            "label": "Electric vehicle",
+            "description": "The channel monitors consumption and exports from the battery charger of an electric vehicle."
+          },
+          {
+            "id": 8,
+            "label": "Battery",
+            "description": "The channel monitors charging + exports to/from a premises-based electricity storage system."
+          },
+          {
+            "id": 9,
+            "label": "Oven",
+            "description": "The channel monitors energy consumption of an oven appliance."
+          },
+          {
+            "id": 10,
+            "label": "Lighting",
+            "description": "The channel monitors energy consumption related to lighting."
+          },
+          {
+            "id": 11,
+            "label": "Power",
+            "description": "The channel monitors power consumption that isn't covered in any other category."
+          },
+          {
+            "id": 12,
+            "label": "Hybrid solar & battery system",
+            "description": "The channel monitors energy generation and consumption from a hybrid solar & battery system."
+          }
+        ]
+      }
+    },
+    {
+      "operationId": "getDeviceModels",
+      "method": "GET",
+      "path": "/devices/models",
+      "tags": [
+        "Devices"
+      ],
+      "response_examples": {
+        "200": [
+          {
+            "code": "3M",
+            "displayName": "Auditor 3M",
+            "channelsCount": 3,
+            "switchesCount": 0,
+            "communications": "cellular"
+          },
+          {
+            "code": "6M",
+            "displayName": "Auditor 6M",
+            "channelsCount": 6,
+            "switchesCount": 0,
+            "communications": "cellular"
+          },
+          {
+            "code": "6M+One",
+            "displayName": "Auditor 6M+One",
+            "channelsCount": 6,
+            "switchesCount": 0,
+            "communications": "cellular"
+          },
+          {
+            "code": "6M+3SW",
+            "displayName": "Auditor 6M+3SW",
+            "channelsCount": 6,
+            "switchesCount": 3,
+            "communications": "cellular"
+          },
+          {
+            "code": "6MW-CER",
+            "displayName": "Auditor 6MW-CER",
+            "channelsCount": 6,
+            "switchesCount": 1,
+            "communications": "cellular+wifi"
+          }
+        ]
+      }
+    },
+    {
+      "operationId": "getShortEnergyData",
+      "method": "GET",
+      "path": "/short-energy/{device-id}",
+      "tags": [
+        "Short Energy"
+      ],
+      "parameter_examples": {
+        "device-id": "D123456789012",
+        "fromTs": 1546952400,
+        "toTs": 1546956000,
+        "filter[group]": "phases",
+        "convert[energy]": "kWh",
+        "fields[energy]": "+pf"
+      },
+      "response_examples": {
+        "200": [
+          {
+            "timestamp": 1550622130,
+            "duration": 5,
+            "frequency": 50.04,
+            "eReal": [
+              1150,
+              2,
+              38
+            ],
+            "eReactive": [
+              -857,
+              -19,
+              -364
+            ],
+            "vRMS": [
+              244.9,
+              244.8,
+              244.8
+            ],
+            "iRMS": [
+              1.259,
+              0.028,
+              0.31
+            ]
+          },
+          {
+            "timestamp": 1550622135,
+            "duration": 5,
+            "frequency": 50.04,
+            "eReal": [
+              1142,
+              3,
+              39
+            ],
+            "eReactive": [
+              -857,
+              -19,
+              -364
+            ],
+            "vRMS": [
+              244.3,
+              244.2,
+              244.3
+            ],
+            "iRMS": [
+              1.252,
+              0.028,
+              0.309
+            ]
+          }
+        ],
+        "422": {
+          "code": "UNPROCESSABLE_ENTITY",
+          "httpCode": 422,
+          "message": "The requested time period is greater than 12 hours."
+        }
+      }
+    },
+    {
+      "operationId": "getFirstShortEnergyData",
+      "method": "GET",
+      "path": "/short-energy/{device-id}/first",
+      "tags": [
+        "Short Energy"
+      ],
+      "parameter_examples": {
+        "device-id": "D123456789012",
+        "filter[group]": "phases",
+        "convert[energy]": "kWh",
+        "fields[energy]": "+pf"
+      },
+      "response_examples": {
+        "200": {
+          "default": {
+            "timestamp": 1550622145,
+            "duration": 5,
+            "frequency": 50.04,
+            "eReal": [
+              1163,
+              3,
+              39
+            ],
+            "eReactive": [
+              -856,
+              -19,
+              -363
+            ],
+            "vRMS": [
+              244.6,
+              244.5,
+              244.5
+            ],
+            "iRMS": [
+              1.267,
+              0.028,
+              0.309
+            ]
+          },
+          "withTimestampOnly": {
+            "timestamp": 1550622145
+          }
+        }
+      }
+    },
+    {
+      "operationId": "getLatestShortEnergyData",
+      "method": "GET",
+      "path": "/short-energy/{device-id}/latest",
+      "tags": [
+        "Short Energy"
+      ],
+      "parameter_examples": {
+        "device-id": "D123456789012",
+        "filter[group]": "phases",
+        "convert[energy]": "kWh",
+        "fields[energy]": "+pf"
+      },
+      "response_examples": {
+        "200": {
+          "default": {
+            "timestamp": 1550622145,
+            "duration": 5,
+            "frequency": 50.04,
+            "eReal": [
+              1163,
+              3,
+              39
+            ],
+            "eReactive": [
+              -856,
+              -19,
+              -363
+            ],
+            "vRMS": [
+              244.6,
+              244.5,
+              244.5
+            ],
+            "iRMS": [
+              1.267,
+              0.028,
+              0.309
+            ]
+          },
+          "withTimestampOnly": {
+            "timestamp": 1550622145
+          }
+        }
+      }
+    },
+    {
+      "operationId": "getLongEnergyData",
+      "method": "GET",
+      "path": "/long-energy/{device-id}",
+      "tags": [
+        "Long Energy"
+      ],
+      "parameter_examples": {
+        "device-id": "D123456789012",
+        "fromTs": 1546952400,
+        "toTs": 1546956000,
+        "granularity": "5m",
+        "timezone": "Australia/Sydney",
+        "filter[group]": "phases",
+        "convert[energy]": "kWh",
+        "fields[energy]": "+pf"
+      },
+      "response_examples": {
+        "200": [
+          {
+            "timestamp": 1550408400,
+            "duration": 900,
+            "eReal": [
+              3639405,
+              336898,
+              -560,
+              37,
+              -14,
+              -25
+            ],
+            "eRealNegative": [
+              0,
+              0,
+              560,
+              0,
+              14,
+              25
+            ],
+            "eRealPositive": [
+              3639405,
+              336898,
+              0,
+              37,
+              0,
+              0
+            ],
+            "eReactive": [
+              154581,
+              140216,
+              61,
+              45,
+              -4,
+              11
+            ],
+            "eReactiveNegative": [
+              13832,
+              0,
+              0,
+              0,
+              5,
+              0
+            ],
+            "eReactivePositive": [
+              168413,
+              140216,
+              61,
+              45,
+              1,
+              11
+            ],
+            "vRMSMin": [
+              229.4,
+              229.5,
+              229.6,
+              229.4,
+              229.5,
+              229.6
+            ],
+            "vRMSMax": [
+              232.2,
+              232.4,
+              232.4,
+              232.2,
+              232.4,
+              232.5
+            ],
+            "iRMSMin": [
+              14.799,
+              0.331,
+              0.023,
+              0.023,
+              0.023,
+              0.022
+            ],
+            "iRMSMax": [
+              21.208,
+              4.534,
+              0.043,
+              0.046,
+              0.043,
+              0.042
+            ]
+          }
+        ],
+        "400": {
+          "code": "BAD_REQUEST",
+          "httpCode": 400,
+          "message": "You must specify a valid timezone value when applying granularity of 'hour', 'day', 'week', or 'month.'"
+        },
+        "422": {
+          "code": "UNPROCESSABLE_ENTITY",
+          "httpCode": 422,
+          "message": "The requested time period is greater than 7 days."
+        }
+      }
+    },
+    {
+      "operationId": "getFirstLongEnergyData",
+      "method": "GET",
+      "path": "/long-energy/{device-id}/first",
+      "tags": [
+        "Long Energy"
+      ],
+      "parameter_examples": {
+        "device-id": "D123456789012",
+        "filter[group]": "phases",
+        "convert[energy]": "kWh",
+        "fields[energy]": "+pf"
+      },
+      "response_examples": {
+        "200": {
+          "default": {
+            "timestamp": 1550622145,
+            "duration": 900,
+            "eReal": [
+              3586031,
+              329486,
+              -549,
+              39,
+              -13,
+              -24
+            ],
+            "eRealNegative": [
+              0,
+              0,
+              549,
+              0,
+              13,
+              24
+            ],
+            "eRealPositive": [
+              3586031,
+              329486,
+              0,
+              39,
+              0,
+              0
+            ],
+            "eReactive": [
+              134087,
+              136446,
+              47,
+              33,
+              -10,
+              11
+            ],
+            "eReactiveNegative": [
+              11739,
+              0,
+              0,
+              0,
+              10,
+              0
+            ],
+            "eReactivePositive": [
+              145826,
+              136446,
+              47,
+              33,
+              0,
+              11
+            ]
+          },
+          "withTimestampOnly": {
+            "timestamp": 1550622145
+          }
+        }
+      }
+    },
+    {
+      "operationId": "getLatestLongEnergyData",
+      "method": "GET",
+      "path": "/long-energy/{device-id}/latest",
+      "tags": [
+        "Long Energy"
+      ],
+      "parameter_examples": {
+        "device-id": "D123456789012",
+        "filter[group]": "phases",
+        "convert[energy]": "kWh",
+        "fields[energy]": "+pf"
+      },
+      "response_examples": {
+        "200": {
+          "default": {
+            "timestamp": 1550622145,
+            "duration": 900,
+            "eReal": [
+              3586031,
+              329486,
+              -549,
+              39,
+              -13,
+              -24
+            ],
+            "eRealNegative": [
+              0,
+              0,
+              549,
+              0,
+              13,
+              24
+            ],
+            "eRealPositive": [
+              3586031,
+              329486,
+              0,
+              39,
+              0,
+              0
+            ],
+            "eReactive": [
+              134087,
+              136446,
+              47,
+              33,
+              -10,
+              11
+            ],
+            "eReactiveNegative": [
+              11739,
+              0,
+              0,
+              0,
+              10,
+              0
+            ],
+            "eReactivePositive": [
+              145826,
+              136446,
+              47,
+              33,
+              0,
+              11
+            ]
+          },
+          "withTimestampOnly": {
+            "timestamp": 1550622145
+          }
+        }
+      }
+    },
+    {
+      "operationId": "getModbusData",
+      "method": "GET",
+      "path": "/modbus/{device-id}",
+      "tags": [
+        "Modbus"
+      ],
+      "parameter_examples": {
+        "device-id": "D123456789012",
+        "fromTs": 1546952400,
+        "toTs": 1546956000
+      },
+      "response_examples": {
+        "200": {
+          "PMC-340B": [
+            {
+              "_Ia": 0,
+              "_Ib": 0,
+              "_Ic": 0,
+              "_PFa": 1,
+              "_PFb": 1,
+              "_PFc": 1,
+              "_Uan": 244.8056182861328,
+              "_Ubn": 122.43417358398438,
+              "_Ucn": 122.45341491699219,
+              "kVAh": 0,
+              "kWh_Exp": 0,
+              "kWh_Imp": 0,
+              "kWh_Net": 0,
+              "kWh_Tot": 0,
+              "kvarh_Q1": 0,
+              "kvarh_Q2": 0,
+              "kvarh_Q3": 0,
+              "kvarh_Q4": 0,
+              "kvarh_Exp": 0,
+              "kvarh_Imp": 0,
+              "kvarh_Net": 0,
+              "kvarh_Tot": 0,
+              "model": "PMC-340B",
+              "timestamp": 1546952400
+            }
+          ],
+          "PMC-220": [
+            {
+              "_I": 0.3065536916255951,
+              "_V": 245.0169219970703,
+              "_PF": 0.5856215357780457,
+              "kVAh": 616,
+              "kWh_Exp": 0,
+              "kWh_Imp": 283,
+              "kWh_Net": 283,
+              "kWh_Tot": 283,
+              "kvarh_Exp": 173,
+              "kvarh_Imp": 0,
+              "kvarh_Net": -173,
+              "kvarh_Tot": 173,
+              "model": "PMC-220",
+              "timestamp": 1546956000
+            }
+          ]
+        },
+        "422": {
+          "PeriodTooLong": {
+            "code": "UNPROCESSABLE_ENTITY",
+            "httpCode": 422,
+            "message": "The requested time period is greater than 7 days."
+          },
+          "NonModbusDevice": {
+            "code": "UNPROCESSABLE ENTITY",
+            "httpCode": 422,
+            "message": "You have attempted to query modbus data for a device ID that does not support it"
+          }
+        }
+      }
+    },
+    {
+      "operationId": "getFirstModbusData",
+      "method": "GET",
+      "path": "/modbus/{device-id}/first",
+      "tags": [
+        "Modbus"
+      ],
+      "parameter_examples": {
+        "device-id": "D123456789012",
+        "fields[energy]": "timestamp"
+      },
+      "response_examples": {
+        "200": {
+          "PMC-340B": {
+            "_Ia": 0,
+            "_Ib": 0,
+            "_Ic": 0,
+            "_PFa": 1,
+            "_PFb": 1,
+            "_PFc": 1,
+            "_Uan": 244.8056182861328,
+            "_Ubn": 122.43417358398438,
+            "_Ucn": 122.45341491699219,
+            "kVAh": 0,
+            "kWh_Exp": 0,
+            "kWh_Imp": 0,
+            "kWh_Net": 0,
+            "kWh_Tot": 0,
+            "kvarh_Q1": 0,
+            "kvarh_Q2": 0,
+            "kvarh_Q3": 0,
+            "kvarh_Q4": 0,
+            "kvarh_Exp": 0,
+            "kvarh_Imp": 0,
+            "kvarh_Net": 0,
+            "kvarh_Tot": 0,
+            "model": "PMC-340B",
+            "timestamp": 1550622145
+          },
+          "PMC-220": {
+            "_I": 0.3065536916255951,
+            "_V": 245.0169219970703,
+            "_PF": 0.5856215357780457,
+            "kVAh": 616,
+            "kWh_Exp": 0,
+            "kWh_Imp": 283,
+            "kWh_Net": 283,
+            "kWh_Tot": 283,
+            "kvarh_Exp": 173,
+            "kvarh_Imp": 0,
+            "kvarh_Net": -173,
+            "kvarh_Tot": 173,
+            "model": "PMC-220",
+            "timestamp": 1550622145
+          },
+          "withTimestampOnly": {
+            "timestamp": 1550622145
+          }
+        },
+        "422": {
+          "code": "UNPROCESSABLE ENTITY",
+          "httpCode": 422,
+          "message": "You have attempted to query modbus data for a device ID that does not support it"
+        }
+      }
+    },
+    {
+      "operationId": "getLatestModbusData",
+      "method": "GET",
+      "path": "/modbus/{device-id}/latest",
+      "tags": [
+        "Modbus"
+      ],
+      "parameter_examples": {
+        "device-id": "D123456789012",
+        "fields[energy]": "timestamp"
+      },
+      "response_examples": {
+        "200": {
+          "PMC-340B": {
+            "_Ia": 0,
+            "_Ib": 0,
+            "_Ic": 0,
+            "_PFa": 1,
+            "_PFb": 1,
+            "_PFc": 1,
+            "_Uan": 244.8056182861328,
+            "_Ubn": 122.43417358398438,
+            "_Ucn": 122.45341491699219,
+            "kVAh": 0,
+            "kWh_Exp": 0,
+            "kWh_Imp": 0,
+            "kWh_Net": 0,
+            "kWh_Tot": 0,
+            "kvarh_Q1": 0,
+            "kvarh_Q2": 0,
+            "kvarh_Q3": 0,
+            "kvarh_Q4": 0,
+            "kvarh_Exp": 0,
+            "kvarh_Imp": 0,
+            "kvarh_Net": 0,
+            "kvarh_Tot": 0,
+            "model": "PMC-340B",
+            "timestamp": 1550622145
+          },
+          "PMC-220": {
+            "_I": 0.3065536916255951,
+            "_V": 245.0169219970703,
+            "_PF": 0.5856215357780457,
+            "kVAh": 616,
+            "kWh_Exp": 0,
+            "kWh_Imp": 283,
+            "kWh_Net": 283,
+            "kWh_Tot": 283,
+            "kvarh_Exp": 173,
+            "kvarh_Imp": 0,
+            "kvarh_Net": -173,
+            "kvarh_Tot": 173,
+            "model": "PMC-220",
+            "timestamp": 1550622145
+          },
+          "withTimestampOnly": {
+            "timestamp": 1550622145
+          }
+        },
+        "422": {
+          "code": "UNPROCESSABLE ENTITY",
+          "httpCode": 422,
+          "message": "You have attempted to query modbus data for a device ID that does not support it"
+        }
+      }
+    }
+  ],
+  "coverage": {
+    "operations_total": 14,
+    "operations_with_examples": 14
+  }
+}
