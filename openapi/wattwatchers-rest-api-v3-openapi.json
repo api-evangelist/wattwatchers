@@ -1,0 +1,2823 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Wattwatchers API",
+    "description": "API for accessing Wattwatchers data and functionality",
+    "contact": {
+      "name": "Wattwatchers Support",
+      "url": "https://service.wattwatchers.com.au/kb-tickets/new",
+      "email": "support@wattwatchers.com.au"
+    },
+    "version": "3.6.0"
+  },
+  "servers": [
+    {
+      "description": "Wattwatchers API v3",
+      "url": "https://api-v3.wattwatchers.com.au"
+    }
+  ],
+  "paths": {
+    "/devices": {
+      "get": {
+        "tags": ["Devices"],
+        "summary": "Get devices",
+        "description": "Returns an array of devices that are available to the current API key.",
+        "operationId": "listDevices",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Devices"
+                },
+                "example": [
+                  "D123456789012",
+                  "D234567890123",
+                  "D345678901234"
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/devices/{device-id}": {
+      "get": {
+        "tags": ["Devices"],
+        "summary": "Get device details",
+        "description": "Returns the status, state, and metadata for a specific device",
+        "operationId": "getDevice",
+        "parameters": [
+          {
+            "name": "device-id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the device to retrieve",
+            "schema": {
+              "type": "string"
+            },
+            "example": "D123456789012"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Device details successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/DeviceDetailsCellular"
+                    },
+                    {
+                      "$ref": "#/components/schemas/DeviceDetailsWiFi"
+                    }
+                  ]
+                },
+                "examples": {
+                  "Cellular device": {
+                    "$ref": "#/components/examples/DeviceDetailsCellular" 
+                  },
+                  "WiFi device": {
+                    "$ref": "#/components/examples/DeviceDetailsWiFi"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "Unauthorized",
+                  "httpCode": 401,
+                  "message": "API key is missing or invalid."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "Forbidden",
+                  "httpCode": 403,
+                  "message": "API key is missing or invalid."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Device not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "Not Found",
+                  "httpCode": 404,
+                  "message": "Device with the specified ID does not exist."
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": ["Devices"],
+        "summary": "Patch device metadata and state",
+        "description": "Enables updating of a subset of fields for a device and related objects (such as channels and switches).",
+        "operationId": "updateDevice",
+        "parameters": [
+          {
+            "name": "device-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the device to update",
+            "example": "D123456789012"
+          }
+        ],
+        "requestBody": {
+          "description": "Device metadata and state to update",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DevicePatchBody"
+              },
+              "examples": {
+                "default": {
+                  "$ref": "#/components/examples/DevicePatchBody"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/DeviceDetailsCellular"
+                    },
+                    {
+                      "$ref": "#/components/schemas/DeviceDetailsWiFi"
+                    }
+                  ]
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/DeviceDetailsCellular" 
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/devices/channel-categories": {
+      "get": {
+        "tags": ["Devices"],
+        "summary": "Get category definitions for device channels",
+        "description": "Returns a collection of the categorisation schema for channels",
+        "operationId": "getChannelCategories",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceChannelCategories"
+                },
+                "example": [
+                  {
+                    "id": -1,
+                    "label": "Not set",
+                    "description": "No category has been set for this channel."
+                  },
+                  {
+                    "id": 0,
+                    "label": "Not connected",
+                    "description": "The channel is available on the device, but is not connected to a circuit."
+                  },
+                  {
+                    "id": 1,
+                    "label": "Grid connect",
+                    "description": "The channel monitors imports and exports to the electricity grid."
+                  },
+                  {
+                    "id": 2,
+                    "label": "Lighting & Power",
+                    "description": "The channel monitors a single circuit covering Lighting and Power combined."
+                  },
+                  {
+                    "id": 3,
+                    "label": "Pool pump",
+                    "description": "The channel monitors energy consumption of a pool pump."
+                  },
+                  {
+                    "id": 4,
+                    "label": "Air conditioning",
+                    "description": "The channel monitors energy consumption of an air conditioner appliance."
+                  },
+                  {
+                    "id": 5,
+                    "label": "Solar generation",
+                    "description": "The channel monitors the total amount of power generated by a solar installation (before consumption/export)."
+                  },
+                  {
+                    "id": 6,
+                    "label": "Hot water",
+                    "description": "The channel monitors energy consumption of an electric hot water system."
+                  },
+                  {
+                    "id": 7,
+                    "label": "Electric vehicle",
+                    "description": "The channel monitors consumption and exports from the battery charger of an electric vehicle."
+                  },
+                  {
+                    "id": 8,
+                    "label": "Battery",
+                    "description": "The channel monitors charging + exports to/from a premises-based electricity storage system."
+                  },
+                  {
+                    "id": 9,
+                    "label": "Oven",
+                    "description": "The channel monitors energy consumption of an oven appliance."
+                  },
+                  {
+                    "id": 10,
+                    "label": "Lighting",
+                    "description": "The channel monitors energy consumption related to lighting."
+                  },
+                  {
+                    "id": 11,
+                    "label": "Power",
+                    "description": "The channel monitors power consumption that isn't covered in any other category."
+                  },
+                  {
+                    "id": 12,
+                    "label": "Hybrid solar & battery system",
+                    "description": "The channel monitors energy generation and consumption from a hybrid solar & battery system."
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/devices/models": {
+      "get": {
+        "tags": ["Devices"],
+        "summary": "Get valid device models",
+        "description": "Returns a list of valid device models supported by Wattwatchers.",
+        "operationId": "getDeviceModels",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceModels"
+                },
+                "example": [
+                  {
+                    "code": "3M",
+                    "displayName": "Auditor 3M",
+                    "channelsCount": 3,
+                    "switchesCount": 0,
+                    "communications": "cellular"
+                  },
+                  {
+                    "code": "6M",
+                    "displayName": "Auditor 6M",
+                    "channelsCount": 6,
+                    "switchesCount": 0,
+                    "communications": "cellular"
+                  },
+                  {
+                    "code": "6M+One",
+                    "displayName": "Auditor 6M+One",
+                    "channelsCount": 6,
+                    "switchesCount": 0,
+                    "communications": "cellular"
+                  },
+                  {
+                    "code": "6M+3SW",
+                    "displayName": "Auditor 6M+3SW",
+                    "channelsCount": 6,
+                    "switchesCount": 3,
+                    "communications": "cellular"
+                  },
+                  {
+                    "code": "6MW-CER",
+                    "displayName": "Auditor 6MW-CER",
+                    "channelsCount": 6,
+                    "switchesCount": 1,
+                    "communications": "cellular+wifi"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/short-energy/{device-id}": {
+      "get": {
+        "tags":["Short Energy"],
+        "summary": "Get short energy data for a device",
+        "description": "Retrieves short-term energy data for a specific device",
+        "operationId": "getShortEnergyData",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/deviceId"
+          },
+          {
+            "$ref": "#/components/parameters/fromTsShort"
+          },
+          {
+            "$ref": "#/components/parameters/toTsShort"
+          },
+          {
+            "$ref": "#/components/parameters/filterGroup"
+          },
+          {
+            "$ref": "#/components/parameters/convertEnergy"
+          },
+          {
+            "$ref": "#/components/parameters/fieldsEnergyPF"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShortEnergyData"
+                },
+                "example": [
+                  {
+                    "timestamp": 1550622130,
+                    "duration": 5,
+                    "frequency": 50.04,
+                    "eReal": [
+                      1150,
+                      2,
+                      38
+                    ],
+                    "eReactive": [
+                      -857,
+                      -19,
+                      -364
+                    ],
+                    "vRMS": [
+                      244.9,
+                      244.8,
+                      244.8
+                    ],
+                    "iRMS": [
+                      1.259,
+                      0.028,
+                      0.31
+                    ]
+                  },
+                  {
+                    "timestamp": 1550622135,
+                    "duration": 5,
+                    "frequency": 50.04,
+                    "eReal": [
+                      1142,
+                      3,
+                      39
+                    ],
+                    "eReactive": [
+                      -857,
+                      -19,
+                      -364
+                    ],
+                    "vRMS": [
+                      244.3,
+                      244.2,
+                      244.3
+                    ],
+                    "iRMS": [
+                      1.252,
+                      0.028,
+                      0.309
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          "204": {
+            "description": "No Content - No energy data has been received from the device"
+          },
+          "422": {
+            "description": "Period > 12 hours",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "UNPROCESSABLE_ENTITY",
+                  "httpCode": 422,
+                  "message": "The requested time period is greater than 12 hours."
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/short-energy/{device-id}/first": {
+      "get": {
+        "tags": ["Short Energy"],
+        "summary": "Get first short energy data entry",
+        "description": "Returns the first received short energy entry from the device.",
+        "operationId": "getFirstShortEnergyData",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/deviceId"
+          },
+          {
+            "$ref": "#/components/parameters/filterGroup"
+          },
+          {
+            "$ref": "#/components/parameters/convertEnergy"
+          },
+          {
+            "$ref": "#/components/parameters/fieldsEnergyPFAndTimestamp"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShortEnergyDataPoint"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/ShortEnergyDataPoint"
+                  },
+                  "withTimestampOnly": {
+                    "$ref": "#/components/examples/FirstLastTimestampOnly"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content - No energy data has been received from the device"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/short-energy/{device-id}/latest": {
+      "get": {
+        "tags": ["Short Energy"],
+        "summary": "Get latest short energy data entry",
+        "description": "Returns the latest received short energy entry from the device.",
+        "operationId": "getLatestShortEnergyData",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/deviceId"
+          },
+          {
+            "$ref": "#/components/parameters/filterGroup"
+          },
+          {
+            "$ref": "#/components/parameters/convertEnergy"
+          },
+          {
+            "$ref": "#/components/parameters/fieldsEnergyPFAndTimestamp"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShortEnergyDataPoint"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/ShortEnergyDataPoint"
+                  },
+                  "withTimestampOnly": {
+                    "$ref": "#/components/examples/FirstLastTimestampOnly"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content - No energy data has been received from the device"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/long-energy/{device-id}": {
+      "get": {
+        "tags": ["Long Energy"],
+        "summary": "Get long energy data for a device",
+        "description": "Returns the energy data for a single device.",
+        "operationId": "getLongEnergyData",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/deviceId"
+          },
+          {
+            "$ref": "#/components/parameters/fromTsLong"
+          },
+          {
+            "$ref": "#/components/parameters/toTsLong"
+          },
+          {
+            "$ref": "#/components/parameters/granularity"
+          },
+          {
+            "$ref": "#/components/parameters/timezone"
+          },
+          {
+            "$ref": "#/components/parameters/filterGroup"
+          },
+          {
+            "$ref": "#/components/parameters/convertEnergy"
+          },
+          {
+            "$ref": "#/components/parameters/fieldsEnergyPF"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LongEnergyData"
+                },
+                "example": [
+                  {
+                    "timestamp": 1550408400,
+                    "duration": 900,
+                    "eReal": [
+                      3639405,
+                      336898,
+                      -560,
+                      37,
+                      -14,
+                      -25
+                    ],
+                    "eRealNegative": [
+                      0,
+                      0,
+                      560,
+                      0,
+                      14,
+                      25
+                    ],
+                    "eRealPositive": [
+                      3639405,
+                      336898,
+                      0,
+                      37,
+                      0,
+                      0
+                    ],
+                    "eReactive": [
+                      154581,
+                      140216,
+                      61,
+                      45,
+                      -4,
+                      11
+                    ],
+                    "eReactiveNegative": [
+                      13832,
+                      0,
+                      0,
+                      0,
+                      5,
+                      0
+                    ],
+                    "eReactivePositive": [
+                      168413,
+                      140216,
+                      61,
+                      45,
+                      1,
+                      11
+                    ],
+                    "vRMSMin": [
+                      229.4,
+                      229.5,
+                      229.6,
+                      229.4,
+                      229.5,
+                      229.6
+                    ],
+                    "vRMSMax": [
+                      232.2,
+                      232.4,
+                      232.4,
+                      232.2,
+                      232.4,
+                      232.5
+                    ],
+                    "iRMSMin": [
+                      14.799,
+                      0.331,
+                      0.023,
+                      0.023,
+                      0.023,
+                      0.022
+                    ],
+                    "iRMSMax": [
+                      21.208,
+                      4.534,
+                      0.043,
+                      0.046,
+                      0.043,
+                      0.042
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          "204": {
+            "description": "No Content - No energy data has been received from the device"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "BAD_REQUEST",
+                  "httpCode": 400,
+                  "message": "You must specify a valid timezone value when applying granularity of 'hour', 'day', 'week', or 'month.'"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity - Period is greater than valid values for granularity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "UNPROCESSABLE_ENTITY",
+                  "httpCode": 422,
+                  "message": "The requested time period is greater than 7 days."
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/long-energy/{device-id}/first": {
+      "get": {
+        "tags": ["Long Energy"],
+        "summary": "Get first long energy data entry",
+        "description": "Returns the first received long energy entry from the device.",
+        "operationId": "getFirstLongEnergyData",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/deviceId"
+          },
+          {
+            "$ref": "#/components/parameters/filterGroup"
+          },
+          {
+            "$ref": "#/components/parameters/convertEnergy"
+          },
+          {
+            "$ref": "#/components/parameters/fieldsEnergyPFAndTimestamp"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LongEnergyDataPoint"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/LongEnergyDataPoint"
+                  },
+                  "withTimestampOnly": {
+                    "$ref": "#/components/examples/FirstLastTimestampOnly"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content - No energy data has been received from the device"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/long-energy/{device-id}/latest": {
+      "get": {
+        "tags": ["Long Energy"],
+        "summary": "Get latest long energy data entry",
+        "description": "Returns the latest received long energy entry from the device.",
+        "operationId": "getLatestLongEnergyData",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/deviceId"
+          },
+          {
+            "$ref": "#/components/parameters/filterGroup"
+          },
+          {
+            "$ref": "#/components/parameters/convertEnergy"
+          },
+          {
+            "$ref": "#/components/parameters/fieldsEnergyPFAndTimestamp"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LongEnergyDataPoint"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/LongEnergyDataPoint"
+                  },
+                  "withTimestampOnly": {
+                    "$ref": "#/components/examples/FirstLastTimestampOnly"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content - No energy data has been received from the device"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/modbus/{device-id}": {
+      "get": {
+        "tags": ["Modbus"],
+        "summary": "Get modbus energy data for a device",
+        "description": "Returns the modbus energy data for a specific device.",
+        "operationId": "getModbusData",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/deviceId"
+          },
+          {
+            "$ref": "#/components/parameters/fromTsModbus"
+          },
+          {
+            "$ref": "#/components/parameters/toTsModbus"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ModbusDataPMC-340B"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ModbusDataPMC-220"
+                    }
+                  ]
+                },
+                "examples": {
+                  "PMC-340B": {
+                    "description": "Response for a PMC-340B device",
+                    "value": [
+                      {
+                        "_Ia": 0,
+                        "_Ib": 0,
+                        "_Ic": 0,
+                        "_PFa": 1,
+                        "_PFb": 1,
+                        "_PFc": 1,
+                        "_Uan": 244.8056182861328,
+                        "_Ubn": 122.43417358398438,
+                        "_Ucn": 122.45341491699219,
+                        "kVAh": 0,
+                        "kWh_Exp": 0,
+                        "kWh_Imp": 0,
+                        "kWh_Net": 0,
+                        "kWh_Tot": 0,
+                        "kvarh_Q1": 0,
+                        "kvarh_Q2": 0,
+                        "kvarh_Q3": 0,
+                        "kvarh_Q4": 0,
+                        "kvarh_Exp": 0,
+                        "kvarh_Imp": 0,
+                        "kvarh_Net": 0,
+                        "kvarh_Tot": 0,
+                        "model": "PMC-340B",
+                        "timestamp": 1546952400
+                      }
+                    ]
+                  },
+                  "PMC-220": {
+                    "description": "Response for a PMC-220 device",
+                    "value": [
+                      {
+                        "_I": 0.3065536916255951,
+                        "_V": 245.0169219970703,
+                        "_PF": 0.5856215357780457,
+                        "kVAh": 616,
+                        "kWh_Exp": 0,
+                        "kWh_Imp": 283,
+                        "kWh_Net": 283,
+                        "kWh_Tot": 283,
+                        "kvarh_Exp": 173,
+                        "kvarh_Imp": 0,
+                        "kvarh_Net": -173,
+                        "kvarh_Tot": 173,
+                        "model": "PMC-220",
+                        "timestamp": 1546956000
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content - No modbus data has been received from the device, or the device is not a modbus-capable device"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "PeriodTooLong": {
+                    "value": {
+                      "code": "UNPROCESSABLE_ENTITY",
+                      "httpCode": 422,
+                      "message": "The requested time period is greater than 7 days."
+                    }
+                  },
+                  "NonModbusDevice": {
+                    "value": {
+                      "code": "UNPROCESSABLE ENTITY",
+                      "httpCode": 422,
+                      "message": "You have attempted to query modbus data for a device ID that does not support it"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/modbus/{device-id}/first": {
+      "get": {
+        "tags": ["Modbus"],
+        "summary": "Get first modbus energy data entry",
+        "description": "Returns the first recorded modbus energy data entry for a specific device.",
+        "operationId": "getFirstModbusData",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/deviceId"
+          },
+          {
+            "$ref": "#/components/parameters/fieldsEnergyTimestamp"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ModbusDataPointPMC-340B"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ModbusDataPointPMC-220"}
+                  ]
+                },
+                "examples": {
+                  "PMC-340B": {
+                    "$ref": "#/components/examples/PMC-340B"
+                  },
+                  "PMC-220": {
+                    "$ref": "#/components/examples/PMC-220"
+                  },
+                  "withTimestampOnly": {
+                    "$ref": "#/components/examples/FirstLastTimestampOnly"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content - No modbus data has been received from the device, or the device is not a modbus-capable device"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "UNPROCESSABLE ENTITY",
+                  "httpCode": 422,
+                  "message": "You have attempted to query modbus data for a device ID that does not support it"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/modbus/{device-id}/latest": {
+      "get": {
+        "tags": ["Modbus"],
+        "summary": "Get latest modbus energy data entry",
+        "description": "Returns the most recent recorded modbus energy data entry for a specific device.",
+        "operationId": "getLatestModbusData",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/deviceId"
+          },
+          {
+            "$ref": "#/components/parameters/fieldsEnergyTimestamp"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ModbusDataPointPMC-340B"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ModbusDataPointPMC-220"
+                    }
+                  ]
+                },
+                "examples": {
+                  "PMC-340B": {
+                    "$ref": "#/components/examples/PMC-340B"
+                  },
+                  "PMC-220": {
+                    "$ref": "#/components/examples/PMC-220"
+                  },
+                  "withTimestampOnly": {
+                    "$ref": "#/components/examples/FirstLastTimestampOnly"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content - No modbus data has been received from the device, or the device is not a modbus-capable device"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "code": "UNPROCESSABLE ENTITY",
+                  "httpCode": 422,
+                  "message": "You have attempted to query modbus data for a device ID that does not support it"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "description": "Bearer token authentication",
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "parameters": {
+      "deviceId": {
+        "name": "device-id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "The ID of the device",
+        "example": "D123456789012"
+      },
+      "fromTsShort": {
+        "name": "fromTs",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer"
+        },
+        "example": 1546952400,
+        "description": "Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs. Default, if not specified = now minus 1 hour."
+      },
+      "toTsShort": {
+        "name": "toTs",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer"
+        },
+        "example": 1546956000,
+        "description": "Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default, if not specified = 1 hour after fromTs."
+      },
+      "fromTsLong": {
+        "name": "fromTs",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer"
+        },
+        "example": 1546952400,
+        "description": "Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs. Default, if not specified = first long energy entry."
+      },
+      "toTsLong": {
+        "name": "toTs",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer"
+        },
+        "example": 1546956000,
+        "description": "Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default, if not specified = 7 days after fromTs."
+      },
+      "fromTsModbus": {
+        "name": "fromTs",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer"
+        },
+        "example": 1546952400,
+        "description": "Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs."
+      },
+      "toTsModbus": {
+        "name": "toTs",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer"
+        },
+        "example": 1546956000,
+        "description": "Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default (if not provided) = 7 days after fromTs."
+      },
+      "filterGroup": {
+        "name": "filter[group]",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "phases"
+          ]
+        },
+        "example": "phases",
+        "description": "When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device."
+      },
+      "convertEnergy": {
+        "name": "convert[energy]",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "kWh",
+            "kW"
+          ]
+        },
+        "example": "kWh",
+        "description": "Converts energy data to kilowatt hours or kilowatts."
+      },
+      "fieldsEnergyPF": {
+        "name": "fields[energy]",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "+pf"
+          ]
+        },
+        "example": "+pf",
+        "description": "\\'+pf\\' will append calculated power factor to the returned energy data objects. Note that filter[group]=phases can't be combined with fields[energy]=+pf."
+      },
+      "fieldsEnergyTimestamp": {
+        "name": "fields[energy]",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "timestamp"
+          ]
+        },
+        "example": "timestamp",
+        "description": "fields[energy]=timestamp will return just the timestamp attribute in the returned data object."
+      },
+      "fieldsEnergyPFAndTimestamp": {
+        "name": "fields[energy]",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "+pf",
+            "timestamp"
+          ]
+        },
+        "example": "+pf",
+        "description": "\\`fields[energy]=+pf\\` will append calculated power factor to the returned energy data objects. \\`timestamp\\` will return just the timestamp attribute in the returned data object. +pf and timestamp are mutually exclusive and can't be combined, i.e. fields[energy]=+pf,timestamp will result in an error. The fields[energy] query string options can't be combined with filter[group]=phases."
+      },
+      "granularity": {
+        "name": "granularity",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "5m",
+            "15m",
+            "30m",
+            "hour",
+            "day",
+            "week",
+            "month"
+          ]
+        },
+        "example": "5m",
+        "description": "Granularity of the data."
+      },
+      "timezone": {
+        "name": "timezone",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "example": "Australia/Sydney",
+        "description": "Required if granularity >= hour. Irrelevant (and ignored) if granularity is < hour."
+      }
+    },
+    "schemas": {
+      "Devices": {
+        "type": "array",
+        "description": "List of device IDs",
+        "items": {
+          "type": "string",
+          "description": "Device ID",
+          "example": "D123456789012"
+        }
+      },
+      "DeviceDetailsCellular": {
+        "type": "object",
+        "title": "Device details (Cellular)",
+        "description": "The status, state and metadata for a cellular device.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Device ID",
+            "example": "D123456789012"
+          },
+          "model": {
+            "type": "string",
+            "description": "Device model",
+            "example": "6M"
+          },
+          "firmwareVersion": {
+            "type": "string",
+            "description": "Device firmware version",
+            "example": "49.1.0"
+          },
+          "latestStatus": {
+            "type": "integer",
+            "description": "Timestamp of the device's latest status",
+            "example": 1550684123
+          },
+          "shortEnergyReportingInterval": {
+            "type": "integer",
+            "description": "Short energy reporting interval",
+            "example": 30
+          },
+          "pending": {
+            "$ref": "#/components/schemas/DevicePending"
+          },
+          "comms": {
+            "type": "object",
+            "description": "The communication status of the device",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "The communication type(s) the device supports",
+                "example": "cellular"
+              },
+              "mode": {
+                "type": "string",
+                "description": "The cellular mode the device is currently using",
+                "example": "4G"
+              },
+              "lastHeardAt": {
+                "type": "number",
+                "description": "The timestamp of the last known communications from the device to the Wattwatchers system",
+                "example": 123456789.2341
+              },
+              "signalQualityDbm": {
+                "type": "integer",
+                "description": "The signal quality in decibel-milliwatts",
+                "example": -57
+              },
+              "simId": {
+                "type": "string",
+                "description": "Thge id of the SIM the device is using",
+                "example": "8900000000000000000"
+              },
+              "apn": {
+                "type": "string",
+                "description": "The Access Point Name (APN) the device is using",
+                "example": "soracom.io"
+              },
+              "imsi": {
+                "type": "string",
+                "description": "The International Mobile Subscriber Identity (IMSI) the device is using",
+                "example": "500000000000000"
+              },
+              "networkId": {
+                "type": "string",
+                "description": "The mobile network the device is connected to",
+                "example": "Optus AU"
+              }
+            }
+          },
+          "channels": {
+            "$ref": "#/components/schemas/DeviceChannels"
+          },
+          "phases": {
+            "$ref": "#/components/schemas/DevicePhases"
+          }
+        }
+      },
+      "DeviceDetailsWiFi": {
+        "type": "object",
+        "title": "Device details (WiFi)",
+        "description": "The status, state and metadata for a WiFi device.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Device ID",
+            "example": "D123456789012"
+          },
+          "model": {
+            "type": "string",
+            "description": "Device model",
+            "example": "6W"
+          },
+          "firmwareVersion": {
+            "type": "string",
+            "description": "Device firmware version",
+            "example": "41.3.2"
+          },
+          "latestStatus": {
+            "type": "integer",
+            "description": "Timestamp of the device's latest status",
+            "example": 1550684123
+          },
+          "shortEnergyReportingInterval": {
+            "type": "integer",
+            "description": "Short energy reporting interval",
+            "example": 30
+          },
+          "pending": {
+            "$ref": "#/components/schemas/DevicePending"
+          },
+          "comms": {
+            "type": "object",
+            "description": "The communication status of the device",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "The communication type(s) the device supports",
+                "example": "wifi"
+              },
+              "lastHeardAt": {
+                "type": "number",
+                "description": "The timestamp of the last known communications from the device to the Wattwatchers system",
+                "example": 123456789.2341
+              },
+              "signalQualityDbm": {
+                "type": "integer",
+                "description": "The signal quality in decibel-milliwatts",
+                "example": -57
+              },
+              "networkId": {
+                "type": "string",
+                "description": "Thge SSID of the wifi network the device is connected to",
+                "example": "my-wifi-net"
+              }
+            }
+          },
+          "channels": {
+            "$ref": "#/components/schemas/DeviceChannels"
+          },
+          "phases": {
+            "$ref": "#/components/schemas/DevicePhases"
+          }
+        }
+      },
+      "DevicePending": {
+        "type": "object",
+        "title": "Pending device state",
+        "properties": {
+          "shortEnergyReportingInterval": {
+            "type": "integer",
+            "description": "Short energy reporting interval",
+            "example": 5
+          }
+        },
+        "description": "Pending changes for the device",
+        "example": {
+          "shortEnergyReportingInterval": 5
+        }
+      },
+      "DevicePhases": {
+        "type": "object",
+        "title": "Device phase configuration",
+        "description": "Phase configuration",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "description": "Phase count",
+            "example": 3
+          },
+          "grouping": {
+            "type": "array",
+            "description": "Phase grouping",
+            "items": {
+              "type": "object",
+              "description": "Phase group",
+              "properties": {
+                "included": {
+                  "type": "array",
+                  "description": "Channels included in phase group",
+                  "items": {
+                    "type": "string",
+                    "description": "Channel Id",
+                    "example": "D123456789012_C1"
+                  },
+                  "example": [
+                    "D123456789012_C1",
+                    "D123456789012_C2",
+                    "D123456789012_C3"
+                  ]
+                }
+              },
+              "example": {
+                "included": [
+                  "D123456789012_C1",
+                  "D123456789012_C2",
+                  "D123456789012_C3"
+                ]
+              }
+            },
+            "example": [
+                {
+                  "included": [
+                    "D123456789012_C1",
+                    "D123456789012_C2",
+                    "D123456789012_C3"
+                  ]
+                },
+                {
+                  "included": [
+                    "D123456789012_C4",
+                    "D123456789012_C5",
+                    "D123456789012_C6"
+                  ]
+                }
+              ]
+          }
+        },
+        "example": {
+          "count": 3,
+          "grouping": [
+            {
+              "included": [
+                "D123456789012_C1",
+                "D123456789012_C2",
+                "D123456789012_C3"
+              ]
+            },
+            {
+              "included": [
+                "D123456789012_C4",
+                "D123456789012_C5",
+                "D123456789012_C6"
+              ]
+            }
+          ]
+        }
+      },
+      "DeviceChannels": {
+        "type": "array",
+        "title": "Device channels",
+        "description": "Array of the device's channels",
+        "items": {
+          "type": "object",
+          "description": "Channel details",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Channel Id",
+              "example": "D123456789012_C1"
+            },
+            "ctRating": {
+              "type": "number",
+              "description": "Channel CT rating",
+              "example": 60
+            },
+            "label": {
+              "type": "string",
+              "description": "Channel label",
+              "example": "Channel 1"
+            },
+            "categoryId": {
+              "type": "number",
+              "description": "Channel category Id",
+              "example": 1
+            },
+            "categoryLabel": {
+              "type": "string",
+              "description": "Channel category label",
+              "example": "Grid connect"
+            }
+          }
+        }  
+      },
+      "DevicePatchBody": {
+        "type": "object",
+        "title": "Device PATCH request body",
+        "description": "Body content for a device PATCH request",
+        "properties": {
+          "label": {
+            "type": "string",
+            "maxLength": 64,
+            "description": "Device label"
+          },
+          "timezone": {
+            "type": "string",
+            "maxLength": 64,
+            "description": "Device timezone"
+          },
+          "channels": {
+            "type": "array",
+            "description": "Array of channels to update",
+            "items": {
+              "type": "object",
+              "description": "Channel properties to update",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Channel properties",
+                  "example": "D123456789012_C1"
+                },
+                "label" : {
+                  "type": "string",
+                  "maxLength": 64,
+                  "description": "Channel label",
+                  "example": "Channel 1"
+                },
+                "categoryId": {
+                  "type": "integer",
+                  "description": "Channel category Id",
+                  "example": 1
+                },
+                "ctRating": {
+                  "type": "integer",
+                  "description": "Channel CT rating",
+                  "enum": [
+                    60,
+                    120,
+                    200,
+                    400,
+                    600
+                  ],
+                  "example": 60
+                }
+              }
+            }
+          },
+          "switches": {
+            "type": "array",
+            "description": "Array of switches to update",
+            "items": {
+              "type": "object",
+              "description": "Switch properties",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Switch Id",
+                  "example": "D123456789012_S1"
+                },
+                "state": {
+                  "type": "string",
+                  "description": "Switch state",
+                  "enum": [
+                    "open",
+                    "closed"
+                  ],
+                  "example": "closed"
+                },
+                "label": {
+                  "type": "string",
+                  "maxLength": 64,
+                  "description": "Switch label",
+                  "example": "Switch 1"
+                },
+                "contactorType": {
+                  "type": "string",
+                  "description": "Switch contactor type",
+                  "enum": [
+                    "NO",
+                    "NC"
+                  ],
+                  "example": "NC"
+                },
+                "closedStateLabel": {
+                  "type": "string",
+                  "maxLength": 16,
+                  "description": "Switch closed state label",
+                  "example": "Closed"
+                },
+                "openStateLabel": {
+                  "type": "string",
+                  "maxLength": 16,
+                  "description": "Switch open state label",
+                  "example": "Open"
+                }
+              }
+            }
+          },
+          "phases": {
+            "type": "object",
+            "description": "Phase configuration",
+            "properties": {
+              "count": {
+                "type": "integer",
+                "enum": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "description": "Phase count",
+                "example": 3
+              },
+              "grouping": {
+                "type": "array",
+                "description": "Phase grouping",
+                "items": {
+                  "type": "object",
+                  "description": "Phase group",
+                  "properties": {
+                    "included": {
+                      "type": "array",
+                      "description": "Channels included in phase group",
+                      "items": {
+                        "type": "string",
+                        "description": "Channel Id",
+                        "example": "D123456789012_C1"
+                      }
+                    }
+                  }
+                }
+              }
+            }, 
+            "example": {
+              "count": 3,
+              "grouping": [
+                {
+                  "included": [
+                    "D123456789012_C1",
+                    "D123456789012_C2",
+                    "D123456789012_C3"
+                  ]
+                },
+                {
+                  "included": [
+                    "D123456789012_C4",
+                    "D123456789012_C5",
+                    "D123456789012_C6"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "DeviceChannelCategories": {
+        "title": "Device channel categories",
+        "description": "Collection of channel categories",
+        "type": "array",
+        "items": {
+          "description": "Channel category",
+          "type": "object",
+          "properties": {
+            "id": {
+              "description": "Category Identifier",
+              "type": "integer",
+              "example": 1
+            },
+            "label": {
+              "description": "Category label",
+              "type": "string",
+              "example": "Grid connect"
+            }
+          },
+          "example": {
+            "id": 1,
+            "label": "Grid connect"
+          }
+        }
+      },
+      "DeviceModels": {
+        "title": "Device models",
+        "description": "Collection of device models",
+        "type": "array",
+        "items": {
+          "description": "Device model",
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "The model code",
+              "example": "3M"
+            },
+            "displayName": {
+              "type": "string",
+              "description": "The human-readable name of the model",
+              "example": "Auditor 3M"
+            },
+            "channelsCount": {
+              "type": "integer",
+              "description": "The number of channels supported by the model",
+              "example": 3
+            },
+            "switchesCount": {
+              "type": "integer",
+              "description": "The number of switches supported by the model",
+              "example": 0
+            },
+            "communications": {
+              "type": "string",
+              "description": "The type of communication supported by the model",
+              "example": "cellular"
+            }
+          }
+        }
+      },
+      "ShortEnergyData": {
+        "title": "Short Energy data",
+        "description": "An array of Short Energy data points",
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ShortEnergyDataPoint" 
+        }
+      },
+      "ShortEnergyDataPoint": { 
+        "title": "Short Energy data point",
+        "description": "A Short Energy data point",
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Unix timestamp in seconds",
+            "example": 1550622130
+          },
+          "duration": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Interval duration in seconds",
+            "example": 30
+          },
+          "frequency": {
+            "type": "number",
+            "format": "float",
+            "description": "Voltage frequency in Hz",
+            "example": 50.04
+          },
+          "eReal": {
+            "description": "Real Energy values for each device channel",
+            "type": "array",
+            "items": {
+              "description": "Real Energy value for a device channel",
+              "type": "number",
+              "format": "float",
+              "example": 1150
+            }, 
+            "example": [
+              1150,
+              2,
+              38
+            ]
+          },
+          "eReactive": {
+            "description": "Reactive Energy values for each device channel",
+            "type": "array",
+            "items": {
+              "description": "Reactive Energy value for a device channel",
+              "type": "number",
+              "format": "float",
+              "example": -857
+            },
+            "example": [
+              -857,
+              -19,
+              -364
+            ]
+          },
+          "vRMS": {
+            "description": "Volts Root Mean Square (RMS) values for each device channel",
+            "type": "array",
+            "items": {
+              "description": "Volts Root Mean Square (RMS) value for a device channel",
+              "type": "number",
+              "format": "float",
+              "example": 244.9
+            },
+            "example": [
+              244.9,
+              244.8,
+              244.8
+            ]
+          },
+          "iRMS": {
+            "description": "Current Root Mean Square (RMS) values for each device channel",
+            "type": "array",
+            "items": {
+              "description": "Current Root Mean Square (RMS) value for a device channel",
+              "type": "number",
+              "format": "float",
+              "example": 1.259
+            },
+            "example": [
+              1.259,
+              0.028,
+              0.31
+            ]
+          }
+        }
+      },
+      "LongEnergyData": {
+        "title": "Long Energy data",
+        "description": "An array of Long Energy data points",
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/LongEnergyDataPoint"
+        }
+      },
+      "LongEnergyDataPoint": {
+        "title": "Long Energy data point",
+        "description": "A Long Energy data point",
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Unix timestamp in seconds",
+            "example": 1550622130
+          },
+          "duration": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Interval duration in seconds",
+            "example": 300
+          },
+          "eReal": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "float",
+              "description": "Real Energy value for a device channel",
+              "example": 3639405
+            },
+            "description": "Real Energy values for each device channel",
+            "example": [
+              3639405,
+              336898,
+              -560,
+              37,
+              -14,
+              -25
+            ]
+          },
+          "eRealNegative": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "float",
+              "description": "Negative Real Energy value for a device channel",
+              "example": 560
+            },
+            "description": "Negative Real Energy values for each device channel. Over the Long Energy period there may be points of negative energy (e.g. exports to the grid) that are \"hidden\" in the `eReal` value for the period if the overall total is positive. `eRealNegative` enables you to determine the total negative flows during the period",
+            "example": [
+              0,
+              0,
+              560,
+              0,
+              14,
+              25
+            ]
+          },
+          "eRealPositive": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "float",
+              "description": "Positive Real Energy value for a device channel. Over the Long Energy period there may be points of negative energy (e.g. drawing energy from the grid) that are \"hidden\" in the `eReal` value for the period if the overall total is negative (for example if solar generation results in an overall export for the period). `eRealPositive` enables you to determine the total positive flows during the period",
+              "example": 3639405
+            },
+            "description": "Positive Real Energy values for each device channel",
+            "example": [
+              3639405,
+              336898,
+              0,
+              37,
+              0,
+              0
+            ]
+          },
+          "eReactive": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "float",
+              "description": "Reactive Energy value for a device channel",
+              "example": 154581
+            },
+            "description": "Reactive Energy values for each device channel",
+            "example": [
+              154581,
+              140216,
+              61,
+              45,
+              -4,
+              11
+            ]
+          },
+          "eReactiveNegative": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "float",
+              "description": "Negative Reactive Energy value for a device channel",
+              "example": 13832
+            },
+            "description": "Negative Reactive Energy values for each device channel",
+            "example": [
+              13832,
+              0,
+              0,
+              0,
+              5,
+              0
+            ]
+          },
+          "eReactivePositive": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "float",
+              "description": "Positive Reactive Energy value for a device channel",
+              "example": 168413
+            },
+            "description": "Positive Reactive Energy values for each device channel",
+            "example": [
+              168413,
+              140216,
+              61,
+              45,
+              1,
+              11
+            ]
+          },
+          "vRMSMin": {
+            "type": "array",
+            "description": "Minimum Volts RMS values for each device channel",
+            "items": {
+              "type": "number",
+              "format": "float",
+              "description": "Minimum Volts RMS value for a device channel. As voltage is an instantaneous value, only the minimum and maximum that occurred within the period are reported for Long Energy.",
+              "example": 244.9
+            },
+            "example": [
+              229.4,
+              229.5,
+              229.6,
+              229.4,
+              229.5,
+              229.6
+            ]
+          },
+          "vRMSMax": {
+            "type": "array",
+            "description": "Maximum Volts RMS values for each device channel",
+            "items": {
+              "type": "number",
+              "format": "float",
+              "description": "Maximum Volts RMS value for a device channel. As voltage is an instantaneous value, only the minimum and maximum that occurred within the period are reported for Long Energy.",
+              "example": 232.2
+            },
+            "example": [
+              232.2,
+              232.4,
+              232.4,
+              232.2,
+              232.4,
+              232.5
+            ]
+          },
+          "iRMSMin": {
+            "type": "array",
+            "description": "Minimum Current RMS values for each device channel",
+            "items": {
+              "type": "number",
+              "format": "float",
+              "description": "Minimum Current RMS value for a device channel. As current is an instantaneous value, only the minimum and maximum that occurred within the period are reported for Long Energy.",
+              "example": 0.023
+            },
+            "example": [
+              14.799,
+              0.331,
+              0.023,
+              0.023,
+              0.023,
+              0.022
+            ]
+          },
+          "iRMSMax": {
+            "type": "array",
+            "description": "Maximum Current RMS values for each device channel",
+            "items": {
+              "type": "number",
+              "format": "float",
+              "description": "Maximum Current RMS value for a device channel. As current is an instantaneous value, only the minimum and maximum that occurred within the period are reported for Long Energy.",
+              "example": 0.023
+            },
+            "example": [
+              21.208,
+              4.534,
+              0.043,
+              0.046,
+              0.043,
+              0.042
+            ]
+          }
+        }
+      },
+      "ModbusDataPMC-340B": {
+        "type": "array",
+        "title": "Data for Modbus PMC-340B device",
+        "description": "An array of modbus data points",
+        "items": {
+          "$ref": "#/components/schemas/ModbusDataPointPMC-340B"
+        }
+      },
+      "ModbusDataPointPMC-340B": {
+        "type": "object",
+        "title": "Data point for Modbus PMC-340B device",
+        "description": "Modbus data point for PMC-340B",
+        "properties": {
+          "_Ia": {
+            "type": "number", 
+            "format": "float",
+            "description": "Current in Amperes for the A phase",
+            "example": 0.0
+          },
+          "_Ib": {
+            "type": "number",
+            "format": "float",
+            "description": "Current in Amperes for the B phase",
+            "example": 0.0
+          },
+          "_Ic": {
+            "type": "number",
+            "format": "float",
+            "description": "Current in Amperes for the C phase",
+            "example": 0.0
+          },
+          "_PFa": {
+            "type": "number",
+            "format": "float",
+            "description": "Power Factor for the A phase",
+            "example": 1.0
+          },
+          "_PFb": {
+            "type": "number",
+            "format": "float",
+            "description": "Power Factor for the B phase",
+            "example": 1.0
+          },
+          "_PFc": {
+            "type": "number",
+            "format": "float",
+            "description": "Power Factor for the C phase",
+            "example": 1.0
+          },
+          "_Uan": {
+            "type": "number",
+            "format": "float",  
+            "description": "The phase-neutral Voltagesfor the A phase",
+            "example": 0.0
+          },
+          "_Ubn": {
+            "type": "number",
+            "format": "float",
+            "description": "The phase-neutral Voltagesfor the B phase",
+            "example": 0.0
+          },
+          "_Ucn": {
+            "type": "number",
+            "format": "float",
+            "description": "The phase-neutral Voltagesfor the C phase",
+            "example": 0.0
+          },
+          "kVAh": {
+            "type": "integer",
+            "format": "int32", 
+            "description": "Apparent power in 0.01kVAh",
+            "example": 0
+          },
+          "kWh_Exp": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Real energy export in 0.01kWh",
+            "example": 0
+          },
+          "kWh_Imp": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Real energy import in 0.01kWh",
+            "example": 0
+          },
+          "kWh_Net": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Real energy net in 0.01kWh",
+            "example": 0
+          },
+          "kWh_Tot": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Real energy total in 0.01kWh",
+            "example": 0
+          },
+          "kvarh_Q1": {
+            "type": "integer",
+            "format": "int32",
+            "description": "kvarh in Q1 in 0.01kvarh",
+            "example": 0
+          },
+          "kvarh_Q2": {
+            "type": "integer",
+            "format": "int32",
+            "description": "kvarh in Q2 in 0.01kvarh",
+            "example": 0
+          },
+          "kvarh_Q3": {
+            "type": "integer",
+            "format": "int32",
+            "description": "kvarh in Q3 in 0.01kvarh",
+            "example": 0
+          },
+          "kvarh_Q4": {
+            "type": "integer",
+            "format": "int32",
+            "description": "kvarh in Q4 in 0.01kvarh",
+            "example": 0
+          },
+          "kvarh_Exp": {
+            "type": "integer",
+            "format": "int32",
+            "description": "kvarh export in 0.01kvarh",
+            "example": 0
+          },
+          "kvarh_Imp": {
+            "type": "integer",
+            "format": "int32",
+            "description": "kvarh import in 0.01kvarh",
+            "example": 0
+          },
+          "kvarh_Net": {
+            "type": "integer",
+            "format": "int32",
+            "description": "kvarh net in 0.01kvarh",
+            "example": 0
+          },
+          "kvarh_Tot": {
+            "type": "integer",
+            "format": "int32",
+            "description": "kvarh total in 0.01kvarh",
+            "example": 0
+          },
+          "model": {
+            "type": "string",
+            "description": "The device model that was attached to the device at the time the data was collected.",
+            "example": "PMC-340B"
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The Unix timestamp in seconds when the data was captured on the device.",
+            "example": 1546952400
+          }
+        }
+      },
+      "ModbusDataPMC-220": {
+        "type": "array",
+        "title": "Data for Modbus PMC-220 device",
+        "description": "An array of Modbus data points",
+        "items": {
+          "$ref": "#/components/schemas/ModbusDataPointPMC-220"
+        }
+      },
+      "ModbusDataPointPMC-220": {
+        "type": "object",
+        "title": "Data point for Modbus PMC-220 device",
+        "description": "Modbus data point for PMC-220",
+        "properties": {
+          "_I": {
+            "type": "number",
+            "format": "float",
+            "description": "Current in Amperes",
+            "example": 0.3065536916255951
+          },
+          "_PF": {
+            "type": "number",
+            "format": "float",
+            "description": "Power Factor",
+            "example": 0.5856215357780457
+          },
+          "_V": {
+            "type": "number",
+            "format": "float",
+            "description": "Voltage",
+            "example":245.0169219970703
+          },
+          "kVAh": {
+            "type": "integer",
+            "format": "int32", 
+            "description": "Apparent power in 0.01kVAh",
+            "example": 0
+          },
+          "kWh_Exp": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Real energy export in 0.01kWh",
+            "example": 0
+          },
+          "kWh_Imp": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Real energy import in 0.01kWh",
+            "example": 0
+          },
+          "kWh_Net": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Real energy net in 0.01kWh",
+            "example": 0
+          },
+          "kWh_Tot": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Real energy total in 0.01kWh",
+            "example": 0
+          },
+          "kvarh_Exp": {
+            "type": "integer",
+            "format": "int32",
+            "description": "kvarh export in 0.01kvarh",
+            "example": 0
+          },
+          "kvarh_Imp": {
+            "type": "integer",
+            "format": "int32",
+            "description": "kvarh import in 0.01kvarh",
+            "example": 0
+          },
+          "kvarh_Net": {
+            "type": "integer",
+            "format": "int32",
+            "description": "kvarh net in 0.01kvarh",
+            "example": 0
+          },
+          "kvarh_Tot": {
+            "type": "integer",
+            "format": "int32",
+            "description": "kvarh total in 0.01kvarh",
+            "example": 0
+          },
+          "model": {
+            "type": "string",
+            "description": "The device model that was attached to the device at the time the data was collected.",
+            "example": "PMC-220"
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The Unix timestamp in seconds when the data was captured on the device.",
+            "example": 1546952400
+          }
+        } 
+      },
+      "Error": {
+        "title": "Error response",
+        "description": "Error object",
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "Error code",
+            "type": "string",
+            "example": "Unauthorized"
+          },
+          "httpCode": {
+            "description": "HTTP error code",
+            "type": "integer",
+            "example": 401
+          },
+          "message": {
+            "description": "Error message",
+            "type": "string",
+            "example": "API key is missing or invalid."
+          }
+        }
+      }
+    },
+    "examples": {
+      "DeviceDetailsCellular": {
+        "description": "Cellular device details",
+        "value": {
+          "id": "D123456789012",
+          "label": "Cellular device",
+          "timezone": "Australia/Sydney",
+          "model": "6M4+3SW",
+          "firmwareVersion": "49.1.0",
+          "latestStatus": 1550632148,
+          "shortEnergyReportingInterval": 30,
+          "pending": {
+            "shortEnergyReportingInterval": 5
+          },
+          "comms": {
+            "type": "cellular",
+            "mode": "4G",
+            "lastHeardAt": 1691035991,
+            "signalQualityDbm": -57,
+            "simId": "simId",
+            "apn": "apn",
+            "imsi": "imsi",
+            "networkId": "networkId"
+          },
+          "channels": [
+            {
+              "id": "D123456789012_C1",
+              "ctRating": 60,
+              "label": "Grid connection",
+              "categoryId": 1,
+              "categoryLabel": "Grid connect"
+            },
+            {
+              "id": "D123456789012_C2",
+              "ctRating": 60,
+              "label": "Grid connection",
+              "categoryId": 1,
+              "categoryLabel": "Grid connect"
+            },
+            {
+              "id": "D123456789012_C3",
+              "ctRating": 60,
+              "label": "Grid connection",
+              "categoryId": 1,
+              "categoryLabel": "Grid connect"
+            },
+            {
+              "id": "D123456789012_C4",
+              "ctRating": 60,
+              "label": "Solar",
+              "categoryId": 5,
+              "categoryLabel": "Solar generation"
+            },
+            {
+              "id": "D123456789012_C5",
+              "ctRating": 60,
+              "label": "Solar",
+              "categoryId": 5,
+              "categoryLabel": "Solar generation"
+            },
+            {
+              "id": "D123456789012_C6",
+              "ctRating": 60,
+              "label": "Solar",
+              "categoryId": 5,
+              "categoryLabel": "Solar generation"
+            }  
+          ],
+          "phases": {
+            "count": 3,
+            "grouping": [
+              {
+                "included": [
+                  "D123456789012_C1",
+                  "D123456789012_C2",
+                  "D123456789012_C3"
+                ]
+              },
+              {
+                "included": [
+                  "D123456789012_C4",
+                  "D123456789012_C5",
+                  "D123456789012_C6"
+                ]
+              }
+            ]
+          },
+          "switches": [
+              {
+                "id": "D123456789012_S1",
+                "state": "open",
+                "label": "Switch one",
+                "contactorType": "NC",
+                "closedStateLabel": "On",
+                "openStateLabel": "Off",
+                "pending": {
+                    "state": "closed"
+                }
+              },
+              {
+                "id": "D123456789012_S2",
+                "state": "open",
+                "label": "Switch two",
+                "contactorType": "NC",
+                "closedStateLabel": "On",
+                "openStateLabel": "Off",
+                "pending": {
+                    "state": "closed"
+                }
+              },
+              {
+                "id": "D123456789012_S3",
+                "state": "open",
+                "label": "Switch three",
+                "contactorType": "NC",
+                "closedStateLabel": "On",
+                "openStateLabel": "Off",
+                "pending": {
+                    "state": "closed"
+                }
+              }
+          ]
+        }
+      },
+      "DeviceDetailsWiFi": {
+        "description": "WiFi device details",
+        "value": {
+          "id": "D123456789012",
+          "label": "WiFi device",
+          "timezone": "Australia/Sydney",
+          "model": "6W+3SW",
+          "firmwareVersion": "2.2.7.0",
+          "latestStatus": 1550632148,
+          "shortEnergyReportingInterval": 30,
+          "pending": {
+            "shortEnergyReportingInterval": 5
+          },
+          "comms": {
+            "type": "cellular",
+            "mode": "4G",
+            "lastHeardAt": 1691035991,
+            "signalQualityDbm": -57,
+            "simId": "simId",
+            "apn": "apn",
+            "imsi": "imsi",
+            "networkId": "networkId"
+          },
+          "channels": [
+            {
+              "id": "D123456789012_C1",
+              "ctRating": 60,
+              "label": "Grid connection",
+              "categoryId": 1,
+              "categoryLabel": "Grid connect"
+            },
+            {
+              "id": "D123456789012_C2",
+              "ctRating": 60,
+              "label": "Grid connection",
+              "categoryId": 1,
+              "categoryLabel": "Grid connect"
+            },
+            {
+              "id": "D123456789012_C3",
+              "ctRating": 60,
+              "label": "Grid connection",
+              "categoryId": 1,
+              "categoryLabel": "Grid connect"
+            },
+            {
+              "id": "D123456789012_C4",
+              "ctRating": 60,
+              "label": "Solar",
+              "categoryId": 5,
+              "categoryLabel": "Solar generation"
+            },
+            {
+              "id": "D123456789012_C5",
+              "ctRating": 60,
+              "label": "Solar",
+              "categoryId": 5,
+              "categoryLabel": "Solar generation"
+            },
+            {
+              "id": "D123456789012_C6",
+              "ctRating": 60,
+              "label": "Solar",
+              "categoryId": 5,
+              "categoryLabel": "Solar generation"
+            }  
+          ],
+          "phases": {
+            "count": 3,
+            "grouping": [
+              {
+                "included": [
+                  "D123456789012_C1",
+                  "D123456789012_C2",
+                  "D123456789012_C3"
+                ]
+              },
+              {
+                "included": [
+                  "D123456789012_C4",
+                  "D123456789012_C5",
+                  "D123456789012_C6"
+                ]
+              }
+            ]
+          },
+          "switches": [
+              {
+                "id": "D123456789012_S1",
+                "state": "open",
+                "label": "Switch one",
+                "contactorType": "NC",
+                "closedStateLabel": "On",
+                "openStateLabel": "Off",
+                "pending": {
+                    "state": "closed"
+                }
+              },
+              {
+                "id": "D123456789012_S2",
+                "state": "open",
+                "label": "Switch two",
+                "contactorType": "NC",
+                "closedStateLabel": "On",
+                "openStateLabel": "Off",
+                "pending": {
+                    "state": "closed"
+                }
+              },
+              {
+                "id": "D123456789012_S3",
+                "state": "open",
+                "label": "Switch three",
+                "contactorType": "NC",
+                "closedStateLabel": "On",
+                "openStateLabel": "Off",
+                "pending": {
+                    "state": "closed"
+                }
+              }
+          ]
+        }
+      },
+      "DevicePatchBody": {
+        "description": "Body content for a device PATCH request",
+        "value": {
+          "label": "Main Switchboard",
+          "timezone": "Australia/Sydney",
+          "switches": [
+            {
+              "id": "D123456789012_S1",
+              "state": "closed"
+            }
+          ],
+          "phases": {
+            "count": 3,
+            "grouping": [
+              {
+                "included": [
+                  "D123456789012_C1",
+                  "D123456789012_C2",
+                  "D123456789012_C3"
+                ]
+              },
+              {
+                "included": [
+                  "D123456789012_C4",
+                  "D123456789012_C5",
+                  "D123456789012_C6"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "ShortEnergyDataPoint": {
+        "description": "A Short Energy data point",
+        "value": {
+          "timestamp": 1550622145,
+          "duration": 5,
+          "frequency": 50.04,
+          "eReal": [
+            1163,
+            3,
+            39
+          ],
+          "eReactive": [
+            -856,
+            -19,
+            -363
+          ],
+          "vRMS": [
+            244.6,
+            244.5,
+            244.5
+          ],
+          "iRMS": [
+            1.267,
+            0.028,
+            0.309
+          ]
+        }
+      },
+      "LongEnergyDataPoint": {
+        "description": "A Long Energy data point",
+        "value": {
+          "timestamp": 1550622145,
+          "duration": 900,
+          "eReal": [
+            3586031,
+            329486,
+            -549,
+            39,
+            -13,
+            -24
+          ],
+          "eRealNegative": [
+            0,
+            0,
+            549,
+            0,
+            13,
+            24
+          ],
+          "eRealPositive": [
+            3586031,
+            329486,
+            0,
+            39,
+            0,
+            0
+          ],
+          "eReactive": [
+            134087,
+            136446,
+            47,
+            33,
+            -10,
+            11
+          ],
+          "eReactiveNegative": [
+            11739,
+            0,
+            0,
+            0,
+            10,
+            0
+          ],
+          "eReactivePositive": [
+            145826,
+            136446,
+            47,
+            33,
+            0,
+            11
+          ]
+        }
+      },
+      "PMC-340B": {
+        "description": "Response for a PMC-340B device",
+        "value": {
+          "_Ia": 0,
+          "_Ib": 0,
+          "_Ic": 0,
+          "_PFa": 1,
+          "_PFb": 1,
+          "_PFc": 1,
+          "_Uan": 244.8056182861328,
+          "_Ubn": 122.43417358398438,
+          "_Ucn": 122.45341491699219,
+          "kVAh": 0,
+          "kWh_Exp": 0,
+          "kWh_Imp": 0,
+          "kWh_Net": 0,
+          "kWh_Tot": 0,
+          "kvarh_Q1": 0,
+          "kvarh_Q2": 0,
+          "kvarh_Q3": 0,
+          "kvarh_Q4": 0,
+          "kvarh_Exp": 0,
+          "kvarh_Imp": 0,
+          "kvarh_Net": 0,
+          "kvarh_Tot": 0,
+          "model": "PMC-340B",
+          "timestamp": 1550622145
+        }
+      },
+      "PMC-220": {
+        "description": "Response for a PMC-220 device",
+        "value": {
+          "_I": 0.3065536916255951,
+          "_V": 245.0169219970703,
+          "_PF": 0.5856215357780457,
+          "kVAh": 616,
+          "kWh_Exp": 0,
+          "kWh_Imp": 283,
+          "kWh_Net": 283,
+          "kWh_Tot": 283,
+          "kvarh_Exp": 173,
+          "kvarh_Imp": 0,
+          "kvarh_Net": -173,
+          "kvarh_Tot": 173,
+          "model": "PMC-220",
+          "timestamp": 1550622145
+        }
+      },
+      "FirstLastTimestampOnly": {
+        "value": {
+          "timestamp": 1550622145
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Devices",
+      "description": "Operations related to devices"
+    },
+    {
+      "name": "Short Energy",
+      "description": "Operations related to Short Energy (SE)"
+    },
+    {
+      "name": "Long Energy",
+      "description": "Operations related to Long Energy (LE)"
+    },
+    {
+      "name": "Modbus",
+      "description": "Operations related to Modbus"
+    }
+  ]
+}

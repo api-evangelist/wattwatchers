@@ -1,0 +1,331 @@
+aid: wattwatchers
+name: Wattwatchers
+review:
+  question: Does Wattwatchers publish a real, documented public API surface, and does
+    any energy data mandate apply to it?
+  answer: true
+  date: '2026-07-27'
+  reviewer: API Evangelist
+  bootstrap: true
+  homeMarket: Australia
+  tier: energy-data-platform
+findings:
+  summary: |
+    Wattwatchers publishes a genuinely public developer documentation site at
+    docs.wattwatchers.com.au (HTTP 200, anonymous, no login) covering REST API
+    v3 "Mercury", including a live Swagger UI and a directly downloadable
+    OpenAPI 3.0.0 contract (version 3.6.0, 13 paths / 14 operations). The
+    documentation layer is open; the data layer is not. API keys are not
+    self-serve — Wattwatchers issues each bearer token by hand and scopes it to
+    the specific devices assigned to that key, so a developer must be a
+    Wattwatchers customer or fleet manager with hardware before the API returns
+    anything. No Consumer Data Right obligation applies to this organization,
+    and no CDR, Green Button or ESPI data standard is implemented.
+  corporateSiteNote: |
+    https://wattwatchers.com.au/ and every /about/, /products/, /use-cases/ page
+    returned HTTP 202 with a SiteGround captcha interstitial
+    (/.well-known/sgcaptcha/) to every non-browser client tried, including
+    full browser headers and cookie jar. The corporate marketing site could not
+    be read programmatically on the review date. All API facts recorded here
+    come from docs.wattwatchers.com.au, api-v3.wattwatchers.com.au, the
+    github.com/wattwatchers organization, and the live CDR Register API — not
+    from the captcha-walled marketing site.
+mandate:
+  regime: none
+  status: not-applicable
+  regimeConsidered: cdr-energy
+  reasoning: |
+    Australia extended the Consumer Data Right — the same statute, the same
+    regulator (ACCC), the same Data Standards Body that produced the identical
+    fifty-bank banking contract — into energy, with AEMO acting as gateway for
+    standardised retailer data. That mandate binds ENERGY RETAILERS and AEMO as
+    designated data holders. Wattwatchers is neither. It is a behind-the-meter
+    hardware and platform vendor: its Auditor devices are sub-metering /
+    circuit-monitoring hardware, not accredited NMI revenue meters, and it does
+    not sell electricity. It therefore carries no CDR energy data-holder
+    obligation, and the mandate is genuinely NOT APPLICABLE here rather than
+    designated-and-unbuilt.
+  verification:
+  - probe: GET https://api.cdr.gov.au/cdr-register/v1/energy/data-holders/brands/summary
+    headers: 'x-v: 1'
+    status: 200
+    date: '2026-07-27'
+    result: 84 designated energy data-holder brands returned. No brand matching
+      "watt" / "Wattwatchers" is present. Wattwatchers is NOT a CDR energy data
+      holder.
+  - probe: GET https://api.cdr.gov.au/cdr-register/v1/all/data-recipients
+    headers: 'x-v: 3'
+    status: 200
+    date: '2026-07-27'
+    result: 38 accredited data recipient legal entities returned. No entity
+      matching "watt" / "Wattwatchers" is present. Wattwatchers is NOT an
+      accredited data recipient (ADR) either.
+  - probe: full-text search of docs.wattwatchers.com.au (22 pages, all HTTP 200)
+    date: '2026-07-27'
+    result: No mention of Consumer Data Right, CDR, ACCC, AEMO, Consumer Data
+      Standards, Green Button, ESPI, IEEE 2030.5, OpenADR, OCPP, OCPI or IEC CIM
+      anywhere in the developer documentation.
+  claimVsImplementation: |
+    Nothing was claimed and nothing was found. This provider makes no compliance
+    claim to verify, which is a cleaner result than the usual "compliance page
+    with no endpoint behind it" — there is no gap between claim and
+    implementation because there is no claim. Recorded as regime=none,
+    status=not-applicable.
+dataStandard:
+  name: no standard reference found
+  detail: |
+    The API is a proprietary JSON/REST shape of Wattwatchers' own design. No
+    consumer-energy interoperability standard is implemented or referenced:
+    no Green Button / ESPI, no CDR Consumer Data Standards energy schemas, no
+    IEEE 2030.5, no OpenADR, no IEC CIM 61968/61970, no OCPP/OCPI. The only
+    standard named anywhere in the surface is Modbus — the industrial fieldbus
+    the 6M+One hardware reads from downstream equipment — surfaced through
+    /modbus/{device-id} endpoints. That is a device-side protocol, not an
+    energy data-sharing standard, and must not be counted as one.
+dataSplit:
+  consumerDataApi: true
+  consumerDataDetail: |
+    A third party CAN obtain an individual customer's electricity usage through
+    a documented API — that is the entire business model. GET
+    /short-energy/{device-id} returns 30-second interval data, GET
+    /long-energy/{device-id} returns 5-minute interval data, both at
+    per-circuit (channel) granularity for a named site's device. Consent is
+    handled commercially and by device assignment, not by any statutory
+    consent framework: whoever Wattwatchers assigns the device to on the key
+    gets the data.
+  marketDataOpen: false
+  marketDataDetail: |
+    Wattwatchers publishes NO open grid, market, system or emissions data. There
+    is no anonymous data endpoint, no open-data portal, no bulk download, no
+    published dataset. Every documented endpoint requires a bearer key. The
+    split is total: documented consumer/site data behind a commercial key,
+    zero open market data. In Australia that market-data role belongs to AEMO,
+    not to this provider.
+accessGate:
+  gate: customer-account-required
+  gated: true
+  howADeveloperGetsIn: |
+    1. Buy / operate Wattwatchers Auditor hardware, or manage a fleet of it.
+    2. Get access to the Fleet Management web app
+       (https://fleet.wattwatchers.com.au) — "Please contact Wattwatchers
+       support if you don't have the details for accessing this app."
+    3. The API key is then visible under the profile menu of the Fleet app.
+       For new keys the docs say: "Please contact the Wattwatchers team to have
+       an API key setup. We will distribute the API key to you securely once we
+       have set it up and assigned the correct devices and related permissions."
+    There is no signup form, no free tier, no sandbox, no trial key, and no
+    self-service key issuance anywhere in the documentation. The key is
+    human-issued and device-scoped, which is why this is recorded as
+    customer-account-required rather than application-approval: approval alone
+    is not enough, you must own the hardware the key points at.
+  documentationGate: none
+  documentationGateDetail: |
+    Notably the DOCS are ungated. The full endpoint reference, the auth guide,
+    the rate-limit contract, the changelog, the Swagger UI and the raw OpenAPI
+    JSON are all served anonymously over CloudFront/S3 with no login and no
+    robots-level obstruction. A developer can fully evaluate and even generate
+    a client before ever talking to a salesperson. Open docs, closed data.
+authModel:
+  scheme: HTTP Bearer token (API key)
+  detail: |
+    Authorization: Bearer key_xxxxxxxxxxxx. Declared in the OpenAPI contract as
+    components.securitySchemes.BearerAuth (type: http, scheme: bearer). No
+    OAuth2, no OpenID Connect, no mTLS, no CDR accreditation, no scopes. There
+    is no top-level `security` array in the published spec, though every
+    documented endpoint requires the header in practice — confirmed live below.
+    Permissions are not expressed as scopes; they are expressed as the set of
+    devices Wattwatchers assigns to the key.
+  oidcDiscovery:
+    probed: https://api-v3.wattwatchers.com.au/.well-known/openid-configuration
+    status: 404
+    result: not served — no OpenID Connect.
+  rateLimits: |
+    Documented and header-driven. X-RateLimit-TpdLimit / TpdRemaining /
+    TpdReset (transactions per day) and X-RateLimit-TpsLimit / TpsRemaining /
+    TpsReset (transactions per second, float reset). 429 returns
+    TOO_MANY_REQUESTS_TPS or TOO_MANY_REQUESTS_TPD plus Retry-After. Limits
+    auto-scale with the number of devices on the key.
+transports:
+- protocol: REST
+  scheme: https
+  baseURL: https://api-v3.wattwatchers.com.au
+  documented: true
+- protocol: Webhooks
+  documented: false
+  note: No webhooks, no MQTT, no WebSocket and no server-push of any kind is
+    documented. The polling-data guide states verbatim that Wattwatchers is
+    "exploring options to enable a stream-based 'push' API" and invites
+    customers to "participate in early trials of the stream API" — an
+    unshipped intention, not a surface. Integrators poll.
+probes:
+- url: https://wattwatchers.com.au/
+  status: 202
+  note: SiteGround captcha interstitial, not readable by any non-browser client.
+- url: https://www.wattwatchers.com.au/
+  status: 202
+  note: same captcha interstitial.
+- url: https://docs.wattwatchers.com.au/
+  status: 200
+  note: REAL public developer documentation hub (MkDocs Material on S3 +
+    CloudFront). No login. This is the developer portal.
+- url: https://developer.wattwatchers.com.au/
+  status: 000
+  note: DNS does not resolve.
+- url: https://developers.wattwatchers.com.au/
+  status: 000
+  note: DNS does not resolve.
+- url: https://api.wattwatchers.com.au/
+  status: 000
+  note: DNS does not resolve — the API host is api-v3.wattwatchers.com.au.
+- url: https://data.wattwatchers.com.au/
+  status: 000
+  note: DNS does not resolve — no open-data host.
+- url: https://api-v3.wattwatchers.com.au/
+  status: 200
+  note: 'anonymous health response: {"status":"ok","time":"2026-07-27T22:22:39+10:00","version":"main-5258783-202607060645"}'
+- url: https://api-v3.wattwatchers.com.au/devices
+  status: 401
+  note: '{"code":"UNAUTHORIZED",...,"You must provide a valid Authorization header
+    value to access this endpoint."} — confirms the gate is real and enforced.'
+- url: https://api-v3.wattwatchers.com.au/.well-known/openid-configuration
+  status: 404
+  note: not served.
+- url: https://api-v3.wattwatchers.com.au/openapi.json
+  status: 404
+  note: spec is not served from the API host; it is served from the docs host.
+- url: https://docs.wattwatchers.com.au/api/v3/openapi/index.html
+  status: 200
+  note: Swagger UI shell; swagger-initializer.js resolves the spec URL to
+    ./public_rest_api_3_6_0.json.
+- url: https://docs.wattwatchers.com.au/api/v3/openapi/public_rest_api_3_6_0.json
+  status: 200
+  note: the real OpenAPI 3.0.0 contract, 87,073 bytes — harvested.
+- url: https://docs.wattwatchers.com.au/sitemap.xml
+  status: 200
+- url: https://github.com/wattwatchers
+  status: 200
+  note: 2 public repos, created 2021-12-13.
+- url: https://github.com/wattwatchers/rest-api-notebooks
+  status: 200
+  note: Jupyter notebooks for Long Energy and Modbus downloads, Colab-runnable.
+- url: https://www.linkedin.com/company/wattwatchers-digital-energy
+  status: 200
+- url: https://api.cdr.gov.au/cdr-register/v1/energy/data-holders/brands/summary
+  status: 200
+  note: authoritative CDR energy data-holder register — Wattwatchers absent.
+- url: https://api.cdr.gov.au/cdr-register/v1/all/data-recipients
+  status: 200
+  note: authoritative CDR accredited-data-recipient register — Wattwatchers absent.
+harvested:
+- path: openapi/wattwatchers-rest-api-v3-openapi.json
+  sourceURL: https://docs.wattwatchers.com.au/api/v3/openapi/public_rest_api_3_6_0.json
+  httpStatus: 200
+  fetchedDate: '2026-07-27'
+  bytes: 87073
+  format: OpenAPI 3.0.0 (JSON)
+  parsed: true
+  verbatim: true
+  title: Wattwatchers API
+  version: 3.6.0
+  server: https://api-v3.wattwatchers.com.au
+  pathCount: 13
+  operationCount: 14
+  tags:
+  - Devices
+  - Short Energy
+  - Long Energy
+  - Modbus
+  securitySchemes:
+  - BearerAuth (http/bearer)
+endpointsConfirmedDocumented:
+- GET https://api-v3.wattwatchers.com.au/devices
+- GET https://api-v3.wattwatchers.com.au/devices/{device-id}
+- PATCH https://api-v3.wattwatchers.com.au/devices/{device-id}
+- GET https://api-v3.wattwatchers.com.au/devices/channel-categories
+- GET https://api-v3.wattwatchers.com.au/devices/models
+- GET https://api-v3.wattwatchers.com.au/short-energy/{device-id}
+- GET https://api-v3.wattwatchers.com.au/short-energy/{device-id}/first
+- GET https://api-v3.wattwatchers.com.au/short-energy/{device-id}/latest
+- GET https://api-v3.wattwatchers.com.au/long-energy/{device-id}
+- GET https://api-v3.wattwatchers.com.au/long-energy/{device-id}/first
+- GET https://api-v3.wattwatchers.com.au/long-energy/{device-id}/latest
+- GET https://api-v3.wattwatchers.com.au/modbus/{device-id}
+- GET https://api-v3.wattwatchers.com.au/modbus/{device-id}/first
+- GET https://api-v3.wattwatchers.com.au/modbus/{device-id}/latest
+apiFamily:
+  usageMetering: 'Yes — short energy (30 second intervals) and long energy (5
+    minute intervals), per device and per circuit/channel, with /first and
+    /latest convenience endpoints.'
+  derAssetControl: 'Yes — switch state is a writable property on PATCH
+    /devices/{device-id} for the +3SW hardware variants (6M+3SW, 6W+3SW,
+    3RM+3SW), with a dedicated switching guide. This is real load control, but
+    it is control of Wattwatchers'' own relays, not a standards-based DER
+    protocol.'
+  deviceConfiguration: 'Yes — CT ratings, channel labels and categories,
+    phase grouping, reporting interval, all via PATCH with a pending-value
+    convergence model.'
+  modbus: 'Yes — /modbus endpoints expose Modbus register data read by 6M+One
+    devices from downstream equipment (inverters, meters).'
+  tariffsPricing: No — not exposed.
+  billing: No — not exposed.
+  outages: No — not exposed.
+  chargingSessions: No — no OCPP/OCPI surface, despite an EV use case in
+    marketing.
+  emissionsCarbon: No — not exposed.
+  marketData: No — not exposed.
+applications:
+- name: Fleet Web App
+  url: https://fleet.wattwatchers.com.au
+  note: where an existing customer's API key is displayed; HTTP 200 (login wall).
+- name: Onboarding Web App
+  url: https://onboarding.wattwatchers.com.au
+  note: installer device configuration; HTTP 200.
+- name: Dashboard Web App
+  url: https://wattwatchers.app
+  note: customer energy dashboard; host did not resolve from this network (000).
+- name: mydata.energy smartphone app
+  url: https://mydata.energy
+  note: consumer app; host did not resolve from this network (000).
+identity:
+  founded: 2007
+  headquarters: Sydney (Rydalmere), New South Wales, Australia
+  homeMarket: Australia
+  valueChainPosition: |
+    Behind-the-meter hardware + data platform. Not a retailer, not a network
+    operator, not a metering coordinator. It sells circuit-level truth about a
+    site to the parties who need it — solar and DER installers, energy services
+    companies, retailers running products on top, EV programs, research trials
+    — and the API is how that truth is delivered.
+sources:
+- url: https://docs.wattwatchers.com.au/
+  type: Documentation
+  note: developer documentation hub, HTTP 200, anonymous.
+- url: https://docs.wattwatchers.com.au/api/v3/auth.html
+  type: Authentication
+  note: bearer token scheme; key issuance is manual and device-scoped.
+- url: https://docs.wattwatchers.com.au/api/v3/endpoints.html
+  type: APIReference
+  note: every documented operation; matches the OpenAPI exactly.
+- url: https://docs.wattwatchers.com.au/api/v3/rate-limits.html
+  type: RateLimits
+  note: TPS/TPD headers and 429 shape.
+- url: https://docs.wattwatchers.com.au/api/tips/polling-data.html
+  type: Documentation
+  note: source of the "exploring... stream-based push API" statement.
+- url: https://docs.wattwatchers.com.au/api/v3/openapi/public_rest_api_3_6_0.json
+  type: OpenAPI
+  note: harvested verbatim.
+- url: https://api.cdr.gov.au/cdr-register/v1/energy/data-holders/brands/summary
+  type: Register
+  note: CDR energy data holders — Wattwatchers not listed.
+- url: https://api.cdr.gov.au/cdr-register/v1/all/data-recipients
+  type: Register
+  note: CDR accredited data recipients — Wattwatchers not listed.
+actions:
+  apisYmlCreated: true
+  readmeCreated: true
+  openapiHarvested: 1
+  specsCount: 1
+  gitCommitted: true
+  githubRemoteCreated: false
+  pushed: false
