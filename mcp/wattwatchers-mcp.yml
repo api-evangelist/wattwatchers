@@ -2,20 +2,16 @@ generated: '2026-07-27'
 method: derived
 status: candidate
 source: openapi/wattwatchers-rest-api-v3-openapi.json
-search_result: >-
-  No official Wattwatchers MCP server exists. Searched the MCP registry, npm
-  (@modelcontextprotocol and wattwatchers scopes), the github.com/wattwatchers
-  organization (2 repos, both Jupyter notebooks) and the full documentation site
-  (22 pages) — no MCP server, no agent toolkit, no /mcp endpoint. This manifest
-  is an API Evangelist-DERIVED candidate: one tool per real operationId in the
-  published OpenAPI, with each tool's input contract inherited verbatim from that
-  operation's parameters. It is a design proposal, not a Wattwatchers product.
-description: >-
-  Candidate MCP tool surface for the Wattwatchers REST API v3 (Mercury). All 14
-  operations map cleanly to tools. Note the safety profile: 13 of 14 are safe
-  reads, and exactly one — update_device — is a physical-world write that can
-  throw a relay on a live electrical circuit. Any real deployment of this server
-  should gate update_device behind human confirmation.
+search_result: 'No official Wattwatchers MCP server exists. Searched the MCP registry, npm (@modelcontextprotocol
+  and wattwatchers scopes), the github.com/wattwatchers organization (2 repos, both Jupyter notebooks)
+  and the full documentation site (22 pages) — no MCP server, no agent toolkit, no /mcp endpoint. This
+  manifest is an API Evangelist-DERIVED candidate: one tool per real operationId in the published OpenAPI,
+  with each tool''s input contract inherited verbatim from that operation''s parameters. It is a design
+  proposal, not a Wattwatchers product.'
+description: 'Candidate MCP tool surface for the Wattwatchers REST API v3 (Mercury). All 14 operations
+  map cleanly to tools. Note the safety profile: 13 of 14 are safe reads, and exactly one — update_device
+  — is a physical-world write that can throw a relay on a live electrical circuit. Any real deployment
+  of this server should gate update_device behind human confirmation.'
 server:
   name: wattwatchers
   transport: http
@@ -24,111 +20,102 @@ server:
   auth:
     type: bearer
     header: Authorization
-    format: 'Bearer key_...'
-    note: >-
-      Keys are issued by hand by Wattwatchers and scoped to a fixed device set.
-      There is no OAuth, no self-serve issuance and no sandbox key, so an MCP
-      deployment must be configured with a customer's production key.
+    format: Bearer key_...
+    note: Keys are issued by hand by Wattwatchers and scoped to a fixed device set. There is no OAuth,
+      no self-serve issuance and no sandbox key, so an MCP deployment must be configured with a customer's
+      production key.
 base_url: https://api-v3.wattwatchers.com.au
 tools:
-  - name: list_devices
-    description: List every device ID available to the API key.
-    source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#listDevices
-    method: GET
-    path: /devices
-    read_only: true
-  - name: get_device
-    description: Get status, state, configuration and metadata for one device.
-    source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getDevice
-    method: GET
-    path: /devices/{device-id}
-    read_only: true
-  - name: update_device
-    description: >-
-      Update device metadata and state — label, timezone, channel CT ratings and
-      categories, phase grouping, and SWITCH STATE (relay open/closed).
-    source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#updateDevice
-    method: PATCH
-    path: /devices/{device-id}
-    read_only: false
-    consequence: physical
-    human_in_the_loop: recommended
-    note: >-
-      The only write in the API. Setting a switch state energises or de-energises
-      a real circuit on +3SW hardware. Changes are applied asynchronously and
-      appear under `pending` until the device converges.
-  - name: get_channel_categories
-    description: Get the platform-wide channel categorisation schema.
-    source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getChannelCategories
-    method: GET
-    path: /devices/channel-categories
-    read_only: true
-  - name: get_device_models
-    description: Get the catalogue of valid device models.
-    source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getDeviceModels
-    method: GET
-    path: /devices/models
-    read_only: true
-  - name: get_short_energy
-    description: >-
-      Get ~30-second interval energy data for a device over a time window
-      (max 12 hours per request).
-    source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getShortEnergyData
-    method: GET
-    path: /short-energy/{device-id}
-    read_only: true
-  - name: get_first_short_energy
-    description: Get the earliest Short Energy data point recorded for a device.
-    source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getFirstShortEnergyData
-    method: GET
-    path: /short-energy/{device-id}/first
-    read_only: true
-  - name: get_latest_short_energy
-    description: Get the most recent Short Energy data point for a device.
-    source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getLatestShortEnergyData
-    method: GET
-    path: /short-energy/{device-id}/latest
-    read_only: true
-  - name: get_long_energy
-    description: >-
-      Get 5-minute interval energy data for a device over a time window, with
-      optional granularity aggregation (5m/15m/30m/hour/day/week/month).
-    source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getLongEnergyData
-    method: GET
-    path: /long-energy/{device-id}
-    read_only: true
-  - name: get_first_long_energy
-    description: Get the earliest Long Energy data point recorded for a device.
-    source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getFirstLongEnergyData
-    method: GET
-    path: /long-energy/{device-id}/first
-    read_only: true
-  - name: get_latest_long_energy
-    description: Get the most recent Long Energy data point for a device.
-    source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getLatestLongEnergyData
-    method: GET
-    path: /long-energy/{device-id}/latest
-    read_only: true
-  - name: get_modbus_data
-    description: >-
-      Get Modbus register data a 6M+One device read from downstream equipment
-      over a time window.
-    source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getModbusData
-    method: GET
-    path: /modbus/{device-id}
-    read_only: true
-  - name: get_first_modbus_data
-    description: Get the earliest Modbus data point recorded for a device.
-    source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getFirstModbusData
-    method: GET
-    path: /modbus/{device-id}/first
-    read_only: true
-  - name: get_latest_modbus_data
-    description: Get the most recent Modbus data point for a device.
-    source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getLatestModbusData
-    method: GET
-    path: /modbus/{device-id}/latest
-    read_only: true
+- name: list_devices
+  description: List every device ID available to the API key.
+  source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#listDevices
+  method: GET
+  path: /devices
+  read_only: true
+- name: get_device
+  description: Get status, state, configuration and metadata for one device.
+  source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getDevice
+  method: GET
+  path: /devices/{device-id}
+  read_only: true
+- name: update_device
+  description: Update device metadata and state — label, timezone, channel CT ratings and categories,
+    phase grouping, and SWITCH STATE (relay open/closed).
+  source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#updateDevice
+  method: PATCH
+  path: /devices/{device-id}
+  read_only: false
+  consequence: physical
+  human_in_the_loop: recommended
+  note: The only write in the API. Setting a switch state energises or de-energises a real circuit on
+    +3SW hardware. Changes are applied asynchronously and appear under `pending` until the device converges.
+- name: get_channel_categories
+  description: Get the platform-wide channel categorisation schema.
+  source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getChannelCategories
+  method: GET
+  path: /devices/channel-categories
+  read_only: true
+- name: get_device_models
+  description: Get the catalogue of valid device models.
+  source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getDeviceModels
+  method: GET
+  path: /devices/models
+  read_only: true
+- name: get_short_energy
+  description: Get ~30-second interval energy data for a device over a time window (max 12 hours per request).
+  source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getShortEnergyData
+  method: GET
+  path: /short-energy/{device-id}
+  read_only: true
+- name: get_first_short_energy
+  description: Get the earliest Short Energy data point recorded for a device.
+  source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getFirstShortEnergyData
+  method: GET
+  path: /short-energy/{device-id}/first
+  read_only: true
+- name: get_latest_short_energy
+  description: Get the most recent Short Energy data point for a device.
+  source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getLatestShortEnergyData
+  method: GET
+  path: /short-energy/{device-id}/latest
+  read_only: true
+- name: get_long_energy
+  description: Get 5-minute interval energy data for a device over a time window, with optional granularity
+    aggregation (5m/15m/30m/hour/day/week/month).
+  source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getLongEnergyData
+  method: GET
+  path: /long-energy/{device-id}
+  read_only: true
+- name: get_first_long_energy
+  description: Get the earliest Long Energy data point recorded for a device.
+  source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getFirstLongEnergyData
+  method: GET
+  path: /long-energy/{device-id}/first
+  read_only: true
+- name: get_latest_long_energy
+  description: Get the most recent Long Energy data point for a device.
+  source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getLatestLongEnergyData
+  method: GET
+  path: /long-energy/{device-id}/latest
+  read_only: true
+- name: get_modbus_data
+  description: Get Modbus register data a 6M+One device read from downstream equipment over a time window.
+  source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getModbusData
+  method: GET
+  path: /modbus/{device-id}
+  read_only: true
+- name: get_first_modbus_data
+  description: Get the earliest Modbus data point recorded for a device.
+  source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getFirstModbusData
+  method: GET
+  path: /modbus/{device-id}/first
+  read_only: true
+- name: get_latest_modbus_data
+  description: Get the most recent Modbus data point for a device.
+  source_operation: openapi/wattwatchers-rest-api-v3-openapi.json#getLatestModbusData
+  method: GET
+  path: /modbus/{device-id}/latest
+  read_only: true
 coverage:
   rest_operations: 14
   tools_derived: 14
@@ -136,16 +123,16 @@ coverage:
   read_only_tools: 13
   write_tools: 1
 agent_notes:
-  - >-
-    Energy payloads are positional arrays indexed by channel order — an agent
-    MUST call get_device first to label anything it reports from get_long_energy
-    or get_short_energy.
-  - >-
-    204 means the device has never reported that data class; 200 with [] means
-    no data in the requested window. Do not conflate.
-  - >-
-    Windows are hard-capped (12h Short Energy, 7d Long Energy) and over-long
-    windows return 422, not a truncated result.
-  - >-
-    Rate limits auto-scale per key; honour Retry-After and the
-    X-RateLimit-Tps*/Tpd* headers.
+- Energy payloads are positional arrays indexed by channel order — an agent MUST call get_device first
+  to label anything it reports from get_long_energy or get_short_energy.
+- 204 means the device has never reported that data class; 200 with [] means no data in the requested
+  window. Do not conflate.
+- Windows are hard-capped (12h Short Energy, 7d Long Energy) and over-long windows return 422, not a truncated
+  result.
+- Rate limits auto-scale per key; honour Retry-After and the X-RateLimit-Tps*/Tpd* headers.
+deployment:
+  mode: none
+  verified: derived
+  tools: 14
+  checked: '2026-08-12'
+  source: catalog MCP census

@@ -1,0 +1,512 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Wattwatchers API",
+    "version": "3.6.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Devices",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get devices",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-v3.wattwatchers.com.au/devices",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns an array of devices that are available to the current API key."
+        },
+        {
+          "info": {
+            "name": "Get device details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-v3.wattwatchers.com.au/devices/:device-id",
+            "params": [
+              {
+                "name": "device-id",
+                "value": "D123456789012",
+                "type": "path",
+                "description": "The ID of the device to retrieve"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns the status, state, and metadata for a specific device"
+        },
+        {
+          "info": {
+            "name": "Patch device metadata and state",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api-v3.wattwatchers.com.au/devices/:device-id",
+            "params": [
+              {
+                "name": "device-id",
+                "value": "D123456789012",
+                "type": "path",
+                "description": "The ID of the device to update"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Enables updating of a subset of fields for a device and related objects (such as channels and switches)."
+        },
+        {
+          "info": {
+            "name": "Get category definitions for device channels",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-v3.wattwatchers.com.au/devices/channel-categories",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns a collection of the categorisation schema for channels"
+        },
+        {
+          "info": {
+            "name": "Get valid device models",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-v3.wattwatchers.com.au/devices/models",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns a list of valid device models supported by Wattwatchers."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Short Energy",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get short energy data for a device",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-v3.wattwatchers.com.au/short-energy/:device-id",
+            "params": [
+              {
+                "name": "device-id",
+                "value": "D123456789012",
+                "type": "path",
+                "description": "The ID of the device"
+              },
+              {
+                "name": "fromTs",
+                "value": "1546952400",
+                "type": "query",
+                "description": "Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs. Default, if not specified = now minus 1 hour."
+              },
+              {
+                "name": "toTs",
+                "value": "1546956000",
+                "type": "query",
+                "description": "Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default, if not specified = 1 hour after fromTs."
+              },
+              {
+                "name": "filter[group]",
+                "value": "phases",
+                "type": "query",
+                "description": "When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device."
+              },
+              {
+                "name": "convert[energy]",
+                "value": "kWh",
+                "type": "query",
+                "description": "Converts energy data to kilowatt hours or kilowatts."
+              },
+              {
+                "name": "fields[energy]",
+                "value": "+pf",
+                "type": "query",
+                "description": "\\'+pf\\' will append calculated power factor to the returned energy data objects. Note that filter[group]=phases can't be combined with fields[energy]=+pf."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves short-term energy data for a specific device"
+        },
+        {
+          "info": {
+            "name": "Get first short energy data entry",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-v3.wattwatchers.com.au/short-energy/:device-id/first",
+            "params": [
+              {
+                "name": "device-id",
+                "value": "D123456789012",
+                "type": "path",
+                "description": "The ID of the device"
+              },
+              {
+                "name": "filter[group]",
+                "value": "phases",
+                "type": "query",
+                "description": "When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device."
+              },
+              {
+                "name": "convert[energy]",
+                "value": "kWh",
+                "type": "query",
+                "description": "Converts energy data to kilowatt hours or kilowatts."
+              },
+              {
+                "name": "fields[energy]",
+                "value": "+pf",
+                "type": "query",
+                "description": "\\`fields[energy]=+pf\\` will append calculated power factor to the returned energy data objects. \\`timestamp\\` will return just the timestamp attribute in the returned data object. +pf and timestamp are mutually exclusive and can't be combined, i.e. fields[energy]=+pf,timestamp will result in an error. The fields[energy] query string options can't be combined with filter[group]=phases."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns the first received short energy entry from the device."
+        },
+        {
+          "info": {
+            "name": "Get latest short energy data entry",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-v3.wattwatchers.com.au/short-energy/:device-id/latest",
+            "params": [
+              {
+                "name": "device-id",
+                "value": "D123456789012",
+                "type": "path",
+                "description": "The ID of the device"
+              },
+              {
+                "name": "filter[group]",
+                "value": "phases",
+                "type": "query",
+                "description": "When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device."
+              },
+              {
+                "name": "convert[energy]",
+                "value": "kWh",
+                "type": "query",
+                "description": "Converts energy data to kilowatt hours or kilowatts."
+              },
+              {
+                "name": "fields[energy]",
+                "value": "+pf",
+                "type": "query",
+                "description": "\\`fields[energy]=+pf\\` will append calculated power factor to the returned energy data objects. \\`timestamp\\` will return just the timestamp attribute in the returned data object. +pf and timestamp are mutually exclusive and can't be combined, i.e. fields[energy]=+pf,timestamp will result in an error. The fields[energy] query string options can't be combined with filter[group]=phases."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns the latest received short energy entry from the device."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Long Energy",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get long energy data for a device",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-v3.wattwatchers.com.au/long-energy/:device-id",
+            "params": [
+              {
+                "name": "device-id",
+                "value": "D123456789012",
+                "type": "path",
+                "description": "The ID of the device"
+              },
+              {
+                "name": "fromTs",
+                "value": "1546952400",
+                "type": "query",
+                "description": "Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs. Default, if not specified = first long energy entry."
+              },
+              {
+                "name": "toTs",
+                "value": "1546956000",
+                "type": "query",
+                "description": "Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default, if not specified = 7 days after fromTs."
+              },
+              {
+                "name": "granularity",
+                "value": "5m",
+                "type": "query",
+                "description": "Granularity of the data."
+              },
+              {
+                "name": "timezone",
+                "value": "Australia/Sydney",
+                "type": "query",
+                "description": "Required if granularity >= hour. Irrelevant (and ignored) if granularity is < hour."
+              },
+              {
+                "name": "filter[group]",
+                "value": "phases",
+                "type": "query",
+                "description": "When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device."
+              },
+              {
+                "name": "convert[energy]",
+                "value": "kWh",
+                "type": "query",
+                "description": "Converts energy data to kilowatt hours or kilowatts."
+              },
+              {
+                "name": "fields[energy]",
+                "value": "+pf",
+                "type": "query",
+                "description": "\\'+pf\\' will append calculated power factor to the returned energy data objects. Note that filter[group]=phases can't be combined with fields[energy]=+pf."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns the energy data for a single device."
+        },
+        {
+          "info": {
+            "name": "Get first long energy data entry",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-v3.wattwatchers.com.au/long-energy/:device-id/first",
+            "params": [
+              {
+                "name": "device-id",
+                "value": "D123456789012",
+                "type": "path",
+                "description": "The ID of the device"
+              },
+              {
+                "name": "filter[group]",
+                "value": "phases",
+                "type": "query",
+                "description": "When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device."
+              },
+              {
+                "name": "convert[energy]",
+                "value": "kWh",
+                "type": "query",
+                "description": "Converts energy data to kilowatt hours or kilowatts."
+              },
+              {
+                "name": "fields[energy]",
+                "value": "+pf",
+                "type": "query",
+                "description": "\\`fields[energy]=+pf\\` will append calculated power factor to the returned energy data objects. \\`timestamp\\` will return just the timestamp attribute in the returned data object. +pf and timestamp are mutually exclusive and can't be combined, i.e. fields[energy]=+pf,timestamp will result in an error. The fields[energy] query string options can't be combined with filter[group]=phases."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns the first received long energy entry from the device."
+        },
+        {
+          "info": {
+            "name": "Get latest long energy data entry",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-v3.wattwatchers.com.au/long-energy/:device-id/latest",
+            "params": [
+              {
+                "name": "device-id",
+                "value": "D123456789012",
+                "type": "path",
+                "description": "The ID of the device"
+              },
+              {
+                "name": "filter[group]",
+                "value": "phases",
+                "type": "query",
+                "description": "When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device."
+              },
+              {
+                "name": "convert[energy]",
+                "value": "kWh",
+                "type": "query",
+                "description": "Converts energy data to kilowatt hours or kilowatts."
+              },
+              {
+                "name": "fields[energy]",
+                "value": "+pf",
+                "type": "query",
+                "description": "\\`fields[energy]=+pf\\` will append calculated power factor to the returned energy data objects. \\`timestamp\\` will return just the timestamp attribute in the returned data object. +pf and timestamp are mutually exclusive and can't be combined, i.e. fields[energy]=+pf,timestamp will result in an error. The fields[energy] query string options can't be combined with filter[group]=phases."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns the latest received long energy entry from the device."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Modbus",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get modbus energy data for a device",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-v3.wattwatchers.com.au/modbus/:device-id",
+            "params": [
+              {
+                "name": "device-id",
+                "value": "D123456789012",
+                "type": "path",
+                "description": "The ID of the device"
+              },
+              {
+                "name": "fromTs",
+                "value": "1546952400",
+                "type": "query",
+                "description": "Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs."
+              },
+              {
+                "name": "toTs",
+                "value": "1546956000",
+                "type": "query",
+                "description": "Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default (if not provided) = 7 days after fromTs."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns the modbus energy data for a specific device."
+        },
+        {
+          "info": {
+            "name": "Get first modbus energy data entry",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-v3.wattwatchers.com.au/modbus/:device-id/first",
+            "params": [
+              {
+                "name": "device-id",
+                "value": "D123456789012",
+                "type": "path",
+                "description": "The ID of the device"
+              },
+              {
+                "name": "fields[energy]",
+                "value": "timestamp",
+                "type": "query",
+                "description": "fields[energy]=timestamp will return just the timestamp attribute in the returned data object."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns the first recorded modbus energy data entry for a specific device."
+        },
+        {
+          "info": {
+            "name": "Get latest modbus energy data entry",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api-v3.wattwatchers.com.au/modbus/:device-id/latest",
+            "params": [
+              {
+                "name": "device-id",
+                "value": "D123456789012",
+                "type": "path",
+                "description": "The ID of the device"
+              },
+              {
+                "name": "fields[energy]",
+                "value": "timestamp",
+                "type": "query",
+                "description": "fields[energy]=timestamp will return just the timestamp attribute in the returned data object."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns the most recent recorded modbus energy data entry for a specific device."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

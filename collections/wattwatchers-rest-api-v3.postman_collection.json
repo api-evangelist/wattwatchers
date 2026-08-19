@@ -1,0 +1,2929 @@
+{
+  "item": [
+    {
+      "id": "29e732ee-fbf9-4375-b577-1ce5ac2e3768",
+      "name": "Devices",
+      "description": {
+        "content": "Operations related to devices",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "2e9b5988-fe6c-43ab-ac7b-c4d3256ea534",
+          "name": "Get devices",
+          "request": {
+            "name": "Get devices",
+            "description": {
+              "content": "Returns an array of devices that are available to the current API key.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "devices"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "a0f9eb9a-800c-48fc-a094-6150250fc075",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "devices"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  \"D123456789012\",\n  \"D234567890123\",\n  \"D345678901234\"\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cb2c93a0-afd8-4c30-b529-66f8aed3a314",
+          "name": "Get device details",
+          "request": {
+            "name": "Get device details",
+            "description": {
+              "content": "Returns the status, state, and metadata for a specific device",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "devices",
+                ":device-id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "device-id",
+                  "description": "(Required) The ID of the device to retrieve"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "2dd050df-e83c-48d8-8832-4b16e9cf933e",
+              "name": "Device details successfully retrieved",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "devices",
+                    ":device-id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device to retrieve"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"D123456789012\",\n  \"label\": \"Cellular device\",\n  \"timezone\": \"Australia/Sydney\",\n  \"model\": \"6M4+3SW\",\n  \"firmwareVersion\": \"49.1.0\",\n  \"latestStatus\": 1550632148,\n  \"shortEnergyReportingInterval\": 30,\n  \"pending\": {\n    \"shortEnergyReportingInterval\": 5\n  },\n  \"comms\": {\n    \"type\": \"cellular\",\n    \"mode\": \"4G\",\n    \"lastHeardAt\": 1691035991,\n    \"signalQualityDbm\": -57,\n    \"simId\": \"simId\",\n    \"apn\": \"apn\",\n    \"imsi\": \"imsi\",\n    \"networkId\": \"networkId\"\n  },\n  \"channels\": [\n    {\n      \"id\": \"D123456789012_C1\",\n      \"ctRating\": 60,\n      \"label\": \"Grid connection\",\n      \"categoryId\": 1,\n      \"categoryLabel\": \"Grid connect\"\n    },\n    {\n      \"id\": \"D123456789012_C2\",\n      \"ctRating\": 60,\n      \"label\": \"Grid connection\",\n      \"categoryId\": 1,\n      \"categoryLabel\": \"Grid connect\"\n    },\n    {\n      \"id\": \"D123456789012_C3\",\n      \"ctRating\": 60,\n      \"label\": \"Grid connection\",\n      \"categoryId\": 1,\n      \"categoryLabel\": \"Grid connect\"\n    },\n    {\n      \"id\": \"D123456789012_C4\",\n      \"ctRating\": 60,\n      \"label\": \"Solar\",\n      \"categoryId\": 5,\n      \"categoryLabel\": \"Solar generation\"\n    },\n    {\n      \"id\": \"D123456789012_C5\",\n      \"ctRating\": 60,\n      \"label\": \"Solar\",\n      \"categoryId\": 5,\n      \"categoryLabel\": \"Solar generation\"\n    },\n    {\n      \"id\": \"D123456789012_C6\",\n      \"ctRating\": 60,\n      \"label\": \"Solar\",\n      \"categoryId\": 5,\n      \"categoryLabel\": \"Solar generation\"\n    }\n  ],\n  \"phases\": {\n    \"count\": 3,\n    \"grouping\": [\n      {\n        \"included\": [\n          \"D123456789012_C1\",\n          \"D123456789012_C2\",\n          \"D123456789012_C3\"\n        ]\n      },\n      {\n        \"included\": [\n          \"D123456789012_C4\",\n          \"D123456789012_C5\",\n          \"D123456789012_C6\"\n        ]\n      }\n    ]\n  },\n  \"switches\": [\n    {\n      \"id\": \"D123456789012_S1\",\n      \"state\": \"open\",\n      \"label\": \"Switch one\",\n      \"contactorType\": \"NC\",\n      \"closedStateLabel\": \"On\",\n      \"openStateLabel\": \"Off\",\n      \"pending\": {\n        \"state\": \"closed\"\n      }\n    },\n    {\n      \"id\": \"D123456789012_S2\",\n      \"state\": \"open\",\n      \"label\": \"Switch two\",\n      \"contactorType\": \"NC\",\n      \"closedStateLabel\": \"On\",\n      \"openStateLabel\": \"Off\",\n      \"pending\": {\n        \"state\": \"closed\"\n      }\n    },\n    {\n      \"id\": \"D123456789012_S3\",\n      \"state\": \"open\",\n      \"label\": \"Switch three\",\n      \"contactorType\": \"NC\",\n      \"closedStateLabel\": \"On\",\n      \"openStateLabel\": \"Off\",\n      \"pending\": {\n        \"state\": \"closed\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e1132fc0-6660-41a7-81fa-2a5af9b02cf4",
+              "name": "Unauthorized access",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "devices",
+                    ":device-id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device to retrieve"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"Unauthorized\",\n  \"httpCode\": 401,\n  \"message\": \"API key is missing or invalid.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4ba1b77d-3e16-4b29-a347-1f5c414c241f",
+              "name": "Forbidden access",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "devices",
+                    ":device-id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device to retrieve"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"Forbidden\",\n  \"httpCode\": 403,\n  \"message\": \"API key is missing or invalid.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2db9864e-cbb2-433f-878a-9a6f4efcbe28",
+              "name": "Device not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "devices",
+                    ":device-id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device to retrieve"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"Not Found\",\n  \"httpCode\": 404,\n  \"message\": \"Device with the specified ID does not exist.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a7b87161-367f-48d3-84e0-4312f9f3d475",
+          "name": "Patch device metadata and state",
+          "request": {
+            "name": "Patch device metadata and state",
+            "description": {
+              "content": "Enables updating of a subset of fields for a device and related objects (such as channels and switches).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "devices",
+                ":device-id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "device-id",
+                  "description": "(Required) The ID of the device to update"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"label\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"channels\": [\n    {\n      \"id\": \"<string>\",\n      \"label\": \"<string>\",\n      \"categoryId\": \"<integer>\",\n      \"ctRating\": \"<integer>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"label\": \"<string>\",\n      \"categoryId\": \"<integer>\",\n      \"ctRating\": \"<integer>\"\n    }\n  ],\n  \"switches\": [\n    {\n      \"id\": \"<string>\",\n      \"state\": \"<string>\",\n      \"label\": \"<string>\",\n      \"contactorType\": \"<string>\",\n      \"closedStateLabel\": \"<string>\",\n      \"openStateLabel\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"state\": \"<string>\",\n      \"label\": \"<string>\",\n      \"contactorType\": \"<string>\",\n      \"closedStateLabel\": \"<string>\",\n      \"openStateLabel\": \"<string>\"\n    }\n  ],\n  \"phases\": {\n    \"count\": \"<integer>\",\n    \"grouping\": [\n      {\n        \"included\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      },\n      {\n        \"included\": [\n          \"<string>\",\n          \"<string>\"\n        ]\n      }\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "ee955f8d-9223-48dd-9b04-f7d597393c80",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "devices",
+                    ":device-id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"label\": \"Main Switchboard\",\n  \"timezone\": \"Australia/Sydney\",\n  \"switches\": [\n    {\n      \"id\": \"D123456789012_S1\",\n      \"state\": \"closed\"\n    }\n  ],\n  \"phases\": {\n    \"count\": 3,\n    \"grouping\": [\n      {\n        \"included\": [\n          \"D123456789012_C1\",\n          \"D123456789012_C2\",\n          \"D123456789012_C3\"\n        ]\n      },\n      {\n        \"included\": [\n          \"D123456789012_C4\",\n          \"D123456789012_C5\",\n          \"D123456789012_C6\"\n        ]\n      }\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"D123456789012\",\n  \"label\": \"Cellular device\",\n  \"timezone\": \"Australia/Sydney\",\n  \"model\": \"6M4+3SW\",\n  \"firmwareVersion\": \"49.1.0\",\n  \"latestStatus\": 1550632148,\n  \"shortEnergyReportingInterval\": 30,\n  \"pending\": {\n    \"shortEnergyReportingInterval\": 5\n  },\n  \"comms\": {\n    \"type\": \"cellular\",\n    \"mode\": \"4G\",\n    \"lastHeardAt\": 1691035991,\n    \"signalQualityDbm\": -57,\n    \"simId\": \"simId\",\n    \"apn\": \"apn\",\n    \"imsi\": \"imsi\",\n    \"networkId\": \"networkId\"\n  },\n  \"channels\": [\n    {\n      \"id\": \"D123456789012_C1\",\n      \"ctRating\": 60,\n      \"label\": \"Grid connection\",\n      \"categoryId\": 1,\n      \"categoryLabel\": \"Grid connect\"\n    },\n    {\n      \"id\": \"D123456789012_C2\",\n      \"ctRating\": 60,\n      \"label\": \"Grid connection\",\n      \"categoryId\": 1,\n      \"categoryLabel\": \"Grid connect\"\n    },\n    {\n      \"id\": \"D123456789012_C3\",\n      \"ctRating\": 60,\n      \"label\": \"Grid connection\",\n      \"categoryId\": 1,\n      \"categoryLabel\": \"Grid connect\"\n    },\n    {\n      \"id\": \"D123456789012_C4\",\n      \"ctRating\": 60,\n      \"label\": \"Solar\",\n      \"categoryId\": 5,\n      \"categoryLabel\": \"Solar generation\"\n    },\n    {\n      \"id\": \"D123456789012_C5\",\n      \"ctRating\": 60,\n      \"label\": \"Solar\",\n      \"categoryId\": 5,\n      \"categoryLabel\": \"Solar generation\"\n    },\n    {\n      \"id\": \"D123456789012_C6\",\n      \"ctRating\": 60,\n      \"label\": \"Solar\",\n      \"categoryId\": 5,\n      \"categoryLabel\": \"Solar generation\"\n    }\n  ],\n  \"phases\": {\n    \"count\": 3,\n    \"grouping\": [\n      {\n        \"included\": [\n          \"D123456789012_C1\",\n          \"D123456789012_C2\",\n          \"D123456789012_C3\"\n        ]\n      },\n      {\n        \"included\": [\n          \"D123456789012_C4\",\n          \"D123456789012_C5\",\n          \"D123456789012_C6\"\n        ]\n      }\n    ]\n  },\n  \"switches\": [\n    {\n      \"id\": \"D123456789012_S1\",\n      \"state\": \"open\",\n      \"label\": \"Switch one\",\n      \"contactorType\": \"NC\",\n      \"closedStateLabel\": \"On\",\n      \"openStateLabel\": \"Off\",\n      \"pending\": {\n        \"state\": \"closed\"\n      }\n    },\n    {\n      \"id\": \"D123456789012_S2\",\n      \"state\": \"open\",\n      \"label\": \"Switch two\",\n      \"contactorType\": \"NC\",\n      \"closedStateLabel\": \"On\",\n      \"openStateLabel\": \"Off\",\n      \"pending\": {\n        \"state\": \"closed\"\n      }\n    },\n    {\n      \"id\": \"D123456789012_S3\",\n      \"state\": \"open\",\n      \"label\": \"Switch three\",\n      \"contactorType\": \"NC\",\n      \"closedStateLabel\": \"On\",\n      \"openStateLabel\": \"Off\",\n      \"pending\": {\n        \"state\": \"closed\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "47d6e571-10be-49a5-891e-e2d41a6e144e",
+          "name": "Get category definitions for device channels",
+          "request": {
+            "name": "Get category definitions for device channels",
+            "description": {
+              "content": "Returns a collection of the categorisation schema for channels",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "devices",
+                "channel-categories"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "ba9f2e2d-9897-421d-a0dd-e5ec51c21db9",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "devices",
+                    "channel-categories"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": -1,\n    \"label\": \"Not set\",\n    \"description\": \"No category has been set for this channel.\"\n  },\n  {\n    \"id\": 0,\n    \"label\": \"Not connected\",\n    \"description\": \"The channel is available on the device, but is not connected to a circuit.\"\n  },\n  {\n    \"id\": 1,\n    \"label\": \"Grid connect\",\n    \"description\": \"The channel monitors imports and exports to the electricity grid.\"\n  },\n  {\n    \"id\": 2,\n    \"label\": \"Lighting & Power\",\n    \"description\": \"The channel monitors a single circuit covering Lighting and Power combined.\"\n  },\n  {\n    \"id\": 3,\n    \"label\": \"Pool pump\",\n    \"description\": \"The channel monitors energy consumption of a pool pump.\"\n  },\n  {\n    \"id\": 4,\n    \"label\": \"Air conditioning\",\n    \"description\": \"The channel monitors energy consumption of an air conditioner appliance.\"\n  },\n  {\n    \"id\": 5,\n    \"label\": \"Solar generation\",\n    \"description\": \"The channel monitors the total amount of power generated by a solar installation (before consumption/export).\"\n  },\n  {\n    \"id\": 6,\n    \"label\": \"Hot water\",\n    \"description\": \"The channel monitors energy consumption of an electric hot water system.\"\n  },\n  {\n    \"id\": 7,\n    \"label\": \"Electric vehicle\",\n    \"description\": \"The channel monitors consumption and exports from the battery charger of an electric vehicle.\"\n  },\n  {\n    \"id\": 8,\n    \"label\": \"Battery\",\n    \"description\": \"The channel monitors charging + exports to/from a premises-based electricity storage system.\"\n  },\n  {\n    \"id\": 9,\n    \"label\": \"Oven\",\n    \"description\": \"The channel monitors energy consumption of an oven appliance.\"\n  },\n  {\n    \"id\": 10,\n    \"label\": \"Lighting\",\n    \"description\": \"The channel monitors energy consumption related to lighting.\"\n  },\n  {\n    \"id\": 11,\n    \"label\": \"Power\",\n    \"description\": \"The channel monitors power consumption that isn't covered in any other category.\"\n  },\n  {\n    \"id\": 12,\n    \"label\": \"Hybrid solar & battery system\",\n    \"description\": \"The channel monitors energy generation and consumption from a hybrid solar & battery system.\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8a8ebea9-bd57-4522-9572-a7256c06f536",
+          "name": "Get valid device models",
+          "request": {
+            "name": "Get valid device models",
+            "description": {
+              "content": "Returns a list of valid device models supported by Wattwatchers.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "devices",
+                "models"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "9f343ca0-8c5c-4aa7-adc9-1758013a75cc",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "devices",
+                    "models"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"code\": \"3M\",\n    \"displayName\": \"Auditor 3M\",\n    \"channelsCount\": 3,\n    \"switchesCount\": 0,\n    \"communications\": \"cellular\"\n  },\n  {\n    \"code\": \"6M\",\n    \"displayName\": \"Auditor 6M\",\n    \"channelsCount\": 6,\n    \"switchesCount\": 0,\n    \"communications\": \"cellular\"\n  },\n  {\n    \"code\": \"6M+One\",\n    \"displayName\": \"Auditor 6M+One\",\n    \"channelsCount\": 6,\n    \"switchesCount\": 0,\n    \"communications\": \"cellular\"\n  },\n  {\n    \"code\": \"6M+3SW\",\n    \"displayName\": \"Auditor 6M+3SW\",\n    \"channelsCount\": 6,\n    \"switchesCount\": 3,\n    \"communications\": \"cellular\"\n  },\n  {\n    \"code\": \"6MW-CER\",\n    \"displayName\": \"Auditor 6MW-CER\",\n    \"channelsCount\": 6,\n    \"switchesCount\": 1,\n    \"communications\": \"cellular+wifi\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "5d0bde70-56eb-4438-8d86-0773824c46d0",
+      "name": "Short Energy",
+      "description": {
+        "content": "Operations related to Short Energy (SE)",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "4d3cd36d-38e2-4a8e-92d3-b3f2622b2752",
+          "name": "Get short energy data for a device",
+          "request": {
+            "name": "Get short energy data for a device",
+            "description": {
+              "content": "Retrieves short-term energy data for a specific device",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "short-energy",
+                ":device-id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "fromTs",
+                  "value": "<integer>",
+                  "description": "Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs. Default, if not specified = now minus 1 hour."
+                },
+                {
+                  "disabled": false,
+                  "key": "toTs",
+                  "value": "<integer>",
+                  "description": "Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default, if not specified = 1 hour after fromTs."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[group]",
+                  "value": "<string>",
+                  "description": "When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device."
+                },
+                {
+                  "disabled": false,
+                  "key": "convert[energy]",
+                  "value": "<string>",
+                  "description": "Converts energy data to kilowatt hours or kilowatts."
+                },
+                {
+                  "disabled": false,
+                  "key": "fields[energy]",
+                  "value": "<string>",
+                  "description": "\\'+pf\\' will append calculated power factor to the returned energy data objects. Note that filter[group]=phases can't be combined with fields[energy]=+pf."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "device-id",
+                  "description": "(Required) The ID of the device"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "f20cfced-a034-411b-b46a-01b54ee72563",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "short-energy",
+                    ":device-id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTs",
+                      "value": "1546952400"
+                    },
+                    {
+                      "key": "toTs",
+                      "value": "1546956000"
+                    },
+                    {
+                      "key": "filter[group]",
+                      "value": "phases"
+                    },
+                    {
+                      "key": "convert[energy]",
+                      "value": "kWh"
+                    },
+                    {
+                      "key": "fields[energy]",
+                      "value": "+pf"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"timestamp\": 1550622130,\n    \"duration\": 5,\n    \"frequency\": 50.04,\n    \"eReal\": [\n      1150,\n      2,\n      38\n    ],\n    \"eReactive\": [\n      -857,\n      -19,\n      -364\n    ],\n    \"vRMS\": [\n      244.9,\n      244.8,\n      244.8\n    ],\n    \"iRMS\": [\n      1.259,\n      0.028,\n      0.31\n    ]\n  },\n  {\n    \"timestamp\": 1550622135,\n    \"duration\": 5,\n    \"frequency\": 50.04,\n    \"eReal\": [\n      1142,\n      3,\n      39\n    ],\n    \"eReactive\": [\n      -857,\n      -19,\n      -364\n    ],\n    \"vRMS\": [\n      244.3,\n      244.2,\n      244.3\n    ],\n    \"iRMS\": [\n      1.252,\n      0.028,\n      0.309\n    ]\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3176c685-a5b2-4085-bb05-d370af3a96da",
+              "name": "No Content - No energy data has been received from the device",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "short-energy",
+                    ":device-id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTs",
+                      "value": "1546952400"
+                    },
+                    {
+                      "key": "toTs",
+                      "value": "1546956000"
+                    },
+                    {
+                      "key": "filter[group]",
+                      "value": "phases"
+                    },
+                    {
+                      "key": "convert[energy]",
+                      "value": "kWh"
+                    },
+                    {
+                      "key": "fields[energy]",
+                      "value": "+pf"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "2bf7f265-79b8-414b-b43b-0d4753e234cd",
+              "name": "Period > 12 hours",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "short-energy",
+                    ":device-id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTs",
+                      "value": "1546952400"
+                    },
+                    {
+                      "key": "toTs",
+                      "value": "1546956000"
+                    },
+                    {
+                      "key": "filter[group]",
+                      "value": "phases"
+                    },
+                    {
+                      "key": "convert[energy]",
+                      "value": "kWh"
+                    },
+                    {
+                      "key": "fields[energy]",
+                      "value": "+pf"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"UNPROCESSABLE_ENTITY\",\n  \"httpCode\": 422,\n  \"message\": \"The requested time period is greater than 12 hours.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5102c713-08f2-4a95-93f2-6e846c5eacfd",
+          "name": "Get first short energy data entry",
+          "request": {
+            "name": "Get first short energy data entry",
+            "description": {
+              "content": "Returns the first received short energy entry from the device.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "short-energy",
+                ":device-id",
+                "first"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "filter[group]",
+                  "value": "<string>",
+                  "description": "When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device."
+                },
+                {
+                  "disabled": false,
+                  "key": "convert[energy]",
+                  "value": "<string>",
+                  "description": "Converts energy data to kilowatt hours or kilowatts."
+                },
+                {
+                  "disabled": false,
+                  "key": "fields[energy]",
+                  "value": "<string>",
+                  "description": "\\`fields[energy]=+pf\\` will append calculated power factor to the returned energy data objects. \\`timestamp\\` will return just the timestamp attribute in the returned data object. +pf and timestamp are mutually exclusive and can't be combined, i.e. fields[energy]=+pf,timestamp will result in an error. The fields[energy] query string options can't be combined with filter[group]=phases."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "device-id",
+                  "description": "(Required) The ID of the device"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "90219fa9-a5a4-451f-a304-94201c2cceab",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "short-energy",
+                    ":device-id",
+                    "first"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "filter[group]",
+                      "value": "phases"
+                    },
+                    {
+                      "key": "convert[energy]",
+                      "value": "kWh"
+                    },
+                    {
+                      "key": "fields[energy]",
+                      "value": "+pf"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": 1550622145,\n  \"duration\": 5,\n  \"frequency\": 50.04,\n  \"eReal\": [\n    1163,\n    3,\n    39\n  ],\n  \"eReactive\": [\n    -856,\n    -19,\n    -363\n  ],\n  \"vRMS\": [\n    244.6,\n    244.5,\n    244.5\n  ],\n  \"iRMS\": [\n    1.267,\n    0.028,\n    0.309\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "faa7462d-7a5b-4551-b1f6-fd72939f47df",
+              "name": "No Content - No energy data has been received from the device",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "short-energy",
+                    ":device-id",
+                    "first"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "filter[group]",
+                      "value": "phases"
+                    },
+                    {
+                      "key": "convert[energy]",
+                      "value": "kWh"
+                    },
+                    {
+                      "key": "fields[energy]",
+                      "value": "+pf"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9b93db5a-326a-4880-9fd8-4569b278cfaa",
+          "name": "Get latest short energy data entry",
+          "request": {
+            "name": "Get latest short energy data entry",
+            "description": {
+              "content": "Returns the latest received short energy entry from the device.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "short-energy",
+                ":device-id",
+                "latest"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "filter[group]",
+                  "value": "<string>",
+                  "description": "When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device."
+                },
+                {
+                  "disabled": false,
+                  "key": "convert[energy]",
+                  "value": "<string>",
+                  "description": "Converts energy data to kilowatt hours or kilowatts."
+                },
+                {
+                  "disabled": false,
+                  "key": "fields[energy]",
+                  "value": "<string>",
+                  "description": "\\`fields[energy]=+pf\\` will append calculated power factor to the returned energy data objects. \\`timestamp\\` will return just the timestamp attribute in the returned data object. +pf and timestamp are mutually exclusive and can't be combined, i.e. fields[energy]=+pf,timestamp will result in an error. The fields[energy] query string options can't be combined with filter[group]=phases."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "device-id",
+                  "description": "(Required) The ID of the device"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "6ebdf903-7740-45ff-87cd-419b3bd09d4f",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "short-energy",
+                    ":device-id",
+                    "latest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "filter[group]",
+                      "value": "phases"
+                    },
+                    {
+                      "key": "convert[energy]",
+                      "value": "kWh"
+                    },
+                    {
+                      "key": "fields[energy]",
+                      "value": "+pf"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": 1550622145,\n  \"duration\": 5,\n  \"frequency\": 50.04,\n  \"eReal\": [\n    1163,\n    3,\n    39\n  ],\n  \"eReactive\": [\n    -856,\n    -19,\n    -363\n  ],\n  \"vRMS\": [\n    244.6,\n    244.5,\n    244.5\n  ],\n  \"iRMS\": [\n    1.267,\n    0.028,\n    0.309\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ae24bc4d-aff5-49d9-86cd-f2e2ea08e77d",
+              "name": "No Content - No energy data has been received from the device",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "short-energy",
+                    ":device-id",
+                    "latest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "filter[group]",
+                      "value": "phases"
+                    },
+                    {
+                      "key": "convert[energy]",
+                      "value": "kWh"
+                    },
+                    {
+                      "key": "fields[energy]",
+                      "value": "+pf"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "9de99fc4-dfcf-4010-8574-8518a347240d",
+      "name": "Long Energy",
+      "description": {
+        "content": "Operations related to Long Energy (LE)",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "d3e07b6a-6921-412f-b837-1175268e0b11",
+          "name": "Get long energy data for a device",
+          "request": {
+            "name": "Get long energy data for a device",
+            "description": {
+              "content": "Returns the energy data for a single device.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "long-energy",
+                ":device-id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "fromTs",
+                  "value": "<integer>",
+                  "description": "Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs. Default, if not specified = first long energy entry."
+                },
+                {
+                  "disabled": false,
+                  "key": "toTs",
+                  "value": "<integer>",
+                  "description": "Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default, if not specified = 7 days after fromTs."
+                },
+                {
+                  "disabled": false,
+                  "key": "granularity",
+                  "value": "<string>",
+                  "description": "Granularity of the data."
+                },
+                {
+                  "disabled": false,
+                  "key": "timezone",
+                  "value": "<string>",
+                  "description": "Required if granularity >= hour. Irrelevant (and ignored) if granularity is < hour."
+                },
+                {
+                  "disabled": false,
+                  "key": "filter[group]",
+                  "value": "<string>",
+                  "description": "When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device."
+                },
+                {
+                  "disabled": false,
+                  "key": "convert[energy]",
+                  "value": "<string>",
+                  "description": "Converts energy data to kilowatt hours or kilowatts."
+                },
+                {
+                  "disabled": false,
+                  "key": "fields[energy]",
+                  "value": "<string>",
+                  "description": "\\'+pf\\' will append calculated power factor to the returned energy data objects. Note that filter[group]=phases can't be combined with fields[energy]=+pf."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "device-id",
+                  "description": "(Required) The ID of the device"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "8a66081c-635d-4848-9126-1a80ebf580a9",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "long-energy",
+                    ":device-id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTs",
+                      "value": "1546952400"
+                    },
+                    {
+                      "key": "toTs",
+                      "value": "1546956000"
+                    },
+                    {
+                      "key": "granularity",
+                      "value": "5m"
+                    },
+                    {
+                      "key": "timezone",
+                      "value": "Australia/Sydney"
+                    },
+                    {
+                      "key": "filter[group]",
+                      "value": "phases"
+                    },
+                    {
+                      "key": "convert[energy]",
+                      "value": "kWh"
+                    },
+                    {
+                      "key": "fields[energy]",
+                      "value": "+pf"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"timestamp\": 1550408400,\n    \"duration\": 900,\n    \"eReal\": [\n      3639405,\n      336898,\n      -560,\n      37,\n      -14,\n      -25\n    ],\n    \"eRealNegative\": [\n      0,\n      0,\n      560,\n      0,\n      14,\n      25\n    ],\n    \"eRealPositive\": [\n      3639405,\n      336898,\n      0,\n      37,\n      0,\n      0\n    ],\n    \"eReactive\": [\n      154581,\n      140216,\n      61,\n      45,\n      -4,\n      11\n    ],\n    \"eReactiveNegative\": [\n      13832,\n      0,\n      0,\n      0,\n      5,\n      0\n    ],\n    \"eReactivePositive\": [\n      168413,\n      140216,\n      61,\n      45,\n      1,\n      11\n    ],\n    \"vRMSMin\": [\n      229.4,\n      229.5,\n      229.6,\n      229.4,\n      229.5,\n      229.6\n    ],\n    \"vRMSMax\": [\n      232.2,\n      232.4,\n      232.4,\n      232.2,\n      232.4,\n      232.5\n    ],\n    \"iRMSMin\": [\n      14.799,\n      0.331,\n      0.023,\n      0.023,\n      0.023,\n      0.022\n    ],\n    \"iRMSMax\": [\n      21.208,\n      4.534,\n      0.043,\n      0.046,\n      0.043,\n      0.042\n    ]\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c040e518-56dc-4d60-8e1f-200b4749e75b",
+              "name": "No Content - No energy data has been received from the device",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "long-energy",
+                    ":device-id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTs",
+                      "value": "1546952400"
+                    },
+                    {
+                      "key": "toTs",
+                      "value": "1546956000"
+                    },
+                    {
+                      "key": "granularity",
+                      "value": "5m"
+                    },
+                    {
+                      "key": "timezone",
+                      "value": "Australia/Sydney"
+                    },
+                    {
+                      "key": "filter[group]",
+                      "value": "phases"
+                    },
+                    {
+                      "key": "convert[energy]",
+                      "value": "kWh"
+                    },
+                    {
+                      "key": "fields[energy]",
+                      "value": "+pf"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "86e87ee1-2477-4b09-b507-d9e5e9edec31",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "long-energy",
+                    ":device-id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTs",
+                      "value": "1546952400"
+                    },
+                    {
+                      "key": "toTs",
+                      "value": "1546956000"
+                    },
+                    {
+                      "key": "granularity",
+                      "value": "5m"
+                    },
+                    {
+                      "key": "timezone",
+                      "value": "Australia/Sydney"
+                    },
+                    {
+                      "key": "filter[group]",
+                      "value": "phases"
+                    },
+                    {
+                      "key": "convert[energy]",
+                      "value": "kWh"
+                    },
+                    {
+                      "key": "fields[energy]",
+                      "value": "+pf"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"BAD_REQUEST\",\n  \"httpCode\": 400,\n  \"message\": \"You must specify a valid timezone value when applying granularity of 'hour', 'day', 'week', or 'month.'\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f6ed8e51-e2a9-4cf8-b8cb-07fd5321c4f3",
+              "name": "Unprocessable Entity - Period is greater than valid values for granularity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "long-energy",
+                    ":device-id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTs",
+                      "value": "1546952400"
+                    },
+                    {
+                      "key": "toTs",
+                      "value": "1546956000"
+                    },
+                    {
+                      "key": "granularity",
+                      "value": "5m"
+                    },
+                    {
+                      "key": "timezone",
+                      "value": "Australia/Sydney"
+                    },
+                    {
+                      "key": "filter[group]",
+                      "value": "phases"
+                    },
+                    {
+                      "key": "convert[energy]",
+                      "value": "kWh"
+                    },
+                    {
+                      "key": "fields[energy]",
+                      "value": "+pf"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"UNPROCESSABLE_ENTITY\",\n  \"httpCode\": 422,\n  \"message\": \"The requested time period is greater than 7 days.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "29d87b65-4677-4761-b2a3-e01b113b0ad6",
+          "name": "Get first long energy data entry",
+          "request": {
+            "name": "Get first long energy data entry",
+            "description": {
+              "content": "Returns the first received long energy entry from the device.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "long-energy",
+                ":device-id",
+                "first"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "filter[group]",
+                  "value": "<string>",
+                  "description": "When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device."
+                },
+                {
+                  "disabled": false,
+                  "key": "convert[energy]",
+                  "value": "<string>",
+                  "description": "Converts energy data to kilowatt hours or kilowatts."
+                },
+                {
+                  "disabled": false,
+                  "key": "fields[energy]",
+                  "value": "<string>",
+                  "description": "\\`fields[energy]=+pf\\` will append calculated power factor to the returned energy data objects. \\`timestamp\\` will return just the timestamp attribute in the returned data object. +pf and timestamp are mutually exclusive and can't be combined, i.e. fields[energy]=+pf,timestamp will result in an error. The fields[energy] query string options can't be combined with filter[group]=phases."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "device-id",
+                  "description": "(Required) The ID of the device"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "dbc7c7a9-f752-443e-858f-a072038ae48c",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "long-energy",
+                    ":device-id",
+                    "first"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "filter[group]",
+                      "value": "phases"
+                    },
+                    {
+                      "key": "convert[energy]",
+                      "value": "kWh"
+                    },
+                    {
+                      "key": "fields[energy]",
+                      "value": "+pf"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": 1550622145,\n  \"duration\": 900,\n  \"eReal\": [\n    3586031,\n    329486,\n    -549,\n    39,\n    -13,\n    -24\n  ],\n  \"eRealNegative\": [\n    0,\n    0,\n    549,\n    0,\n    13,\n    24\n  ],\n  \"eRealPositive\": [\n    3586031,\n    329486,\n    0,\n    39,\n    0,\n    0\n  ],\n  \"eReactive\": [\n    134087,\n    136446,\n    47,\n    33,\n    -10,\n    11\n  ],\n  \"eReactiveNegative\": [\n    11739,\n    0,\n    0,\n    0,\n    10,\n    0\n  ],\n  \"eReactivePositive\": [\n    145826,\n    136446,\n    47,\n    33,\n    0,\n    11\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ed9c1d92-f95c-4115-a7c5-8ca304874388",
+              "name": "No Content - No energy data has been received from the device",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "long-energy",
+                    ":device-id",
+                    "first"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "filter[group]",
+                      "value": "phases"
+                    },
+                    {
+                      "key": "convert[energy]",
+                      "value": "kWh"
+                    },
+                    {
+                      "key": "fields[energy]",
+                      "value": "+pf"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "245dce71-4b8d-4a54-bb39-d017c52fe6e5",
+          "name": "Get latest long energy data entry",
+          "request": {
+            "name": "Get latest long energy data entry",
+            "description": {
+              "content": "Returns the latest received long energy entry from the device.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "long-energy",
+                ":device-id",
+                "latest"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "filter[group]",
+                  "value": "<string>",
+                  "description": "When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device."
+                },
+                {
+                  "disabled": false,
+                  "key": "convert[energy]",
+                  "value": "<string>",
+                  "description": "Converts energy data to kilowatt hours or kilowatts."
+                },
+                {
+                  "disabled": false,
+                  "key": "fields[energy]",
+                  "value": "<string>",
+                  "description": "\\`fields[energy]=+pf\\` will append calculated power factor to the returned energy data objects. \\`timestamp\\` will return just the timestamp attribute in the returned data object. +pf and timestamp are mutually exclusive and can't be combined, i.e. fields[energy]=+pf,timestamp will result in an error. The fields[energy] query string options can't be combined with filter[group]=phases."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "device-id",
+                  "description": "(Required) The ID of the device"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "a5090922-1be5-4d0d-9881-9da61885ef6b",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "long-energy",
+                    ":device-id",
+                    "latest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "filter[group]",
+                      "value": "phases"
+                    },
+                    {
+                      "key": "convert[energy]",
+                      "value": "kWh"
+                    },
+                    {
+                      "key": "fields[energy]",
+                      "value": "+pf"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": 1550622145,\n  \"duration\": 900,\n  \"eReal\": [\n    3586031,\n    329486,\n    -549,\n    39,\n    -13,\n    -24\n  ],\n  \"eRealNegative\": [\n    0,\n    0,\n    549,\n    0,\n    13,\n    24\n  ],\n  \"eRealPositive\": [\n    3586031,\n    329486,\n    0,\n    39,\n    0,\n    0\n  ],\n  \"eReactive\": [\n    134087,\n    136446,\n    47,\n    33,\n    -10,\n    11\n  ],\n  \"eReactiveNegative\": [\n    11739,\n    0,\n    0,\n    0,\n    10,\n    0\n  ],\n  \"eReactivePositive\": [\n    145826,\n    136446,\n    47,\n    33,\n    0,\n    11\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5dc121b0-d71d-466d-95cb-7f8d76c0b7ff",
+              "name": "No Content - No energy data has been received from the device",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "long-energy",
+                    ":device-id",
+                    "latest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "filter[group]",
+                      "value": "phases"
+                    },
+                    {
+                      "key": "convert[energy]",
+                      "value": "kWh"
+                    },
+                    {
+                      "key": "fields[energy]",
+                      "value": "+pf"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "dbf900e3-8c4f-4b6e-ad78-9462ccb78d6a",
+      "name": "Modbus",
+      "description": {
+        "content": "Operations related to Modbus",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "115dc460-8a3b-428f-b8ec-f973d74e4b64",
+          "name": "Get modbus energy data for a device",
+          "request": {
+            "name": "Get modbus energy data for a device",
+            "description": {
+              "content": "Returns the modbus energy data for a specific device.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "modbus",
+                ":device-id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "fromTs",
+                  "value": "<integer>",
+                  "description": "Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs."
+                },
+                {
+                  "disabled": false,
+                  "key": "toTs",
+                  "value": "<integer>",
+                  "description": "Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default (if not provided) = 7 days after fromTs."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "device-id",
+                  "description": "(Required) The ID of the device"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "ca4badd5-50c8-4dbc-99c7-94093f16637f",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "modbus",
+                    ":device-id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTs",
+                      "value": "1546952400"
+                    },
+                    {
+                      "key": "toTs",
+                      "value": "1546956000"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"_Ia\": 0,\n    \"_Ib\": 0,\n    \"_Ic\": 0,\n    \"_PFa\": 1,\n    \"_PFb\": 1,\n    \"_PFc\": 1,\n    \"_Uan\": 244.8056182861328,\n    \"_Ubn\": 122.43417358398438,\n    \"_Ucn\": 122.45341491699219,\n    \"kVAh\": 0,\n    \"kWh_Exp\": 0,\n    \"kWh_Imp\": 0,\n    \"kWh_Net\": 0,\n    \"kWh_Tot\": 0,\n    \"kvarh_Q1\": 0,\n    \"kvarh_Q2\": 0,\n    \"kvarh_Q3\": 0,\n    \"kvarh_Q4\": 0,\n    \"kvarh_Exp\": 0,\n    \"kvarh_Imp\": 0,\n    \"kvarh_Net\": 0,\n    \"kvarh_Tot\": 0,\n    \"model\": \"PMC-340B\",\n    \"timestamp\": 1546952400\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "48082900-554b-43f2-80c1-de35168fb284",
+              "name": "No Content - No modbus data has been received from the device, or the device is not a modbus-capable device",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "modbus",
+                    ":device-id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTs",
+                      "value": "1546952400"
+                    },
+                    {
+                      "key": "toTs",
+                      "value": "1546956000"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "167431fc-8417-4a29-9fca-ffa9db17c722",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "modbus",
+                    ":device-id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTs",
+                      "value": "1546952400"
+                    },
+                    {
+                      "key": "toTs",
+                      "value": "1546956000"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"UNPROCESSABLE_ENTITY\",\n  \"httpCode\": 422,\n  \"message\": \"The requested time period is greater than 7 days.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e911ed41-746e-4c84-9ea4-8b6306fcb768",
+          "name": "Get first modbus energy data entry",
+          "request": {
+            "name": "Get first modbus energy data entry",
+            "description": {
+              "content": "Returns the first recorded modbus energy data entry for a specific device.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "modbus",
+                ":device-id",
+                "first"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "fields[energy]",
+                  "value": "<string>",
+                  "description": "fields[energy]=timestamp will return just the timestamp attribute in the returned data object."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "device-id",
+                  "description": "(Required) The ID of the device"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "6cfe1491-55e3-4395-973a-8f609b345d6e",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "modbus",
+                    ":device-id",
+                    "first"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fields[energy]",
+                      "value": "timestamp"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"_Ia\": 0,\n  \"_Ib\": 0,\n  \"_Ic\": 0,\n  \"_PFa\": 1,\n  \"_PFb\": 1,\n  \"_PFc\": 1,\n  \"_Uan\": 244.8056182861328,\n  \"_Ubn\": 122.43417358398438,\n  \"_Ucn\": 122.45341491699219,\n  \"kVAh\": 0,\n  \"kWh_Exp\": 0,\n  \"kWh_Imp\": 0,\n  \"kWh_Net\": 0,\n  \"kWh_Tot\": 0,\n  \"kvarh_Q1\": 0,\n  \"kvarh_Q2\": 0,\n  \"kvarh_Q3\": 0,\n  \"kvarh_Q4\": 0,\n  \"kvarh_Exp\": 0,\n  \"kvarh_Imp\": 0,\n  \"kvarh_Net\": 0,\n  \"kvarh_Tot\": 0,\n  \"model\": \"PMC-340B\",\n  \"timestamp\": 1550622145\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6d269318-5d2d-4ff2-aa31-810f979f7641",
+              "name": "No Content - No modbus data has been received from the device, or the device is not a modbus-capable device",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "modbus",
+                    ":device-id",
+                    "first"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fields[energy]",
+                      "value": "timestamp"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "a02c9f30-1293-43df-8538-b7d1fdce266f",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "modbus",
+                    ":device-id",
+                    "first"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fields[energy]",
+                      "value": "timestamp"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"UNPROCESSABLE ENTITY\",\n  \"httpCode\": 422,\n  \"message\": \"You have attempted to query modbus data for a device ID that does not support it\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "df28e484-70d8-4ef0-a5b1-ba48ed98a795",
+          "name": "Get latest modbus energy data entry",
+          "request": {
+            "name": "Get latest modbus energy data entry",
+            "description": {
+              "content": "Returns the most recent recorded modbus energy data entry for a specific device.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "modbus",
+                ":device-id",
+                "latest"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "fields[energy]",
+                  "value": "<string>",
+                  "description": "fields[energy]=timestamp will return just the timestamp attribute in the returned data object."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "device-id",
+                  "description": "(Required) The ID of the device"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "28d8dbb9-9b34-4143-ab65-38ba4867339f",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "modbus",
+                    ":device-id",
+                    "latest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fields[energy]",
+                      "value": "timestamp"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"_Ia\": 0,\n  \"_Ib\": 0,\n  \"_Ic\": 0,\n  \"_PFa\": 1,\n  \"_PFb\": 1,\n  \"_PFc\": 1,\n  \"_Uan\": 244.8056182861328,\n  \"_Ubn\": 122.43417358398438,\n  \"_Ucn\": 122.45341491699219,\n  \"kVAh\": 0,\n  \"kWh_Exp\": 0,\n  \"kWh_Imp\": 0,\n  \"kWh_Net\": 0,\n  \"kWh_Tot\": 0,\n  \"kvarh_Q1\": 0,\n  \"kvarh_Q2\": 0,\n  \"kvarh_Q3\": 0,\n  \"kvarh_Q4\": 0,\n  \"kvarh_Exp\": 0,\n  \"kvarh_Imp\": 0,\n  \"kvarh_Net\": 0,\n  \"kvarh_Tot\": 0,\n  \"model\": \"PMC-340B\",\n  \"timestamp\": 1550622145\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8e0e7425-9a92-44bc-a8c5-1d8280766b3f",
+              "name": "No Content - No modbus data has been received from the device, or the device is not a modbus-capable device",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "modbus",
+                    ":device-id",
+                    "latest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fields[energy]",
+                      "value": "timestamp"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "dafae8a2-29b3-440a-bd30-66630abb39f5",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "modbus",
+                    ":device-id",
+                    "latest"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fields[energy]",
+                      "value": "timestamp"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device-id",
+                      "description": "(Required) The ID of the device"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"UNPROCESSABLE ENTITY\",\n  \"httpCode\": 422,\n  \"message\": \"You have attempted to query modbus data for a device ID that does not support it\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api-v3.wattwatchers.com.au",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "c466213c-7324-452e-9920-4b53d3dc9153",
+    "name": "Wattwatchers API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "API for accessing Wattwatchers data and functionality\n\nContact Support:\n Name: Wattwatchers Support\n Email: support@wattwatchers.com.au",
+      "type": "text/plain"
+    }
+  }
+}
