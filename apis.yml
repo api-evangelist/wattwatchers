@@ -36,25 +36,16 @@ created: '2026-07-27'
 modified: '2026-07-27'
 specificationVersion: '0.23'
 apis:
-- aid: wattwatchers:wattwatchers-rest-api-v3
-  name: Wattwatchers REST API v3 (Mercury)
-  description: The Wattwatchers REST API v3, code-named Mercury — 14 documented operations across
-    13 paths, covering device inventory and configuration (including switch control via PATCH), 30-second
-    "short energy" interval data, 5-minute "long energy" interval data, and Modbus data read from
-    downstream devices by 6M+One hardware. Authentication is a Wattwatchers-issued bearer API key
-    scoped to the devices assigned to that key. Version 3.6.0 of the published OpenAPI contract.
+- aid: wattwatchers:wattwatchers-devices-api
+  name: Wattwatchers Devices API
+  description: Operations related to devices
   humanURL: https://docs.wattwatchers.com.au/api/v3/index.html
   baseURL: https://api-v3.wattwatchers.com.au
   tags:
   - Devices
-  - Short Energy
-  - Long Energy
-  - Modbus
-  - Energy Data
-  - Smart Metering
   properties:
   - type: OpenAPI
-    url: openapi/wattwatchers-rest-api-v3-openapi.json
+    url: openapi/wattwatchers-devices-api-openapi.yml
   - type: Documentation
     url: https://docs.wattwatchers.com.au/api/v3/index.html
   - type: APIReference
@@ -91,8 +82,162 @@ apis:
     url: https://docs.wattwatchers.com.au/api/tips/switching-example.html
   - type: SampleCode
     url: https://github.com/wattwatchers/rest-api-notebooks
-  - type: Overlay
-    url: overlays/wattwatchers-rest-api-v3-overlay.yaml
+  - type: Examples
+    url: examples/wattwatchers-rest-api-v3-examples.json
+  - type: Roadmap
+    url: https://docs.wattwatchers.com.au/api/roadmap.html
+  - type: GettingStarted
+    url: https://service.wattwatchers.com.au/getting-started-with-wattwatchers
+- aid: wattwatchers:wattwatchers-long-energy-api
+  name: Wattwatchers Long Energy API
+  description: Operations related to Long Energy (LE)
+  humanURL: https://docs.wattwatchers.com.au/api/v3/index.html
+  baseURL: https://api-v3.wattwatchers.com.au
+  tags:
+  - Long Energy
+  properties:
+  - type: OpenAPI
+    url: openapi/wattwatchers-long-energy-api-openapi.yml
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/v3/index.html
+  - type: APIReference
+    url: https://docs.wattwatchers.com.au/api/v3/endpoints.html
+  - type: InteractiveDocumentation
+    url: https://docs.wattwatchers.com.au/api/v3/openapi/index.html
+  - type: Authentication
+    url: https://docs.wattwatchers.com.au/api/v3/auth.html
+  - type: RateLimits
+    url: https://docs.wattwatchers.com.au/api/v3/rate-limits.html
+  - type: Errors
+    url: https://docs.wattwatchers.com.au/api/v3/errors.html
+  - type: Conventions
+    url: https://docs.wattwatchers.com.au/api/v3/conventions.html
+  - type: ChangeLog
+    url: https://docs.wattwatchers.com.au/api/v3/release-notes.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/v3/phase-grouping.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/v3/v2-diff.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/concepts.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/polling-data.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/device-catch-up.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/modbus-data.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/units-conversion.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/working-with-timestamps.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/switching-example.html
+  - type: SampleCode
+    url: https://github.com/wattwatchers/rest-api-notebooks
+  - type: Examples
+    url: examples/wattwatchers-rest-api-v3-examples.json
+  - type: Roadmap
+    url: https://docs.wattwatchers.com.au/api/roadmap.html
+  - type: GettingStarted
+    url: https://service.wattwatchers.com.au/getting-started-with-wattwatchers
+- aid: wattwatchers:wattwatchers-modbus-api
+  name: Wattwatchers Modbus API
+  description: Operations related to Modbus
+  humanURL: https://docs.wattwatchers.com.au/api/v3/index.html
+  baseURL: https://api-v3.wattwatchers.com.au
+  tags:
+  - Modbus
+  properties:
+  - type: OpenAPI
+    url: openapi/wattwatchers-modbus-api-openapi.yml
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/v3/index.html
+  - type: APIReference
+    url: https://docs.wattwatchers.com.au/api/v3/endpoints.html
+  - type: InteractiveDocumentation
+    url: https://docs.wattwatchers.com.au/api/v3/openapi/index.html
+  - type: Authentication
+    url: https://docs.wattwatchers.com.au/api/v3/auth.html
+  - type: RateLimits
+    url: https://docs.wattwatchers.com.au/api/v3/rate-limits.html
+  - type: Errors
+    url: https://docs.wattwatchers.com.au/api/v3/errors.html
+  - type: Conventions
+    url: https://docs.wattwatchers.com.au/api/v3/conventions.html
+  - type: ChangeLog
+    url: https://docs.wattwatchers.com.au/api/v3/release-notes.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/v3/phase-grouping.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/v3/v2-diff.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/concepts.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/polling-data.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/device-catch-up.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/modbus-data.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/units-conversion.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/working-with-timestamps.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/switching-example.html
+  - type: SampleCode
+    url: https://github.com/wattwatchers/rest-api-notebooks
+  - type: Examples
+    url: examples/wattwatchers-rest-api-v3-examples.json
+  - type: Roadmap
+    url: https://docs.wattwatchers.com.au/api/roadmap.html
+  - type: GettingStarted
+    url: https://service.wattwatchers.com.au/getting-started-with-wattwatchers
+- aid: wattwatchers:wattwatchers-short-energy-api
+  name: Wattwatchers Short Energy API
+  description: Operations related to Short Energy (SE)
+  humanURL: https://docs.wattwatchers.com.au/api/v3/index.html
+  baseURL: https://api-v3.wattwatchers.com.au
+  tags:
+  - Short Energy
+  properties:
+  - type: OpenAPI
+    url: openapi/wattwatchers-short-energy-api-openapi.yml
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/v3/index.html
+  - type: APIReference
+    url: https://docs.wattwatchers.com.au/api/v3/endpoints.html
+  - type: InteractiveDocumentation
+    url: https://docs.wattwatchers.com.au/api/v3/openapi/index.html
+  - type: Authentication
+    url: https://docs.wattwatchers.com.au/api/v3/auth.html
+  - type: RateLimits
+    url: https://docs.wattwatchers.com.au/api/v3/rate-limits.html
+  - type: Errors
+    url: https://docs.wattwatchers.com.au/api/v3/errors.html
+  - type: Conventions
+    url: https://docs.wattwatchers.com.au/api/v3/conventions.html
+  - type: ChangeLog
+    url: https://docs.wattwatchers.com.au/api/v3/release-notes.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/v3/phase-grouping.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/v3/v2-diff.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/concepts.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/polling-data.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/device-catch-up.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/modbus-data.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/units-conversion.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/working-with-timestamps.html
+  - type: Documentation
+    url: https://docs.wattwatchers.com.au/api/tips/switching-example.html
+  - type: SampleCode
+    url: https://github.com/wattwatchers/rest-api-notebooks
   - type: Examples
     url: examples/wattwatchers-rest-api-v3-examples.json
   - type: Roadmap
