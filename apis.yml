@@ -20,6 +20,17 @@ description: 'Wattwatchers is an Australian digital energy company (founded 2007
   standard. Wattwatchers entered voluntary administration in October 2025 and was acquired by EPX
   Limited (ASX:EPX, formerly EP&T Global); the Wattwatchers knowledge base now redirects to support.epx.tech,
   while the developer documentation, the API host and the OpenAPI contract all remain live and unchanged.'
+deliveryModel:
+  model: unknown
+  open_source: false
+  commercial: false
+  callable_host: true
+  label: Delivery model not determined — needs a product licence on record
+  confidence: low
+  source:
+  - openapi
+  generated: '2026-08-28'
+  method: derived
 image: https://docs.wattwatchers.com.au/assets/images/favicon.png
 tags:
 - Energy
