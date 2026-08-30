@@ -1,0 +1,840 @@
+openapi: 3.2.0
+info:
+  title: Wattwatchers Devices API
+  description: API for accessing Wattwatchers data and functionality
+  contact:
+    name: Wattwatchers Support
+    url: https://service.wattwatchers.com.au/kb-tickets/new
+    email: support@wattwatchers.com.au
+  version: 3.6.0
+servers:
+- description: Wattwatchers API v3
+  url: https://api-v3.wattwatchers.com.au
+tags:
+- name: Devices
+  description: Operations related to devices
+paths:
+  /devices:
+    get:
+      tags:
+      - Devices
+      summary: Get devices
+      description: Returns an array of devices that are available to the current API key.
+      operationId: listDevices
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Devices'
+              example:
+              - D123456789012
+              - D234567890123
+              - D345678901234
+      security:
+      - BearerAuth: []
+  /devices/{device-id}:
+    get:
+      tags:
+      - Devices
+      summary: Get device details
+      description: Returns the status, state, and metadata for a specific device
+      operationId: getDevice
+      parameters:
+      - name: device-id
+        in: path
+        required: true
+        description: The ID of the device to retrieve
+        schema:
+          type: string
+        example: D123456789012
+      responses:
+        '200':
+          description: Device details successfully retrieved
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/DeviceDetailsCellular'
+                - $ref: '#/components/schemas/DeviceDetailsWiFi'
+              examples:
+                Cellular device:
+                  $ref: '#/components/examples/DeviceDetailsCellular'
+                WiFi device:
+                  $ref: '#/components/examples/DeviceDetailsWiFi'
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: Unauthorized
+                httpCode: 401
+                message: API key is missing or invalid.
+        '403':
+          description: Forbidden access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: Forbidden
+                httpCode: 403
+                message: API key is missing or invalid.
+        '404':
+          description: Device not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: Not Found
+                httpCode: 404
+                message: Device with the specified ID does not exist.
+      security:
+      - BearerAuth: []
+    patch:
+      tags:
+      - Devices
+      summary: Patch device metadata and state
+      description: Enables updating of a subset of fields for a device and related objects (such as channels and switches).
+      operationId: updateDevice
+      parameters:
+      - name: device-id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The ID of the device to update
+        example: D123456789012
+      requestBody:
+        description: Device metadata and state to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DevicePatchBody'
+            examples:
+              default:
+                $ref: '#/components/examples/DevicePatchBody'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/DeviceDetailsCellular'
+                - $ref: '#/components/schemas/DeviceDetailsWiFi'
+              examples:
+                default:
+                  $ref: '#/components/examples/DeviceDetailsCellular'
+      security:
+      - BearerAuth: []
+  /devices/channel-categories:
+    get:
+      tags:
+      - Devices
+      summary: Get category definitions for device channels
+      description: Returns a collection of the categorisation schema for channels
+      operationId: getChannelCategories
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceChannelCategories'
+              example:
+              - id: -1
+                label: Not set
+                description: No category has been set for this channel.
+              - id: 0
+                label: Not connected
+                description: The channel is available on the device, but is not connected to a circuit.
+              - id: 1
+                label: Grid connect
+                description: The channel monitors imports and exports to the electricity grid.
+              - id: 2
+                label: Lighting & Power
+                description: The channel monitors a single circuit covering Lighting and Power combined.
+              - id: 3
+                label: Pool pump
+                description: The channel monitors energy consumption of a pool pump.
+              - id: 4
+                label: Air conditioning
+                description: The channel monitors energy consumption of an air conditioner appliance.
+              - id: 5
+                label: Solar generation
+                description: The channel monitors the total amount of power generated by a solar installation (before consumption/export).
+              - id: 6
+                label: Hot water
+                description: The channel monitors energy consumption of an electric hot water system.
+              - id: 7
+                label: Electric vehicle
+                description: The channel monitors consumption and exports from the battery charger of an electric vehicle.
+              - id: 8
+                label: Battery
+                description: The channel monitors charging + exports to/from a premises-based electricity storage system.
+              - id: 9
+                label: Oven
+                description: The channel monitors energy consumption of an oven appliance.
+              - id: 10
+                label: Lighting
+                description: The channel monitors energy consumption related to lighting.
+              - id: 11
+                label: Power
+                description: The channel monitors power consumption that isn't covered in any other category.
+              - id: 12
+                label: Hybrid solar & battery system
+                description: The channel monitors energy generation and consumption from a hybrid solar & battery system.
+      security:
+      - BearerAuth: []
+  /devices/models:
+    get:
+      tags:
+      - Devices
+      summary: Get valid device models
+      description: Returns a list of valid device models supported by Wattwatchers.
+      operationId: getDeviceModels
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceModels'
+              example:
+              - code: 3M
+                displayName: Auditor 3M
+                channelsCount: 3
+                switchesCount: 0
+                communications: cellular
+              - code: 6M
+                displayName: Auditor 6M
+                channelsCount: 6
+                switchesCount: 0
+                communications: cellular
+              - code: 6M+One
+                displayName: Auditor 6M+One
+                channelsCount: 6
+                switchesCount: 0
+                communications: cellular
+              - code: 6M+3SW
+                displayName: Auditor 6M+3SW
+                channelsCount: 6
+                switchesCount: 3
+                communications: cellular
+              - code: 6MW-CER
+                displayName: Auditor 6MW-CER
+                channelsCount: 6
+                switchesCount: 1
+                communications: cellular+wifi
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    DevicePending:
+      type: object
+      title: Pending device state
+      properties:
+        shortEnergyReportingInterval:
+          type: integer
+          description: Short energy reporting interval
+          example: 5
+      description: Pending changes for the device
+      example:
+        shortEnergyReportingInterval: 5
+    DeviceModels:
+      title: Device models
+      description: Collection of device models
+      type: array
+      items:
+        description: Device model
+        type: object
+        properties:
+          code:
+            type: string
+            description: The model code
+            example: 3M
+          displayName:
+            type: string
+            description: The human-readable name of the model
+            example: Auditor 3M
+          channelsCount:
+            type: integer
+            description: The number of channels supported by the model
+            example: 3
+          switchesCount:
+            type: integer
+            description: The number of switches supported by the model
+            example: 0
+          communications:
+            type: string
+            description: The type of communication supported by the model
+            example: cellular
+    DevicePatchBody:
+      type: object
+      title: Device PATCH request body
+      description: Body content for a device PATCH request
+      properties:
+        label:
+          type: string
+          maxLength: 64
+          description: Device label
+        timezone:
+          type: string
+          maxLength: 64
+          description: Device timezone
+        channels:
+          type: array
+          description: Array of channels to update
+          items:
+            type: object
+            description: Channel properties to update
+            properties:
+              id:
+                type: string
+                description: Channel properties
+                example: D123456789012_C1
+              label:
+                type: string
+                maxLength: 64
+                description: Channel label
+                example: Channel 1
+              categoryId:
+                type: integer
+                description: Channel category Id
+                example: 1
+              ctRating:
+                type: integer
+                description: Channel CT rating
+                enum:
+                - 60
+                - 120
+                - 200
+                - 400
+                - 600
+                example: 60
+        switches:
+          type: array
+          description: Array of switches to update
+          items:
+            type: object
+            description: Switch properties
+            properties:
+              id:
+                type: string
+                description: Switch Id
+                example: D123456789012_S1
+              state:
+                type: string
+                description: Switch state
+                enum:
+                - open
+                - closed
+                example: closed
+              label:
+                type: string
+                maxLength: 64
+                description: Switch label
+                example: Switch 1
+              contactorType:
+                type: string
+                description: Switch contactor type
+                enum:
+                - 'NO'
+                - NC
+                example: NC
+              closedStateLabel:
+                type: string
+                maxLength: 16
+                description: Switch closed state label
+                example: Closed
+              openStateLabel:
+                type: string
+                maxLength: 16
+                description: Switch open state label
+                example: Open
+        phases:
+          type: object
+          description: Phase configuration
+          properties:
+            count:
+              type: integer
+              enum:
+              - 0
+              - 1
+              - 2
+              - 3
+              description: Phase count
+              example: 3
+            grouping:
+              type: array
+              description: Phase grouping
+              items:
+                type: object
+                description: Phase group
+                properties:
+                  included:
+                    type: array
+                    description: Channels included in phase group
+                    items:
+                      type: string
+                      description: Channel Id
+                      example: D123456789012_C1
+          example:
+            count: 3
+            grouping:
+            - included:
+              - D123456789012_C1
+              - D123456789012_C2
+              - D123456789012_C3
+            - included:
+              - D123456789012_C4
+              - D123456789012_C5
+              - D123456789012_C6
+    DeviceChannels:
+      type: array
+      title: Device channels
+      description: Array of the device's channels
+      items:
+        type: object
+        description: Channel details
+        properties:
+          id:
+            type: string
+            description: Channel Id
+            example: D123456789012_C1
+          ctRating:
+            type: number
+            description: Channel CT rating
+            example: 60
+          label:
+            type: string
+            description: Channel label
+            example: Channel 1
+          categoryId:
+            type: number
+            description: Channel category Id
+            example: 1
+          categoryLabel:
+            type: string
+            description: Channel category label
+            example: Grid connect
+    DeviceChannelCategories:
+      title: Device channel categories
+      description: Collection of channel categories
+      type: array
+      items:
+        description: Channel category
+        type: object
+        properties:
+          id:
+            description: Category Identifier
+            type: integer
+            example: 1
+          label:
+            description: Category label
+            type: string
+            example: Grid connect
+        example:
+          id: 1
+          label: Grid connect
+    Devices:
+      type: array
+      description: List of device IDs
+      items:
+        type: string
+        description: Device ID
+        example: D123456789012
+    DevicePhases:
+      type: object
+      title: Device phase configuration
+      description: Phase configuration
+      properties:
+        count:
+          type: integer
+          description: Phase count
+          example: 3
+        grouping:
+          type: array
+          description: Phase grouping
+          items:
+            type: object
+            description: Phase group
+            properties:
+              included:
+                type: array
+                description: Channels included in phase group
+                items:
+                  type: string
+                  description: Channel Id
+                  example: D123456789012_C1
+                example:
+                - D123456789012_C1
+                - D123456789012_C2
+                - D123456789012_C3
+            example:
+              included:
+              - D123456789012_C1
+              - D123456789012_C2
+              - D123456789012_C3
+          example:
+          - included:
+            - D123456789012_C1
+            - D123456789012_C2
+            - D123456789012_C3
+          - included:
+            - D123456789012_C4
+            - D123456789012_C5
+            - D123456789012_C6
+      example:
+        count: 3
+        grouping:
+        - included:
+          - D123456789012_C1
+          - D123456789012_C2
+          - D123456789012_C3
+        - included:
+          - D123456789012_C4
+          - D123456789012_C5
+          - D123456789012_C6
+    DeviceDetailsCellular:
+      type: object
+      title: Device details (Cellular)
+      description: The status, state and metadata for a cellular device.
+      properties:
+        id:
+          type: string
+          description: Device ID
+          example: D123456789012
+        model:
+          type: string
+          description: Device model
+          example: 6M
+        firmwareVersion:
+          type: string
+          description: Device firmware version
+          example: 49.1.0
+        latestStatus:
+          type: integer
+          description: Timestamp of the device's latest status
+          example: 1550684123
+        shortEnergyReportingInterval:
+          type: integer
+          description: Short energy reporting interval
+          example: 30
+        pending:
+          $ref: '#/components/schemas/DevicePending'
+        comms:
+          type: object
+          description: The communication status of the device
+          properties:
+            type:
+              type: string
+              description: The communication type(s) the device supports
+              example: cellular
+            mode:
+              type: string
+              description: The cellular mode the device is currently using
+              example: 4G
+            lastHeardAt:
+              type: number
+              description: The timestamp of the last known communications from the device to the Wattwatchers system
+              example: 123456789.2341
+            signalQualityDbm:
+              type: integer
+              description: The signal quality in decibel-milliwatts
+              example: -57
+            simId:
+              type: string
+              description: Thge id of the SIM the device is using
+              example: '8900000000000000000'
+            apn:
+              type: string
+              description: The Access Point Name (APN) the device is using
+              example: soracom.io
+            imsi:
+              type: string
+              description: The International Mobile Subscriber Identity (IMSI) the device is using
+              example: '500000000000000'
+            networkId:
+              type: string
+              description: The mobile network the device is connected to
+              example: Optus AU
+        channels:
+          $ref: '#/components/schemas/DeviceChannels'
+        phases:
+          $ref: '#/components/schemas/DevicePhases'
+    Error:
+      title: Error response
+      description: Error object
+      type: object
+      properties:
+        code:
+          description: Error code
+          type: string
+          example: Unauthorized
+        httpCode:
+          description: HTTP error code
+          type: integer
+          example: 401
+        message:
+          description: Error message
+          type: string
+          example: API key is missing or invalid.
+    DeviceDetailsWiFi:
+      type: object
+      title: Device details (WiFi)
+      description: The status, state and metadata for a WiFi device.
+      properties:
+        id:
+          type: string
+          description: Device ID
+          example: D123456789012
+        model:
+          type: string
+          description: Device model
+          example: 6W
+        firmwareVersion:
+          type: string
+          description: Device firmware version
+          example: 41.3.2
+        latestStatus:
+          type: integer
+          description: Timestamp of the device's latest status
+          example: 1550684123
+        shortEnergyReportingInterval:
+          type: integer
+          description: Short energy reporting interval
+          example: 30
+        pending:
+          $ref: '#/components/schemas/DevicePending'
+        comms:
+          type: object
+          description: The communication status of the device
+          properties:
+            type:
+              type: string
+              description: The communication type(s) the device supports
+              example: wifi
+            lastHeardAt:
+              type: number
+              description: The timestamp of the last known communications from the device to the Wattwatchers system
+              example: 123456789.2341
+            signalQualityDbm:
+              type: integer
+              description: The signal quality in decibel-milliwatts
+              example: -57
+            networkId:
+              type: string
+              description: Thge SSID of the wifi network the device is connected to
+              example: my-wifi-net
+        channels:
+          $ref: '#/components/schemas/DeviceChannels'
+        phases:
+          $ref: '#/components/schemas/DevicePhases'
+  examples:
+    DeviceDetailsCellular:
+      description: Cellular device details
+      value:
+        id: D123456789012
+        label: Cellular device
+        timezone: Australia/Sydney
+        model: 6M4+3SW
+        firmwareVersion: 49.1.0
+        latestStatus: 1550632148
+        shortEnergyReportingInterval: 30
+        pending:
+          shortEnergyReportingInterval: 5
+        comms:
+          type: cellular
+          mode: 4G
+          lastHeardAt: 1691035991
+          signalQualityDbm: -57
+          simId: simId
+          apn: apn
+          imsi: imsi
+          networkId: networkId
+        channels:
+        - id: D123456789012_C1
+          ctRating: 60
+          label: Grid connection
+          categoryId: 1
+          categoryLabel: Grid connect
+        - id: D123456789012_C2
+          ctRating: 60
+          label: Grid connection
+          categoryId: 1
+          categoryLabel: Grid connect
+        - id: D123456789012_C3
+          ctRating: 60
+          label: Grid connection
+          categoryId: 1
+          categoryLabel: Grid connect
+        - id: D123456789012_C4
+          ctRating: 60
+          label: Solar
+          categoryId: 5
+          categoryLabel: Solar generation
+        - id: D123456789012_C5
+          ctRating: 60
+          label: Solar
+          categoryId: 5
+          categoryLabel: Solar generation
+        - id: D123456789012_C6
+          ctRating: 60
+          label: Solar
+          categoryId: 5
+          categoryLabel: Solar generation
+        phases:
+          count: 3
+          grouping:
+          - included:
+            - D123456789012_C1
+            - D123456789012_C2
+            - D123456789012_C3
+          - included:
+            - D123456789012_C4
+            - D123456789012_C5
+            - D123456789012_C6
+        switches:
+        - id: D123456789012_S1
+          state: open
+          label: Switch one
+          contactorType: NC
+          closedStateLabel: 'On'
+          openStateLabel: 'Off'
+          pending:
+            state: closed
+        - id: D123456789012_S2
+          state: open
+          label: Switch two
+          contactorType: NC
+          closedStateLabel: 'On'
+          openStateLabel: 'Off'
+          pending:
+            state: closed
+        - id: D123456789012_S3
+          state: open
+          label: Switch three
+          contactorType: NC
+          closedStateLabel: 'On'
+          openStateLabel: 'Off'
+          pending:
+            state: closed
+    DevicePatchBody:
+      description: Body content for a device PATCH request
+      value:
+        label: Main Switchboard
+        timezone: Australia/Sydney
+        switches:
+        - id: D123456789012_S1
+          state: closed
+        phases:
+          count: 3
+          grouping:
+          - included:
+            - D123456789012_C1
+            - D123456789012_C2
+            - D123456789012_C3
+          - included:
+            - D123456789012_C4
+            - D123456789012_C5
+            - D123456789012_C6
+    DeviceDetailsWiFi:
+      description: WiFi device details
+      value:
+        id: D123456789012
+        label: WiFi device
+        timezone: Australia/Sydney
+        model: 6W+3SW
+        firmwareVersion: 2.2.7.0
+        latestStatus: 1550632148
+        shortEnergyReportingInterval: 30
+        pending:
+          shortEnergyReportingInterval: 5
+        comms:
+          type: cellular
+          mode: 4G
+          lastHeardAt: 1691035991
+          signalQualityDbm: -57
+          simId: simId
+          apn: apn
+          imsi: imsi
+          networkId: networkId
+        channels:
+        - id: D123456789012_C1
+          ctRating: 60
+          label: Grid connection
+          categoryId: 1
+          categoryLabel: Grid connect
+        - id: D123456789012_C2
+          ctRating: 60
+          label: Grid connection
+          categoryId: 1
+          categoryLabel: Grid connect
+        - id: D123456789012_C3
+          ctRating: 60
+          label: Grid connection
+          categoryId: 1
+          categoryLabel: Grid connect
+        - id: D123456789012_C4
+          ctRating: 60
+          label: Solar
+          categoryId: 5
+          categoryLabel: Solar generation
+        - id: D123456789012_C5
+          ctRating: 60
+          label: Solar
+          categoryId: 5
+          categoryLabel: Solar generation
+        - id: D123456789012_C6
+          ctRating: 60
+          label: Solar
+          categoryId: 5
+          categoryLabel: Solar generation
+        phases:
+          count: 3
+          grouping:
+          - included:
+            - D123456789012_C1
+            - D123456789012_C2
+            - D123456789012_C3
+          - included:
+            - D123456789012_C4
+            - D123456789012_C5
+            - D123456789012_C6
+        switches:
+        - id: D123456789012_S1
+          state: open
+          label: Switch one
+          contactorType: NC
+          closedStateLabel: 'On'
+          openStateLabel: 'Off'
+          pending:
+            state: closed
+        - id: D123456789012_S2
+          state: open
+          label: Switch two
+          contactorType: NC
+          closedStateLabel: 'On'
+          openStateLabel: 'Off'
+          pending:
+            state: closed
+        - id: D123456789012_S3
+          state: open
+          label: Switch three
+          contactorType: NC
+          closedStateLabel: 'On'
+          openStateLabel: 'Off'
+          pending:
+            state: closed
+  securitySchemes:
+    BearerAuth:
+      description: Bearer token authentication
+      type: http
+      scheme: bearer

@@ -1,0 +1,499 @@
+openapi: 3.2.0
+info:
+  title: Wattwatchers Modbus API
+  description: API for accessing Wattwatchers data and functionality
+  contact:
+    name: Wattwatchers Support
+    url: https://service.wattwatchers.com.au/kb-tickets/new
+    email: support@wattwatchers.com.au
+  version: 3.6.0
+servers:
+- description: Wattwatchers API v3
+  url: https://api-v3.wattwatchers.com.au
+tags:
+- name: Modbus
+  description: Operations related to Modbus
+paths:
+  /modbus/{device-id}:
+    get:
+      tags:
+      - Modbus
+      summary: Get modbus energy data for a device
+      description: Returns the modbus energy data for a specific device.
+      operationId: getModbusData
+      parameters:
+      - $ref: '#/components/parameters/deviceId'
+      - $ref: '#/components/parameters/fromTsModbus'
+      - $ref: '#/components/parameters/toTsModbus'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/ModbusDataPMC-340B'
+                - $ref: '#/components/schemas/ModbusDataPMC-220'
+              examples:
+                PMC-340B:
+                  description: Response for a PMC-340B device
+                  value:
+                  - _Ia: 0
+                    _Ib: 0
+                    _Ic: 0
+                    _PFa: 1
+                    _PFb: 1
+                    _PFc: 1
+                    _Uan: 244.8056182861328
+                    _Ubn: 122.43417358398438
+                    _Ucn: 122.45341491699219
+                    kVAh: 0
+                    kWh_Exp: 0
+                    kWh_Imp: 0
+                    kWh_Net: 0
+                    kWh_Tot: 0
+                    kvarh_Q1: 0
+                    kvarh_Q2: 0
+                    kvarh_Q3: 0
+                    kvarh_Q4: 0
+                    kvarh_Exp: 0
+                    kvarh_Imp: 0
+                    kvarh_Net: 0
+                    kvarh_Tot: 0
+                    model: PMC-340B
+                    timestamp: 1546952400
+                PMC-220:
+                  description: Response for a PMC-220 device
+                  value:
+                  - _I: 0.3065536916255951
+                    _V: 245.0169219970703
+                    _PF: 0.5856215357780457
+                    kVAh: 616
+                    kWh_Exp: 0
+                    kWh_Imp: 283
+                    kWh_Net: 283
+                    kWh_Tot: 283
+                    kvarh_Exp: 173
+                    kvarh_Imp: 0
+                    kvarh_Net: -173
+                    kvarh_Tot: 173
+                    model: PMC-220
+                    timestamp: 1546956000
+        '204':
+          description: No Content - No modbus data has been received from the device, or the device is not a modbus-capable device
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                PeriodTooLong:
+                  value:
+                    code: UNPROCESSABLE_ENTITY
+                    httpCode: 422
+                    message: The requested time period is greater than 7 days.
+                NonModbusDevice:
+                  value:
+                    code: UNPROCESSABLE ENTITY
+                    httpCode: 422
+                    message: You have attempted to query modbus data for a device ID that does not support it
+      security:
+      - BearerAuth: []
+  /modbus/{device-id}/first:
+    get:
+      tags:
+      - Modbus
+      summary: Get first modbus energy data entry
+      description: Returns the first recorded modbus energy data entry for a specific device.
+      operationId: getFirstModbusData
+      parameters:
+      - $ref: '#/components/parameters/deviceId'
+      - $ref: '#/components/parameters/fieldsEnergyTimestamp'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/ModbusDataPointPMC-340B'
+                - $ref: '#/components/schemas/ModbusDataPointPMC-220'
+              examples:
+                PMC-340B:
+                  $ref: '#/components/examples/PMC-340B'
+                PMC-220:
+                  $ref: '#/components/examples/PMC-220'
+                withTimestampOnly:
+                  $ref: '#/components/examples/FirstLastTimestampOnly'
+        '204':
+          description: No Content - No modbus data has been received from the device, or the device is not a modbus-capable device
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: UNPROCESSABLE ENTITY
+                httpCode: 422
+                message: You have attempted to query modbus data for a device ID that does not support it
+      security:
+      - BearerAuth: []
+  /modbus/{device-id}/latest:
+    get:
+      tags:
+      - Modbus
+      summary: Get latest modbus energy data entry
+      description: Returns the most recent recorded modbus energy data entry for a specific device.
+      operationId: getLatestModbusData
+      parameters:
+      - $ref: '#/components/parameters/deviceId'
+      - $ref: '#/components/parameters/fieldsEnergyTimestamp'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/ModbusDataPointPMC-340B'
+                - $ref: '#/components/schemas/ModbusDataPointPMC-220'
+              examples:
+                PMC-340B:
+                  $ref: '#/components/examples/PMC-340B'
+                PMC-220:
+                  $ref: '#/components/examples/PMC-220'
+                withTimestampOnly:
+                  $ref: '#/components/examples/FirstLastTimestampOnly'
+        '204':
+          description: No Content - No modbus data has been received from the device, or the device is not a modbus-capable device
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: UNPROCESSABLE ENTITY
+                httpCode: 422
+                message: You have attempted to query modbus data for a device ID that does not support it
+      security:
+      - BearerAuth: []
+components:
+  schemas:
+    ModbusDataPMC-340B:
+      type: array
+      title: Data for Modbus PMC-340B device
+      description: An array of modbus data points
+      items:
+        $ref: '#/components/schemas/ModbusDataPointPMC-340B'
+    ModbusDataPointPMC-220:
+      type: object
+      title: Data point for Modbus PMC-220 device
+      description: Modbus data point for PMC-220
+      properties:
+        _I:
+          type: number
+          format: float
+          description: Current in Amperes
+          example: 0.3065536916255951
+        _PF:
+          type: number
+          format: float
+          description: Power Factor
+          example: 0.5856215357780457
+        _V:
+          type: number
+          format: float
+          description: Voltage
+          example: 245.0169219970703
+        kVAh:
+          type: integer
+          format: int32
+          description: Apparent power in 0.01kVAh
+          example: 0
+        kWh_Exp:
+          type: integer
+          format: int32
+          description: Real energy export in 0.01kWh
+          example: 0
+        kWh_Imp:
+          type: integer
+          format: int32
+          description: Real energy import in 0.01kWh
+          example: 0
+        kWh_Net:
+          type: integer
+          format: int32
+          description: Real energy net in 0.01kWh
+          example: 0
+        kWh_Tot:
+          type: integer
+          format: int32
+          description: Real energy total in 0.01kWh
+          example: 0
+        kvarh_Exp:
+          type: integer
+          format: int32
+          description: kvarh export in 0.01kvarh
+          example: 0
+        kvarh_Imp:
+          type: integer
+          format: int32
+          description: kvarh import in 0.01kvarh
+          example: 0
+        kvarh_Net:
+          type: integer
+          format: int32
+          description: kvarh net in 0.01kvarh
+          example: 0
+        kvarh_Tot:
+          type: integer
+          format: int32
+          description: kvarh total in 0.01kvarh
+          example: 0
+        model:
+          type: string
+          description: The device model that was attached to the device at the time the data was collected.
+          example: PMC-220
+        timestamp:
+          type: integer
+          format: int32
+          description: The Unix timestamp in seconds when the data was captured on the device.
+          example: 1546952400
+    Error:
+      title: Error response
+      description: Error object
+      type: object
+      properties:
+        code:
+          description: Error code
+          type: string
+          example: Unauthorized
+        httpCode:
+          description: HTTP error code
+          type: integer
+          example: 401
+        message:
+          description: Error message
+          type: string
+          example: API key is missing or invalid.
+    ModbusDataPointPMC-340B:
+      type: object
+      title: Data point for Modbus PMC-340B device
+      description: Modbus data point for PMC-340B
+      properties:
+        _Ia:
+          type: number
+          format: float
+          description: Current in Amperes for the A phase
+          example: 0.0
+        _Ib:
+          type: number
+          format: float
+          description: Current in Amperes for the B phase
+          example: 0.0
+        _Ic:
+          type: number
+          format: float
+          description: Current in Amperes for the C phase
+          example: 0.0
+        _PFa:
+          type: number
+          format: float
+          description: Power Factor for the A phase
+          example: 1.0
+        _PFb:
+          type: number
+          format: float
+          description: Power Factor for the B phase
+          example: 1.0
+        _PFc:
+          type: number
+          format: float
+          description: Power Factor for the C phase
+          example: 1.0
+        _Uan:
+          type: number
+          format: float
+          description: The phase-neutral Voltagesfor the A phase
+          example: 0.0
+        _Ubn:
+          type: number
+          format: float
+          description: The phase-neutral Voltagesfor the B phase
+          example: 0.0
+        _Ucn:
+          type: number
+          format: float
+          description: The phase-neutral Voltagesfor the C phase
+          example: 0.0
+        kVAh:
+          type: integer
+          format: int32
+          description: Apparent power in 0.01kVAh
+          example: 0
+        kWh_Exp:
+          type: integer
+          format: int32
+          description: Real energy export in 0.01kWh
+          example: 0
+        kWh_Imp:
+          type: integer
+          format: int32
+          description: Real energy import in 0.01kWh
+          example: 0
+        kWh_Net:
+          type: integer
+          format: int32
+          description: Real energy net in 0.01kWh
+          example: 0
+        kWh_Tot:
+          type: integer
+          format: int32
+          description: Real energy total in 0.01kWh
+          example: 0
+        kvarh_Q1:
+          type: integer
+          format: int32
+          description: kvarh in Q1 in 0.01kvarh
+          example: 0
+        kvarh_Q2:
+          type: integer
+          format: int32
+          description: kvarh in Q2 in 0.01kvarh
+          example: 0
+        kvarh_Q3:
+          type: integer
+          format: int32
+          description: kvarh in Q3 in 0.01kvarh
+          example: 0
+        kvarh_Q4:
+          type: integer
+          format: int32
+          description: kvarh in Q4 in 0.01kvarh
+          example: 0
+        kvarh_Exp:
+          type: integer
+          format: int32
+          description: kvarh export in 0.01kvarh
+          example: 0
+        kvarh_Imp:
+          type: integer
+          format: int32
+          description: kvarh import in 0.01kvarh
+          example: 0
+        kvarh_Net:
+          type: integer
+          format: int32
+          description: kvarh net in 0.01kvarh
+          example: 0
+        kvarh_Tot:
+          type: integer
+          format: int32
+          description: kvarh total in 0.01kvarh
+          example: 0
+        model:
+          type: string
+          description: The device model that was attached to the device at the time the data was collected.
+          example: PMC-340B
+        timestamp:
+          type: integer
+          format: int32
+          description: The Unix timestamp in seconds when the data was captured on the device.
+          example: 1546952400
+    ModbusDataPMC-220:
+      type: array
+      title: Data for Modbus PMC-220 device
+      description: An array of Modbus data points
+      items:
+        $ref: '#/components/schemas/ModbusDataPointPMC-220'
+  parameters:
+    fieldsEnergyTimestamp:
+      name: fields[energy]
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - timestamp
+      example: timestamp
+      description: fields[energy]=timestamp will return just the timestamp attribute in the returned data object.
+    deviceId:
+      name: device-id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The ID of the device
+      example: D123456789012
+    toTsModbus:
+      name: toTs
+      in: query
+      required: false
+      schema:
+        type: integer
+      example: 1546956000
+      description: Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default (if not provided) = 7 days after fromTs.
+    fromTsModbus:
+      name: fromTs
+      in: query
+      required: false
+      schema:
+        type: integer
+      example: 1546952400
+      description: Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs.
+  examples:
+    PMC-220:
+      description: Response for a PMC-220 device
+      value:
+        _I: 0.3065536916255951
+        _V: 245.0169219970703
+        _PF: 0.5856215357780457
+        kVAh: 616
+        kWh_Exp: 0
+        kWh_Imp: 283
+        kWh_Net: 283
+        kWh_Tot: 283
+        kvarh_Exp: 173
+        kvarh_Imp: 0
+        kvarh_Net: -173
+        kvarh_Tot: 173
+        model: PMC-220
+        timestamp: 1550622145
+    FirstLastTimestampOnly:
+      value:
+        timestamp: 1550622145
+    PMC-340B:
+      description: Response for a PMC-340B device
+      value:
+        _Ia: 0
+        _Ib: 0
+        _Ic: 0
+        _PFa: 1
+        _PFb: 1
+        _PFc: 1
+        _Uan: 244.8056182861328
+        _Ubn: 122.43417358398438
+        _Ucn: 122.45341491699219
+        kVAh: 0
+        kWh_Exp: 0
+        kWh_Imp: 0
+        kWh_Net: 0
+        kWh_Tot: 0
+        kvarh_Q1: 0
+        kvarh_Q2: 0
+        kvarh_Q3: 0
+        kvarh_Q4: 0
+        kvarh_Exp: 0
+        kvarh_Imp: 0
+        kvarh_Net: 0
+        kvarh_Tot: 0
+        model: PMC-340B
+        timestamp: 1550622145
+  securitySchemes:
+    BearerAuth:
+      description: Bearer token authentication
+      type: http
+      scheme: bearer

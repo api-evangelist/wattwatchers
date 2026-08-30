@@ -1,0 +1,337 @@
+openapi: 3.2.0
+info:
+  title: Wattwatchers Short Energy API
+  description: API for accessing Wattwatchers data and functionality
+  contact:
+    name: Wattwatchers Support
+    url: https://service.wattwatchers.com.au/kb-tickets/new
+    email: support@wattwatchers.com.au
+  version: 3.6.0
+servers:
+- description: Wattwatchers API v3
+  url: https://api-v3.wattwatchers.com.au
+tags:
+- name: Short Energy
+  description: Operations related to Short Energy (SE)
+paths:
+  /short-energy/{device-id}:
+    get:
+      tags:
+      - Short Energy
+      summary: Get short energy data for a device
+      description: Retrieves short-term energy data for a specific device
+      operationId: getShortEnergyData
+      parameters:
+      - $ref: '#/components/parameters/deviceId'
+      - $ref: '#/components/parameters/fromTsShort'
+      - $ref: '#/components/parameters/toTsShort'
+      - $ref: '#/components/parameters/filterGroup'
+      - $ref: '#/components/parameters/convertEnergy'
+      - $ref: '#/components/parameters/fieldsEnergyPF'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShortEnergyData'
+              example:
+              - timestamp: 1550622130
+                duration: 5
+                frequency: 50.04
+                eReal:
+                - 1150
+                - 2
+                - 38
+                eReactive:
+                - -857
+                - -19
+                - -364
+                vRMS:
+                - 244.9
+                - 244.8
+                - 244.8
+                iRMS:
+                - 1.259
+                - 0.028
+                - 0.31
+              - timestamp: 1550622135
+                duration: 5
+                frequency: 50.04
+                eReal:
+                - 1142
+                - 3
+                - 39
+                eReactive:
+                - -857
+                - -19
+                - -364
+                vRMS:
+                - 244.3
+                - 244.2
+                - 244.3
+                iRMS:
+                - 1.252
+                - 0.028
+                - 0.309
+        '204':
+          description: No Content - No energy data has been received from the device
+        '422':
+          description: Period > 12 hours
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: UNPROCESSABLE_ENTITY
+                httpCode: 422
+                message: The requested time period is greater than 12 hours.
+      security:
+      - BearerAuth: []
+  /short-energy/{device-id}/first:
+    get:
+      tags:
+      - Short Energy
+      summary: Get first short energy data entry
+      description: Returns the first received short energy entry from the device.
+      operationId: getFirstShortEnergyData
+      parameters:
+      - $ref: '#/components/parameters/deviceId'
+      - $ref: '#/components/parameters/filterGroup'
+      - $ref: '#/components/parameters/convertEnergy'
+      - $ref: '#/components/parameters/fieldsEnergyPFAndTimestamp'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShortEnergyDataPoint'
+              examples:
+                default:
+                  $ref: '#/components/examples/ShortEnergyDataPoint'
+                withTimestampOnly:
+                  $ref: '#/components/examples/FirstLastTimestampOnly'
+        '204':
+          description: No Content - No energy data has been received from the device
+      security:
+      - BearerAuth: []
+  /short-energy/{device-id}/latest:
+    get:
+      tags:
+      - Short Energy
+      summary: Get latest short energy data entry
+      description: Returns the latest received short energy entry from the device.
+      operationId: getLatestShortEnergyData
+      parameters:
+      - $ref: '#/components/parameters/deviceId'
+      - $ref: '#/components/parameters/filterGroup'
+      - $ref: '#/components/parameters/convertEnergy'
+      - $ref: '#/components/parameters/fieldsEnergyPFAndTimestamp'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShortEnergyDataPoint'
+              examples:
+                default:
+                  $ref: '#/components/examples/ShortEnergyDataPoint'
+                withTimestampOnly:
+                  $ref: '#/components/examples/FirstLastTimestampOnly'
+        '204':
+          description: No Content - No energy data has been received from the device
+      security:
+      - BearerAuth: []
+components:
+  parameters:
+    fieldsEnergyPF:
+      name: fields[energy]
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - +pf
+      example: +pf
+      description: \'+pf\' will append calculated power factor to the returned energy data objects. Note that filter[group]=phases can't be combined with fields[energy]=+pf.
+    filterGroup:
+      name: filter[group]
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - phases
+      example: phases
+      description: When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device.
+    convertEnergy:
+      name: convert[energy]
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - kWh
+        - kW
+      example: kWh
+      description: Converts energy data to kilowatt hours or kilowatts.
+    toTsShort:
+      name: toTs
+      in: query
+      required: false
+      schema:
+        type: integer
+      example: 1546956000
+      description: Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default, if not specified = 1 hour after fromTs.
+    deviceId:
+      name: device-id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The ID of the device
+      example: D123456789012
+    fieldsEnergyPFAndTimestamp:
+      name: fields[energy]
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - +pf
+        - timestamp
+      example: +pf
+      description: \`fields[energy]=+pf\` will append calculated power factor to the returned energy data objects. \`timestamp\` will return just the timestamp attribute in the returned data object. +pf and timestamp are mutually exclusive and can't be combined, i.e. fields[energy]=+pf,timestamp will result in an error. The fields[energy] query string options can't be combined with filter[group]=phases.
+    fromTsShort:
+      name: fromTs
+      in: query
+      required: false
+      schema:
+        type: integer
+      example: 1546952400
+      description: Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs. Default, if not specified = now minus 1 hour.
+  schemas:
+    ShortEnergyData:
+      title: Short Energy data
+      description: An array of Short Energy data points
+      type: array
+      items:
+        $ref: '#/components/schemas/ShortEnergyDataPoint'
+    Error:
+      title: Error response
+      description: Error object
+      type: object
+      properties:
+        code:
+          description: Error code
+          type: string
+          example: Unauthorized
+        httpCode:
+          description: HTTP error code
+          type: integer
+          example: 401
+        message:
+          description: Error message
+          type: string
+          example: API key is missing or invalid.
+    ShortEnergyDataPoint:
+      title: Short Energy data point
+      description: A Short Energy data point
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix timestamp in seconds
+          example: 1550622130
+        duration:
+          type: integer
+          format: int64
+          description: Interval duration in seconds
+          example: 30
+        frequency:
+          type: number
+          format: float
+          description: Voltage frequency in Hz
+          example: 50.04
+        eReal:
+          description: Real Energy values for each device channel
+          type: array
+          items:
+            description: Real Energy value for a device channel
+            type: number
+            format: float
+            example: 1150
+          example:
+          - 1150
+          - 2
+          - 38
+        eReactive:
+          description: Reactive Energy values for each device channel
+          type: array
+          items:
+            description: Reactive Energy value for a device channel
+            type: number
+            format: float
+            example: -857
+          example:
+          - -857
+          - -19
+          - -364
+        vRMS:
+          description: Volts Root Mean Square (RMS) values for each device channel
+          type: array
+          items:
+            description: Volts Root Mean Square (RMS) value for a device channel
+            type: number
+            format: float
+            example: 244.9
+          example:
+          - 244.9
+          - 244.8
+          - 244.8
+        iRMS:
+          description: Current Root Mean Square (RMS) values for each device channel
+          type: array
+          items:
+            description: Current Root Mean Square (RMS) value for a device channel
+            type: number
+            format: float
+            example: 1.259
+          example:
+          - 1.259
+          - 0.028
+          - 0.31
+  examples:
+    ShortEnergyDataPoint:
+      description: A Short Energy data point
+      value:
+        timestamp: 1550622145
+        duration: 5
+        frequency: 50.04
+        eReal:
+        - 1163
+        - 3
+        - 39
+        eReactive:
+        - -856
+        - -19
+        - -363
+        vRMS:
+        - 244.6
+        - 244.5
+        - 244.5
+        iRMS:
+        - 1.267
+        - 0.028
+        - 0.309
+    FirstLastTimestampOnly:
+      value:
+        timestamp: 1550622145
+  securitySchemes:
+    BearerAuth:
+      description: Bearer token authentication
+      type: http
+      scheme: bearer
