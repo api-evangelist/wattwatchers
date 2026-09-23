@@ -1,0 +1,26 @@
+{
+  "provider": "wattwatchers",
+  "sources": [
+    "_original/wattwatchers-rest-api-v3-openapi.json"
+  ],
+  "outputs": [
+    "wattwatchers-devices-api-openapi.yml",
+    "wattwatchers-long-energy-api-openapi.yml",
+    "wattwatchers-modbus-api-openapi.yml",
+    "wattwatchers-short-energy-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "wattwatchers-rest-api-v3-openapi.json: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "wattwatchers-devices-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "wattwatchers-long-energy-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "wattwatchers-modbus-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "wattwatchers-short-energy-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

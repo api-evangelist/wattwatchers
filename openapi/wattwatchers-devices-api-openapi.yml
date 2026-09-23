@@ -236,45 +236,73 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    DevicePending:
+    DeviceDetailsCellular:
       type: object
-      title: Pending device state
+      title: Device details (Cellular)
+      description: The status, state and metadata for a cellular device.
       properties:
+        id:
+          type: string
+          description: Device ID
+          example: D123456789012
+        model:
+          type: string
+          description: Device model
+          example: 6M
+        firmwareVersion:
+          type: string
+          description: Device firmware version
+          example: 49.1.0
+        latestStatus:
+          type: integer
+          description: Timestamp of the device's latest status
+          example: 1550684123
         shortEnergyReportingInterval:
           type: integer
           description: Short energy reporting interval
-          example: 5
-      description: Pending changes for the device
-      example:
-        shortEnergyReportingInterval: 5
-    DeviceModels:
-      title: Device models
-      description: Collection of device models
-      type: array
-      items:
-        description: Device model
-        type: object
-        properties:
-          code:
-            type: string
-            description: The model code
-            example: 3M
-          displayName:
-            type: string
-            description: The human-readable name of the model
-            example: Auditor 3M
-          channelsCount:
-            type: integer
-            description: The number of channels supported by the model
-            example: 3
-          switchesCount:
-            type: integer
-            description: The number of switches supported by the model
-            example: 0
-          communications:
-            type: string
-            description: The type of communication supported by the model
-            example: cellular
+          example: 30
+        pending:
+          $ref: '#/components/schemas/DevicePending'
+        comms:
+          type: object
+          description: The communication status of the device
+          properties:
+            type:
+              type: string
+              description: The communication type(s) the device supports
+              example: cellular
+            mode:
+              type: string
+              description: The cellular mode the device is currently using
+              example: 4G
+            lastHeardAt:
+              type: number
+              description: The timestamp of the last known communications from the device to the Wattwatchers system
+              example: 123456789.2341
+            signalQualityDbm:
+              type: integer
+              description: The signal quality in decibel-milliwatts
+              example: -57
+            simId:
+              type: string
+              description: Thge id of the SIM the device is using
+              example: '8900000000000000000'
+            apn:
+              type: string
+              description: The Access Point Name (APN) the device is using
+              example: soracom.io
+            imsi:
+              type: string
+              description: The International Mobile Subscriber Identity (IMSI) the device is using
+              example: '500000000000000'
+            networkId:
+              type: string
+              description: The mobile network the device is connected to
+              example: Optus AU
+        channels:
+          $ref: '#/components/schemas/DeviceChannels'
+        phases:
+          $ref: '#/components/schemas/DevicePhases'
     DevicePatchBody:
       type: object
       title: Device PATCH request body
@@ -396,60 +424,57 @@ components:
               - D123456789012_C4
               - D123456789012_C5
               - D123456789012_C6
-    DeviceChannels:
-      type: array
-      title: Device channels
-      description: Array of the device's channels
-      items:
-        type: object
-        description: Channel details
-        properties:
-          id:
-            type: string
-            description: Channel Id
-            example: D123456789012_C1
-          ctRating:
-            type: number
-            description: Channel CT rating
-            example: 60
-          label:
-            type: string
-            description: Channel label
-            example: Channel 1
-          categoryId:
-            type: number
-            description: Channel category Id
-            example: 1
-          categoryLabel:
-            type: string
-            description: Channel category label
-            example: Grid connect
-    DeviceChannelCategories:
-      title: Device channel categories
-      description: Collection of channel categories
-      type: array
-      items:
-        description: Channel category
-        type: object
-        properties:
-          id:
-            description: Category Identifier
-            type: integer
-            example: 1
-          label:
-            description: Category label
-            type: string
-            example: Grid connect
-        example:
-          id: 1
-          label: Grid connect
-    Devices:
-      type: array
-      description: List of device IDs
-      items:
-        type: string
-        description: Device ID
-        example: D123456789012
+    DeviceDetailsWiFi:
+      type: object
+      title: Device details (WiFi)
+      description: The status, state and metadata for a WiFi device.
+      properties:
+        id:
+          type: string
+          description: Device ID
+          example: D123456789012
+        model:
+          type: string
+          description: Device model
+          example: 6W
+        firmwareVersion:
+          type: string
+          description: Device firmware version
+          example: 41.3.2
+        latestStatus:
+          type: integer
+          description: Timestamp of the device's latest status
+          example: 1550684123
+        shortEnergyReportingInterval:
+          type: integer
+          description: Short energy reporting interval
+          example: 30
+        pending:
+          $ref: '#/components/schemas/DevicePending'
+        comms:
+          type: object
+          description: The communication status of the device
+          properties:
+            type:
+              type: string
+              description: The communication type(s) the device supports
+              example: wifi
+            lastHeardAt:
+              type: number
+              description: The timestamp of the last known communications from the device to the Wattwatchers system
+              example: 123456789.2341
+            signalQualityDbm:
+              type: integer
+              description: The signal quality in decibel-milliwatts
+              example: -57
+            networkId:
+              type: string
+              description: Thge SSID of the wifi network the device is connected to
+              example: my-wifi-net
+        channels:
+          $ref: '#/components/schemas/DeviceChannels'
+        phases:
+          $ref: '#/components/schemas/DevicePhases'
     DevicePhases:
       type: object
       title: Device phase configuration
@@ -502,73 +527,6 @@ components:
           - D123456789012_C4
           - D123456789012_C5
           - D123456789012_C6
-    DeviceDetailsCellular:
-      type: object
-      title: Device details (Cellular)
-      description: The status, state and metadata for a cellular device.
-      properties:
-        id:
-          type: string
-          description: Device ID
-          example: D123456789012
-        model:
-          type: string
-          description: Device model
-          example: 6M
-        firmwareVersion:
-          type: string
-          description: Device firmware version
-          example: 49.1.0
-        latestStatus:
-          type: integer
-          description: Timestamp of the device's latest status
-          example: 1550684123
-        shortEnergyReportingInterval:
-          type: integer
-          description: Short energy reporting interval
-          example: 30
-        pending:
-          $ref: '#/components/schemas/DevicePending'
-        comms:
-          type: object
-          description: The communication status of the device
-          properties:
-            type:
-              type: string
-              description: The communication type(s) the device supports
-              example: cellular
-            mode:
-              type: string
-              description: The cellular mode the device is currently using
-              example: 4G
-            lastHeardAt:
-              type: number
-              description: The timestamp of the last known communications from the device to the Wattwatchers system
-              example: 123456789.2341
-            signalQualityDbm:
-              type: integer
-              description: The signal quality in decibel-milliwatts
-              example: -57
-            simId:
-              type: string
-              description: Thge id of the SIM the device is using
-              example: '8900000000000000000'
-            apn:
-              type: string
-              description: The Access Point Name (APN) the device is using
-              example: soracom.io
-            imsi:
-              type: string
-              description: The International Mobile Subscriber Identity (IMSI) the device is using
-              example: '500000000000000'
-            networkId:
-              type: string
-              description: The mobile network the device is connected to
-              example: Optus AU
-        channels:
-          $ref: '#/components/schemas/DeviceChannels'
-        phases:
-          $ref: '#/components/schemas/DevicePhases'
     Error:
       title: Error response
       description: Error object
@@ -586,57 +544,99 @@ components:
           description: Error message
           type: string
           example: API key is missing or invalid.
-    DeviceDetailsWiFi:
+    DeviceChannels:
+      type: array
+      title: Device channels
+      description: Array of the device's channels
+      items:
+        type: object
+        description: Channel details
+        properties:
+          id:
+            type: string
+            description: Channel Id
+            example: D123456789012_C1
+          ctRating:
+            type: number
+            description: Channel CT rating
+            example: 60
+          label:
+            type: string
+            description: Channel label
+            example: Channel 1
+          categoryId:
+            type: number
+            description: Channel category Id
+            example: 1
+          categoryLabel:
+            type: string
+            description: Channel category label
+            example: Grid connect
+    DevicePending:
       type: object
-      title: Device details (WiFi)
-      description: The status, state and metadata for a WiFi device.
+      title: Pending device state
       properties:
-        id:
-          type: string
-          description: Device ID
-          example: D123456789012
-        model:
-          type: string
-          description: Device model
-          example: 6W
-        firmwareVersion:
-          type: string
-          description: Device firmware version
-          example: 41.3.2
-        latestStatus:
-          type: integer
-          description: Timestamp of the device's latest status
-          example: 1550684123
         shortEnergyReportingInterval:
           type: integer
           description: Short energy reporting interval
-          example: 30
-        pending:
-          $ref: '#/components/schemas/DevicePending'
-        comms:
-          type: object
-          description: The communication status of the device
-          properties:
-            type:
-              type: string
-              description: The communication type(s) the device supports
-              example: wifi
-            lastHeardAt:
-              type: number
-              description: The timestamp of the last known communications from the device to the Wattwatchers system
-              example: 123456789.2341
-            signalQualityDbm:
-              type: integer
-              description: The signal quality in decibel-milliwatts
-              example: -57
-            networkId:
-              type: string
-              description: Thge SSID of the wifi network the device is connected to
-              example: my-wifi-net
-        channels:
-          $ref: '#/components/schemas/DeviceChannels'
-        phases:
-          $ref: '#/components/schemas/DevicePhases'
+          example: 5
+      description: Pending changes for the device
+      example:
+        shortEnergyReportingInterval: 5
+    DeviceChannelCategories:
+      title: Device channel categories
+      description: Collection of channel categories
+      type: array
+      items:
+        description: Channel category
+        type: object
+        properties:
+          id:
+            description: Category Identifier
+            type: integer
+            example: 1
+          label:
+            description: Category label
+            type: string
+            example: Grid connect
+        example:
+          id: 1
+          label: Grid connect
+    DeviceModels:
+      title: Device models
+      description: Collection of device models
+      type: array
+      items:
+        description: Device model
+        type: object
+        properties:
+          code:
+            type: string
+            description: The model code
+            example: 3M
+          displayName:
+            type: string
+            description: The human-readable name of the model
+            example: Auditor 3M
+          channelsCount:
+            type: integer
+            description: The number of channels supported by the model
+            example: 3
+          switchesCount:
+            type: integer
+            description: The number of switches supported by the model
+            example: 0
+          communications:
+            type: string
+            description: The type of communication supported by the model
+            example: cellular
+    Devices:
+      type: array
+      description: List of device IDs
+      items:
+        type: string
+        description: Device ID
+        example: D123456789012
   examples:
     DeviceDetailsCellular:
       description: Cellular device details

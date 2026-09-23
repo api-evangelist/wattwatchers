@@ -192,6 +192,17 @@ paths:
       - BearerAuth: []
 components:
   parameters:
+    convertEnergy:
+      name: convert[energy]
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - kWh
+        - kW
+      example: kWh
+      description: Converts energy data to kilowatt hours or kilowatts.
     toTsLong:
       name: toTs
       in: query
@@ -216,45 +227,14 @@ components:
         - month
       example: 5m
       description: Granularity of the data.
-    fieldsEnergyPF:
-      name: fields[energy]
+    fromTsLong:
+      name: fromTs
       in: query
       required: false
       schema:
-        type: string
-        enum:
-        - +pf
-      example: +pf
-      description: \'+pf\' will append calculated power factor to the returned energy data objects. Note that filter[group]=phases can't be combined with fields[energy]=+pf.
-    filterGroup:
-      name: filter[group]
-      in: query
-      required: false
-      schema:
-        type: string
-        enum:
-        - phases
-      example: phases
-      description: When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device.
-    convertEnergy:
-      name: convert[energy]
-      in: query
-      required: false
-      schema:
-        type: string
-        enum:
-        - kWh
-        - kW
-      example: kWh
-      description: Converts energy data to kilowatt hours or kilowatts.
-    deviceId:
-      name: device-id
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The ID of the device
-      example: D123456789012
+        type: integer
+      example: 1546952400
+      description: Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs. Default, if not specified = first long energy entry.
     fieldsEnergyPFAndTimestamp:
       name: fields[energy]
       in: query
@@ -266,14 +246,34 @@ components:
         - timestamp
       example: +pf
       description: \`fields[energy]=+pf\` will append calculated power factor to the returned energy data objects. \`timestamp\` will return just the timestamp attribute in the returned data object. +pf and timestamp are mutually exclusive and can't be combined, i.e. fields[energy]=+pf,timestamp will result in an error. The fields[energy] query string options can't be combined with filter[group]=phases.
-    fromTsLong:
-      name: fromTs
+    fieldsEnergyPF:
+      name: fields[energy]
       in: query
       required: false
       schema:
-        type: integer
-      example: 1546952400
-      description: Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs. Default, if not specified = first long energy entry.
+        type: string
+        enum:
+        - +pf
+      example: +pf
+      description: \'+pf\' will append calculated power factor to the returned energy data objects. Note that filter[group]=phases can't be combined with fields[energy]=+pf.
+    deviceId:
+      name: device-id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The ID of the device
+      example: D123456789012
+    filterGroup:
+      name: filter[group]
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - phases
+      example: phases
+      description: When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device.
     timezone:
       name: timezone
       in: query
@@ -282,6 +282,57 @@ components:
         type: string
       example: Australia/Sydney
       description: Required if granularity >= hour. Irrelevant (and ignored) if granularity is < hour.
+  examples:
+    LongEnergyDataPoint:
+      description: A Long Energy data point
+      value:
+        timestamp: 1550622145
+        duration: 900
+        eReal:
+        - 3586031
+        - 329486
+        - -549
+        - 39
+        - -13
+        - -24
+        eRealNegative:
+        - 0
+        - 0
+        - 549
+        - 0
+        - 13
+        - 24
+        eRealPositive:
+        - 3586031
+        - 329486
+        - 0
+        - 39
+        - 0
+        - 0
+        eReactive:
+        - 134087
+        - 136446
+        - 47
+        - 33
+        - -10
+        - 11
+        eReactiveNegative:
+        - 11739
+        - 0
+        - 0
+        - 0
+        - 10
+        - 0
+        eReactivePositive:
+        - 145826
+        - 136446
+        - 47
+        - 33
+        - 0
+        - 11
+    FirstLastTimestampOnly:
+      value:
+        timestamp: 1550622145
   schemas:
     LongEnergyDataPoint:
       title: Long Energy data point
@@ -448,12 +499,6 @@ components:
           - 0.046
           - 0.043
           - 0.042
-    LongEnergyData:
-      title: Long Energy data
-      description: An array of Long Energy data points
-      type: array
-      items:
-        $ref: '#/components/schemas/LongEnergyDataPoint'
     Error:
       title: Error response
       description: Error object
@@ -471,57 +516,12 @@ components:
           description: Error message
           type: string
           example: API key is missing or invalid.
-  examples:
-    FirstLastTimestampOnly:
-      value:
-        timestamp: 1550622145
-    LongEnergyDataPoint:
-      description: A Long Energy data point
-      value:
-        timestamp: 1550622145
-        duration: 900
-        eReal:
-        - 3586031
-        - 329486
-        - -549
-        - 39
-        - -13
-        - -24
-        eRealNegative:
-        - 0
-        - 0
-        - 549
-        - 0
-        - 13
-        - 24
-        eRealPositive:
-        - 3586031
-        - 329486
-        - 0
-        - 39
-        - 0
-        - 0
-        eReactive:
-        - 134087
-        - 136446
-        - 47
-        - 33
-        - -10
-        - 11
-        eReactiveNegative:
-        - 11739
-        - 0
-        - 0
-        - 0
-        - 10
-        - 0
-        eReactivePositive:
-        - 145826
-        - 136446
-        - 47
-        - 33
-        - 0
-        - 11
+    LongEnergyData:
+      title: Long Energy data
+      description: An array of Long Energy data points
+      type: array
+      items:
+        $ref: '#/components/schemas/LongEnergyDataPoint'
   securitySchemes:
     BearerAuth:
       description: Bearer token authentication

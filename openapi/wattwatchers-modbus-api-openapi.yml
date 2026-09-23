@@ -182,103 +182,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    ModbusDataPMC-340B:
-      type: array
-      title: Data for Modbus PMC-340B device
-      description: An array of modbus data points
-      items:
-        $ref: '#/components/schemas/ModbusDataPointPMC-340B'
-    ModbusDataPointPMC-220:
-      type: object
-      title: Data point for Modbus PMC-220 device
-      description: Modbus data point for PMC-220
-      properties:
-        _I:
-          type: number
-          format: float
-          description: Current in Amperes
-          example: 0.3065536916255951
-        _PF:
-          type: number
-          format: float
-          description: Power Factor
-          example: 0.5856215357780457
-        _V:
-          type: number
-          format: float
-          description: Voltage
-          example: 245.0169219970703
-        kVAh:
-          type: integer
-          format: int32
-          description: Apparent power in 0.01kVAh
-          example: 0
-        kWh_Exp:
-          type: integer
-          format: int32
-          description: Real energy export in 0.01kWh
-          example: 0
-        kWh_Imp:
-          type: integer
-          format: int32
-          description: Real energy import in 0.01kWh
-          example: 0
-        kWh_Net:
-          type: integer
-          format: int32
-          description: Real energy net in 0.01kWh
-          example: 0
-        kWh_Tot:
-          type: integer
-          format: int32
-          description: Real energy total in 0.01kWh
-          example: 0
-        kvarh_Exp:
-          type: integer
-          format: int32
-          description: kvarh export in 0.01kvarh
-          example: 0
-        kvarh_Imp:
-          type: integer
-          format: int32
-          description: kvarh import in 0.01kvarh
-          example: 0
-        kvarh_Net:
-          type: integer
-          format: int32
-          description: kvarh net in 0.01kvarh
-          example: 0
-        kvarh_Tot:
-          type: integer
-          format: int32
-          description: kvarh total in 0.01kvarh
-          example: 0
-        model:
-          type: string
-          description: The device model that was attached to the device at the time the data was collected.
-          example: PMC-220
-        timestamp:
-          type: integer
-          format: int32
-          description: The Unix timestamp in seconds when the data was captured on the device.
-          example: 1546952400
-    Error:
-      title: Error response
-      description: Error object
-      type: object
-      properties:
-        code:
-          description: Error code
-          type: string
-          example: Unauthorized
-        httpCode:
-          description: HTTP error code
-          type: integer
-          example: 401
-        message:
-          description: Error message
-          type: string
-          example: API key is missing or invalid.
     ModbusDataPointPMC-340B:
       type: object
       title: Data point for Modbus PMC-340B device
@@ -403,47 +306,109 @@ components:
           format: int32
           description: The Unix timestamp in seconds when the data was captured on the device.
           example: 1546952400
+    Error:
+      title: Error response
+      description: Error object
+      type: object
+      properties:
+        code:
+          description: Error code
+          type: string
+          example: Unauthorized
+        httpCode:
+          description: HTTP error code
+          type: integer
+          example: 401
+        message:
+          description: Error message
+          type: string
+          example: API key is missing or invalid.
+    ModbusDataPointPMC-220:
+      type: object
+      title: Data point for Modbus PMC-220 device
+      description: Modbus data point for PMC-220
+      properties:
+        _I:
+          type: number
+          format: float
+          description: Current in Amperes
+          example: 0.3065536916255951
+        _PF:
+          type: number
+          format: float
+          description: Power Factor
+          example: 0.5856215357780457
+        _V:
+          type: number
+          format: float
+          description: Voltage
+          example: 245.0169219970703
+        kVAh:
+          type: integer
+          format: int32
+          description: Apparent power in 0.01kVAh
+          example: 0
+        kWh_Exp:
+          type: integer
+          format: int32
+          description: Real energy export in 0.01kWh
+          example: 0
+        kWh_Imp:
+          type: integer
+          format: int32
+          description: Real energy import in 0.01kWh
+          example: 0
+        kWh_Net:
+          type: integer
+          format: int32
+          description: Real energy net in 0.01kWh
+          example: 0
+        kWh_Tot:
+          type: integer
+          format: int32
+          description: Real energy total in 0.01kWh
+          example: 0
+        kvarh_Exp:
+          type: integer
+          format: int32
+          description: kvarh export in 0.01kvarh
+          example: 0
+        kvarh_Imp:
+          type: integer
+          format: int32
+          description: kvarh import in 0.01kvarh
+          example: 0
+        kvarh_Net:
+          type: integer
+          format: int32
+          description: kvarh net in 0.01kvarh
+          example: 0
+        kvarh_Tot:
+          type: integer
+          format: int32
+          description: kvarh total in 0.01kvarh
+          example: 0
+        model:
+          type: string
+          description: The device model that was attached to the device at the time the data was collected.
+          example: PMC-220
+        timestamp:
+          type: integer
+          format: int32
+          description: The Unix timestamp in seconds when the data was captured on the device.
+          example: 1546952400
+    ModbusDataPMC-340B:
+      type: array
+      title: Data for Modbus PMC-340B device
+      description: An array of modbus data points
+      items:
+        $ref: '#/components/schemas/ModbusDataPointPMC-340B'
     ModbusDataPMC-220:
       type: array
       title: Data for Modbus PMC-220 device
       description: An array of Modbus data points
       items:
         $ref: '#/components/schemas/ModbusDataPointPMC-220'
-  parameters:
-    fieldsEnergyTimestamp:
-      name: fields[energy]
-      in: query
-      required: false
-      schema:
-        type: string
-        enum:
-        - timestamp
-      example: timestamp
-      description: fields[energy]=timestamp will return just the timestamp attribute in the returned data object.
-    deviceId:
-      name: device-id
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The ID of the device
-      example: D123456789012
-    toTsModbus:
-      name: toTs
-      in: query
-      required: false
-      schema:
-        type: integer
-      example: 1546956000
-      description: Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default (if not provided) = 7 days after fromTs.
-    fromTsModbus:
-      name: fromTs
-      in: query
-      required: false
-      schema:
-        type: integer
-      example: 1546952400
-      description: Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs.
   examples:
     PMC-220:
       description: Response for a PMC-220 device
@@ -461,9 +426,6 @@ components:
         kvarh_Net: -173
         kvarh_Tot: 173
         model: PMC-220
-        timestamp: 1550622145
-    FirstLastTimestampOnly:
-      value:
         timestamp: 1550622145
     PMC-340B:
       description: Response for a PMC-340B device
@@ -492,6 +454,44 @@ components:
         kvarh_Tot: 0
         model: PMC-340B
         timestamp: 1550622145
+    FirstLastTimestampOnly:
+      value:
+        timestamp: 1550622145
+  parameters:
+    fromTsModbus:
+      name: fromTs
+      in: query
+      required: false
+      schema:
+        type: integer
+      example: 1546952400
+      description: Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs.
+    deviceId:
+      name: device-id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The ID of the device
+      example: D123456789012
+    fieldsEnergyTimestamp:
+      name: fields[energy]
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - timestamp
+      example: timestamp
+      description: fields[energy]=timestamp will return just the timestamp attribute in the returned data object.
+    toTsModbus:
+      name: toTs
+      in: query
+      required: false
+      schema:
+        type: integer
+      example: 1546956000
+      description: Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default (if not provided) = 7 days after fromTs.
   securitySchemes:
     BearerAuth:
       description: Bearer token authentication
