@@ -323,6 +323,18 @@ components:
           description: Error message
           type: string
           example: API key is missing or invalid.
+    ModbusDataPMC-220:
+      type: array
+      title: Data for Modbus PMC-220 device
+      description: An array of Modbus data points
+      items:
+        $ref: '#/components/schemas/ModbusDataPointPMC-220'
+    ModbusDataPMC-340B:
+      type: array
+      title: Data for Modbus PMC-340B device
+      description: An array of modbus data points
+      items:
+        $ref: '#/components/schemas/ModbusDataPointPMC-340B'
     ModbusDataPointPMC-220:
       type: object
       title: Data point for Modbus PMC-220 device
@@ -397,36 +409,7 @@ components:
           format: int32
           description: The Unix timestamp in seconds when the data was captured on the device.
           example: 1546952400
-    ModbusDataPMC-340B:
-      type: array
-      title: Data for Modbus PMC-340B device
-      description: An array of modbus data points
-      items:
-        $ref: '#/components/schemas/ModbusDataPointPMC-340B'
-    ModbusDataPMC-220:
-      type: array
-      title: Data for Modbus PMC-220 device
-      description: An array of Modbus data points
-      items:
-        $ref: '#/components/schemas/ModbusDataPointPMC-220'
   examples:
-    PMC-220:
-      description: Response for a PMC-220 device
-      value:
-        _I: 0.3065536916255951
-        _V: 245.0169219970703
-        _PF: 0.5856215357780457
-        kVAh: 616
-        kWh_Exp: 0
-        kWh_Imp: 283
-        kWh_Net: 283
-        kWh_Tot: 283
-        kvarh_Exp: 173
-        kvarh_Imp: 0
-        kvarh_Net: -173
-        kvarh_Tot: 173
-        model: PMC-220
-        timestamp: 1550622145
     PMC-340B:
       description: Response for a PMC-340B device
       value:
@@ -454,26 +437,27 @@ components:
         kvarh_Tot: 0
         model: PMC-340B
         timestamp: 1550622145
+    PMC-220:
+      description: Response for a PMC-220 device
+      value:
+        _I: 0.3065536916255951
+        _V: 245.0169219970703
+        _PF: 0.5856215357780457
+        kVAh: 616
+        kWh_Exp: 0
+        kWh_Imp: 283
+        kWh_Net: 283
+        kWh_Tot: 283
+        kvarh_Exp: 173
+        kvarh_Imp: 0
+        kvarh_Net: -173
+        kvarh_Tot: 173
+        model: PMC-220
+        timestamp: 1550622145
     FirstLastTimestampOnly:
       value:
         timestamp: 1550622145
   parameters:
-    fromTsModbus:
-      name: fromTs
-      in: query
-      required: false
-      schema:
-        type: integer
-      example: 1546952400
-      description: Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs.
-    deviceId:
-      name: device-id
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The ID of the device
-      example: D123456789012
     fieldsEnergyTimestamp:
       name: fields[energy]
       in: query
@@ -484,6 +468,14 @@ components:
         - timestamp
       example: timestamp
       description: fields[energy]=timestamp will return just the timestamp attribute in the returned data object.
+    deviceId:
+      name: device-id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The ID of the device
+      example: D123456789012
     toTsModbus:
       name: toTs
       in: query
@@ -492,6 +484,14 @@ components:
         type: integer
       example: 1546956000
       description: Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default (if not provided) = 7 days after fromTs.
+    fromTsModbus:
+      name: fromTs
+      in: query
+      required: false
+      schema:
+        type: integer
+      example: 1546952400
+      description: Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs.
   securitySchemes:
     BearerAuth:
       description: Bearer token authentication

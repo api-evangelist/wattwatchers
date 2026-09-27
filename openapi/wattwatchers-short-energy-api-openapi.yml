@@ -157,22 +157,6 @@ components:
         - kW
       example: kWh
       description: Converts energy data to kilowatt hours or kilowatts.
-    fromTsShort:
-      name: fromTs
-      in: query
-      required: false
-      schema:
-        type: integer
-      example: 1546952400
-      description: Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs. Default, if not specified = now minus 1 hour.
-    toTsShort:
-      name: toTs
-      in: query
-      required: false
-      schema:
-        type: integer
-      example: 1546956000
-      description: Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default, if not specified = 1 hour after fromTs.
     fieldsEnergyPFAndTimestamp:
       name: fields[energy]
       in: query
@@ -194,14 +178,6 @@ components:
         - +pf
       example: +pf
       description: \'+pf\' will append calculated power factor to the returned energy data objects. Note that filter[group]=phases can't be combined with fields[energy]=+pf.
-    deviceId:
-      name: device-id
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The ID of the device
-      example: D123456789012
     filterGroup:
       name: filter[group]
       in: query
@@ -212,6 +188,56 @@ components:
         - phases
       example: phases
       description: When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device.
+    toTsShort:
+      name: toTs
+      in: query
+      required: false
+      schema:
+        type: integer
+      example: 1546956000
+      description: Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default, if not specified = 1 hour after fromTs.
+    fromTsShort:
+      name: fromTs
+      in: query
+      required: false
+      schema:
+        type: integer
+      example: 1546952400
+      description: Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs. Default, if not specified = now minus 1 hour.
+    deviceId:
+      name: device-id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The ID of the device
+      example: D123456789012
+  examples:
+    FirstLastTimestampOnly:
+      value:
+        timestamp: 1550622145
+    ShortEnergyDataPoint:
+      description: A Short Energy data point
+      value:
+        timestamp: 1550622145
+        duration: 5
+        frequency: 50.04
+        eReal:
+        - 1163
+        - 3
+        - 39
+        eReactive:
+        - -856
+        - -19
+        - -363
+        vRMS:
+        - 244.6
+        - 244.5
+        - 244.5
+        iRMS:
+        - 1.267
+        - 0.028
+        - 0.309
   schemas:
     ShortEnergyDataPoint:
       title: Short Energy data point
@@ -304,32 +330,6 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/ShortEnergyDataPoint'
-  examples:
-    ShortEnergyDataPoint:
-      description: A Short Energy data point
-      value:
-        timestamp: 1550622145
-        duration: 5
-        frequency: 50.04
-        eReal:
-        - 1163
-        - 3
-        - 39
-        eReactive:
-        - -856
-        - -19
-        - -363
-        vRMS:
-        - 244.6
-        - 244.5
-        - 244.5
-        iRMS:
-        - 1.267
-        - 0.028
-        - 0.309
-    FirstLastTimestampOnly:
-      value:
-        timestamp: 1550622145
   securitySchemes:
     BearerAuth:
       description: Bearer token authentication
