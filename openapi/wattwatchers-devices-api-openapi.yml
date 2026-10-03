@@ -236,6 +236,109 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    Error:
+      title: Error response
+      description: Error object
+      type: object
+      properties:
+        code:
+          description: Error code
+          type: string
+          example: Unauthorized
+        httpCode:
+          description: HTTP error code
+          type: integer
+          example: 401
+        message:
+          description: Error message
+          type: string
+          example: API key is missing or invalid.
+    DeviceDetailsWiFi:
+      type: object
+      title: Device details (WiFi)
+      description: The status, state and metadata for a WiFi device.
+      properties:
+        id:
+          type: string
+          description: Device ID
+          example: D123456789012
+        model:
+          type: string
+          description: Device model
+          example: 6W
+        firmwareVersion:
+          type: string
+          description: Device firmware version
+          example: 41.3.2
+        latestStatus:
+          type: integer
+          description: Timestamp of the device's latest status
+          example: 1550684123
+        shortEnergyReportingInterval:
+          type: integer
+          description: Short energy reporting interval
+          example: 30
+        pending:
+          $ref: '#/components/schemas/DevicePending'
+        comms:
+          type: object
+          description: The communication status of the device
+          properties:
+            type:
+              type: string
+              description: The communication type(s) the device supports
+              example: wifi
+            lastHeardAt:
+              type: number
+              description: The timestamp of the last known communications from the device to the Wattwatchers system
+              example: 123456789.2341
+            signalQualityDbm:
+              type: integer
+              description: The signal quality in decibel-milliwatts
+              example: -57
+            networkId:
+              type: string
+              description: Thge SSID of the wifi network the device is connected to
+              example: my-wifi-net
+        channels:
+          $ref: '#/components/schemas/DeviceChannels'
+        phases:
+          $ref: '#/components/schemas/DevicePhases'
+    Devices:
+      type: array
+      description: List of device IDs
+      items:
+        type: string
+        description: Device ID
+        example: D123456789012
+    DeviceModels:
+      title: Device models
+      description: Collection of device models
+      type: array
+      items:
+        description: Device model
+        type: object
+        properties:
+          code:
+            type: string
+            description: The model code
+            example: 3M
+          displayName:
+            type: string
+            description: The human-readable name of the model
+            example: Auditor 3M
+          channelsCount:
+            type: integer
+            description: The number of channels supported by the model
+            example: 3
+          switchesCount:
+            type: integer
+            description: The number of switches supported by the model
+            example: 0
+          communications:
+            type: string
+            description: The type of communication supported by the model
+            example: cellular
     DevicePatchBody:
       type: object
       title: Device PATCH request body
@@ -357,6 +460,88 @@ components:
               - D123456789012_C4
               - D123456789012_C5
               - D123456789012_C6
+    DevicePending:
+      type: object
+      title: Pending device state
+      properties:
+        shortEnergyReportingInterval:
+          type: integer
+          description: Short energy reporting interval
+          example: 5
+      description: Pending changes for the device
+      example:
+        shortEnergyReportingInterval: 5
+    DeviceChannelCategories:
+      title: Device channel categories
+      description: Collection of channel categories
+      type: array
+      items:
+        description: Channel category
+        type: object
+        properties:
+          id:
+            description: Category Identifier
+            type: integer
+            example: 1
+          label:
+            description: Category label
+            type: string
+            example: Grid connect
+        example:
+          id: 1
+          label: Grid connect
+    DevicePhases:
+      type: object
+      title: Device phase configuration
+      description: Phase configuration
+      properties:
+        count:
+          type: integer
+          description: Phase count
+          example: 3
+        grouping:
+          type: array
+          description: Phase grouping
+          items:
+            type: object
+            description: Phase group
+            properties:
+              included:
+                type: array
+                description: Channels included in phase group
+                items:
+                  type: string
+                  description: Channel Id
+                  example: D123456789012_C1
+                example:
+                - D123456789012_C1
+                - D123456789012_C2
+                - D123456789012_C3
+            example:
+              included:
+              - D123456789012_C1
+              - D123456789012_C2
+              - D123456789012_C3
+          example:
+          - included:
+            - D123456789012_C1
+            - D123456789012_C2
+            - D123456789012_C3
+          - included:
+            - D123456789012_C4
+            - D123456789012_C5
+            - D123456789012_C6
+      example:
+        count: 3
+        grouping:
+        - included:
+          - D123456789012_C1
+          - D123456789012_C2
+          - D123456789012_C3
+        - included:
+          - D123456789012_C4
+          - D123456789012_C5
+          - D123456789012_C6
     DeviceDetailsCellular:
       type: object
       title: Device details (Cellular)
@@ -424,104 +609,6 @@ components:
           $ref: '#/components/schemas/DeviceChannels'
         phases:
           $ref: '#/components/schemas/DevicePhases'
-    DeviceDetailsWiFi:
-      type: object
-      title: Device details (WiFi)
-      description: The status, state and metadata for a WiFi device.
-      properties:
-        id:
-          type: string
-          description: Device ID
-          example: D123456789012
-        model:
-          type: string
-          description: Device model
-          example: 6W
-        firmwareVersion:
-          type: string
-          description: Device firmware version
-          example: 41.3.2
-        latestStatus:
-          type: integer
-          description: Timestamp of the device's latest status
-          example: 1550684123
-        shortEnergyReportingInterval:
-          type: integer
-          description: Short energy reporting interval
-          example: 30
-        pending:
-          $ref: '#/components/schemas/DevicePending'
-        comms:
-          type: object
-          description: The communication status of the device
-          properties:
-            type:
-              type: string
-              description: The communication type(s) the device supports
-              example: wifi
-            lastHeardAt:
-              type: number
-              description: The timestamp of the last known communications from the device to the Wattwatchers system
-              example: 123456789.2341
-            signalQualityDbm:
-              type: integer
-              description: The signal quality in decibel-milliwatts
-              example: -57
-            networkId:
-              type: string
-              description: Thge SSID of the wifi network the device is connected to
-              example: my-wifi-net
-        channels:
-          $ref: '#/components/schemas/DeviceChannels'
-        phases:
-          $ref: '#/components/schemas/DevicePhases'
-    Error:
-      title: Error response
-      description: Error object
-      type: object
-      properties:
-        code:
-          description: Error code
-          type: string
-          example: Unauthorized
-        httpCode:
-          description: HTTP error code
-          type: integer
-          example: 401
-        message:
-          description: Error message
-          type: string
-          example: API key is missing or invalid.
-    DevicePending:
-      type: object
-      title: Pending device state
-      properties:
-        shortEnergyReportingInterval:
-          type: integer
-          description: Short energy reporting interval
-          example: 5
-      description: Pending changes for the device
-      example:
-        shortEnergyReportingInterval: 5
-    DeviceChannelCategories:
-      title: Device channel categories
-      description: Collection of channel categories
-      type: array
-      items:
-        description: Channel category
-        type: object
-        properties:
-          id:
-            description: Category Identifier
-            type: integer
-            example: 1
-          label:
-            description: Category label
-            type: string
-            example: Grid connect
-        example:
-          id: 1
-          label: Grid connect
     DeviceChannels:
       type: array
       title: Device channels
@@ -550,93 +637,6 @@ components:
             type: string
             description: Channel category label
             example: Grid connect
-    DevicePhases:
-      type: object
-      title: Device phase configuration
-      description: Phase configuration
-      properties:
-        count:
-          type: integer
-          description: Phase count
-          example: 3
-        grouping:
-          type: array
-          description: Phase grouping
-          items:
-            type: object
-            description: Phase group
-            properties:
-              included:
-                type: array
-                description: Channels included in phase group
-                items:
-                  type: string
-                  description: Channel Id
-                  example: D123456789012_C1
-                example:
-                - D123456789012_C1
-                - D123456789012_C2
-                - D123456789012_C3
-            example:
-              included:
-              - D123456789012_C1
-              - D123456789012_C2
-              - D123456789012_C3
-          example:
-          - included:
-            - D123456789012_C1
-            - D123456789012_C2
-            - D123456789012_C3
-          - included:
-            - D123456789012_C4
-            - D123456789012_C5
-            - D123456789012_C6
-      example:
-        count: 3
-        grouping:
-        - included:
-          - D123456789012_C1
-          - D123456789012_C2
-          - D123456789012_C3
-        - included:
-          - D123456789012_C4
-          - D123456789012_C5
-          - D123456789012_C6
-    Devices:
-      type: array
-      description: List of device IDs
-      items:
-        type: string
-        description: Device ID
-        example: D123456789012
-    DeviceModels:
-      title: Device models
-      description: Collection of device models
-      type: array
-      items:
-        description: Device model
-        type: object
-        properties:
-          code:
-            type: string
-            description: The model code
-            example: 3M
-          displayName:
-            type: string
-            description: The human-readable name of the model
-            example: Auditor 3M
-          channelsCount:
-            type: integer
-            description: The number of channels supported by the model
-            example: 3
-          switchesCount:
-            type: integer
-            description: The number of switches supported by the model
-            example: 0
-          communications:
-            type: string
-            description: The type of communication supported by the model
-            example: cellular
   examples:
     DeviceDetailsCellular:
       description: Cellular device details
