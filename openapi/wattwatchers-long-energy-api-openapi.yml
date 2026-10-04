@@ -192,23 +192,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    Error:
-      title: Error response
-      description: Error object
-      type: object
-      properties:
-        code:
-          description: Error code
-          type: string
-          example: Unauthorized
-        httpCode:
-          description: HTTP error code
-          type: integer
-          example: 401
-        message:
-          description: Error message
-          type: string
-          example: API key is missing or invalid.
     LongEnergyData:
       title: Long Energy data
       description: An array of Long Energy data points
@@ -380,7 +363,53 @@ components:
           - 0.046
           - 0.043
           - 0.042
+    Error:
+      title: Error response
+      description: Error object
+      type: object
+      properties:
+        code:
+          description: Error code
+          type: string
+          example: Unauthorized
+        httpCode:
+          description: HTTP error code
+          type: integer
+          example: 401
+        message:
+          description: Error message
+          type: string
+          example: API key is missing or invalid.
   parameters:
+    fieldsEnergyPFAndTimestamp:
+      name: fields[energy]
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - +pf
+        - timestamp
+      example: +pf
+      description: \`fields[energy]=+pf\` will append calculated power factor to the returned energy data objects. \`timestamp\` will return just the timestamp attribute in the returned data object. +pf and timestamp are mutually exclusive and can't be combined, i.e. fields[energy]=+pf,timestamp will result in an error. The fields[energy] query string options can't be combined with filter[group]=phases.
+    deviceId:
+      name: device-id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The ID of the device
+      example: D123456789012
+    filterGroup:
+      name: filter[group]
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - phases
+      example: phases
+      description: When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device.
     timezone:
       name: timezone
       in: query
@@ -389,6 +418,25 @@ components:
         type: string
       example: Australia/Sydney
       description: Required if granularity >= hour. Irrelevant (and ignored) if granularity is < hour.
+    toTsLong:
+      name: toTs
+      in: query
+      required: false
+      schema:
+        type: integer
+      example: 1546956000
+      description: Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default, if not specified = 7 days after fromTs.
+    convertEnergy:
+      name: convert[energy]
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - kWh
+        - kW
+      example: kWh
+      description: Converts energy data to kilowatt hours or kilowatts.
     fromTsLong:
       name: fromTs
       in: query
@@ -397,6 +445,16 @@ components:
         type: integer
       example: 1546952400
       description: Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs. Default, if not specified = first long energy entry.
+    fieldsEnergyPF:
+      name: fields[energy]
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - +pf
+      example: +pf
+      description: \'+pf\' will append calculated power factor to the returned energy data objects. Note that filter[group]=phases can't be combined with fields[energy]=+pf.
     granularity:
       name: granularity
       in: query
@@ -413,68 +471,7 @@ components:
         - month
       example: 5m
       description: Granularity of the data.
-    filterGroup:
-      name: filter[group]
-      in: query
-      required: false
-      schema:
-        type: string
-        enum:
-        - phases
-      example: phases
-      description: When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device.
-    fieldsEnergyPFAndTimestamp:
-      name: fields[energy]
-      in: query
-      required: false
-      schema:
-        type: string
-        enum:
-        - +pf
-        - timestamp
-      example: +pf
-      description: \`fields[energy]=+pf\` will append calculated power factor to the returned energy data objects. \`timestamp\` will return just the timestamp attribute in the returned data object. +pf and timestamp are mutually exclusive and can't be combined, i.e. fields[energy]=+pf,timestamp will result in an error. The fields[energy] query string options can't be combined with filter[group]=phases.
-    toTsLong:
-      name: toTs
-      in: query
-      required: false
-      schema:
-        type: integer
-      example: 1546956000
-      description: Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default, if not specified = 7 days after fromTs.
-    fieldsEnergyPF:
-      name: fields[energy]
-      in: query
-      required: false
-      schema:
-        type: string
-        enum:
-        - +pf
-      example: +pf
-      description: \'+pf\' will append calculated power factor to the returned energy data objects. Note that filter[group]=phases can't be combined with fields[energy]=+pf.
-    deviceId:
-      name: device-id
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The ID of the device
-      example: D123456789012
-    convertEnergy:
-      name: convert[energy]
-      in: query
-      required: false
-      schema:
-        type: string
-        enum:
-        - kWh
-        - kW
-      example: kWh
-      description: Converts energy data to kilowatt hours or kilowatts.
   examples:
-    FirstLastTimestampOnly:
-      value:
-        timestamp: 1550622145
     LongEnergyDataPoint:
       description: A Long Energy data point
       value:
@@ -522,6 +519,9 @@ components:
         - 33
         - 0
         - 11
+    FirstLastTimestampOnly:
+      value:
+        timestamp: 1550622145
   securitySchemes:
     BearerAuth:
       description: Bearer token authentication

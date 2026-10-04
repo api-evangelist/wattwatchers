@@ -146,23 +146,12 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    Error:
-      title: Error response
-      description: Error object
-      type: object
-      properties:
-        code:
-          description: Error code
-          type: string
-          example: Unauthorized
-        httpCode:
-          description: HTTP error code
-          type: integer
-          example: 401
-        message:
-          description: Error message
-          type: string
-          example: API key is missing or invalid.
+    ShortEnergyData:
+      title: Short Energy data
+      description: An array of Short Energy data points
+      type: array
+      items:
+        $ref: '#/components/schemas/ShortEnergyDataPoint'
     ShortEnergyDataPoint:
       title: Short Energy data point
       description: A Short Energy data point
@@ -231,16 +220,91 @@ components:
           - 1.259
           - 0.028
           - 0.31
-    ShortEnergyData:
-      title: Short Energy data
-      description: An array of Short Energy data points
-      type: array
-      items:
-        $ref: '#/components/schemas/ShortEnergyDataPoint'
+    Error:
+      title: Error response
+      description: Error object
+      type: object
+      properties:
+        code:
+          description: Error code
+          type: string
+          example: Unauthorized
+        httpCode:
+          description: HTTP error code
+          type: integer
+          example: 401
+        message:
+          description: Error message
+          type: string
+          example: API key is missing or invalid.
+  parameters:
+    toTsShort:
+      name: toTs
+      in: query
+      required: false
+      schema:
+        type: integer
+      example: 1546956000
+      description: Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default, if not specified = 1 hour after fromTs.
+    fromTsShort:
+      name: fromTs
+      in: query
+      required: false
+      schema:
+        type: integer
+      example: 1546952400
+      description: Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs. Default, if not specified = now minus 1 hour.
+    fieldsEnergyPFAndTimestamp:
+      name: fields[energy]
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - +pf
+        - timestamp
+      example: +pf
+      description: \`fields[energy]=+pf\` will append calculated power factor to the returned energy data objects. \`timestamp\` will return just the timestamp attribute in the returned data object. +pf and timestamp are mutually exclusive and can't be combined, i.e. fields[energy]=+pf,timestamp will result in an error. The fields[energy] query string options can't be combined with filter[group]=phases.
+    deviceId:
+      name: device-id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The ID of the device
+      example: D123456789012
+    filterGroup:
+      name: filter[group]
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - phases
+      example: phases
+      description: When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device.
+    convertEnergy:
+      name: convert[energy]
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - kWh
+        - kW
+      example: kWh
+      description: Converts energy data to kilowatt hours or kilowatts.
+    fieldsEnergyPF:
+      name: fields[energy]
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - +pf
+      example: +pf
+      description: \'+pf\' will append calculated power factor to the returned energy data objects. Note that filter[group]=phases can't be combined with fields[energy]=+pf.
   examples:
-    FirstLastTimestampOnly:
-      value:
-        timestamp: 1550622145
     ShortEnergyDataPoint:
       description: A Short Energy data point
       value:
@@ -263,73 +327,9 @@ components:
         - 1.267
         - 0.028
         - 0.309
-  parameters:
-    fromTsShort:
-      name: fromTs
-      in: query
-      required: false
-      schema:
-        type: integer
-      example: 1546952400
-      description: Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs. Default, if not specified = now minus 1 hour.
-    filterGroup:
-      name: filter[group]
-      in: query
-      required: false
-      schema:
-        type: string
-        enum:
-        - phases
-      example: phases
-      description: When set to 'phases', the energy data entries will be collapsed to reflect the phases.grouping configuration of the device.
-    fieldsEnergyPFAndTimestamp:
-      name: fields[energy]
-      in: query
-      required: false
-      schema:
-        type: string
-        enum:
-        - +pf
-        - timestamp
-      example: +pf
-      description: \`fields[energy]=+pf\` will append calculated power factor to the returned energy data objects. \`timestamp\` will return just the timestamp attribute in the returned data object. +pf and timestamp are mutually exclusive and can't be combined, i.e. fields[energy]=+pf,timestamp will result in an error. The fields[energy] query string options can't be combined with filter[group]=phases.
-    convertEnergy:
-      name: convert[energy]
-      in: query
-      required: false
-      schema:
-        type: string
-        enum:
-        - kWh
-        - kW
-      example: kWh
-      description: Converts energy data to kilowatt hours or kilowatts.
-    fieldsEnergyPF:
-      name: fields[energy]
-      in: query
-      required: false
-      schema:
-        type: string
-        enum:
-        - +pf
-      example: +pf
-      description: \'+pf\' will append calculated power factor to the returned energy data objects. Note that filter[group]=phases can't be combined with fields[energy]=+pf.
-    deviceId:
-      name: device-id
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The ID of the device
-      example: D123456789012
-    toTsShort:
-      name: toTs
-      in: query
-      required: false
-      schema:
-        type: integer
-      example: 1546956000
-      description: Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default, if not specified = 1 hour after fromTs.
+    FirstLastTimestampOnly:
+      value:
+        timestamp: 1550622145
   securitySchemes:
     BearerAuth:
       description: Bearer token authentication
