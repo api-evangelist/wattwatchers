@@ -238,14 +238,6 @@ components:
           type: string
           example: API key is missing or invalid.
   parameters:
-    toTsShort:
-      name: toTs
-      in: query
-      required: false
-      schema:
-        type: integer
-      example: 1546956000
-      description: Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default, if not specified = 1 hour after fromTs.
     fromTsShort:
       name: fromTs
       in: query
@@ -254,25 +246,6 @@ components:
         type: integer
       example: 1546952400
       description: Unix timestamp, seconds since epoch. Returns data with timestamp >= fromTs. Default, if not specified = now minus 1 hour.
-    fieldsEnergyPFAndTimestamp:
-      name: fields[energy]
-      in: query
-      required: false
-      schema:
-        type: string
-        enum:
-        - +pf
-        - timestamp
-      example: +pf
-      description: \`fields[energy]=+pf\` will append calculated power factor to the returned energy data objects. \`timestamp\` will return just the timestamp attribute in the returned data object. +pf and timestamp are mutually exclusive and can't be combined, i.e. fields[energy]=+pf,timestamp will result in an error. The fields[energy] query string options can't be combined with filter[group]=phases.
-    deviceId:
-      name: device-id
-      in: path
-      required: true
-      schema:
-        type: string
-      description: The ID of the device
-      example: D123456789012
     filterGroup:
       name: filter[group]
       in: query
@@ -294,6 +267,33 @@ components:
         - kW
       example: kWh
       description: Converts energy data to kilowatt hours or kilowatts.
+    toTsShort:
+      name: toTs
+      in: query
+      required: false
+      schema:
+        type: integer
+      example: 1546956000
+      description: Unix timestamp, seconds since epoch. Returns data with timestamp < toTs. Default, if not specified = 1 hour after fromTs.
+    fieldsEnergyPFAndTimestamp:
+      name: fields[energy]
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+        - +pf
+        - timestamp
+      example: +pf
+      description: \`fields[energy]=+pf\` will append calculated power factor to the returned energy data objects. \`timestamp\` will return just the timestamp attribute in the returned data object. +pf and timestamp are mutually exclusive and can't be combined, i.e. fields[energy]=+pf,timestamp will result in an error. The fields[energy] query string options can't be combined with filter[group]=phases.
+    deviceId:
+      name: device-id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The ID of the device
+      example: D123456789012
     fieldsEnergyPF:
       name: fields[energy]
       in: query
